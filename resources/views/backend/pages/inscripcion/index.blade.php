@@ -78,21 +78,27 @@
                                             href="{{ route('admin.inscripcion.create', ['sede_id' => $sede_id]) }}">Preinscribir
                                         </a><br><br>
                                     @endif
-                                    <ul class="nav nav-tabs tabs" role="tablist">
-                                        @foreach ($inscripciones->groupBy('pro_id') as $pro_id => $inscripcionesGrouped)
-                                            <li class="nav-item">
-                                                <a class="nav-link {{ $loop->first ? 'active' : '' }}" data-toggle="tab"
-                                                    href="#tab_{{ $pro_id }}" role="tab">
-                                                    {{ $inscripcionesGrouped->first()->pro_nombre_abre }}
-                                                </a>
-                                                <div class="slide"></div>
-                                            </li>
-                                        @endforeach
+                                    <ul class="nav nav-tabs tabs" role="tablist" id="inscripcionTabs">
+                                        @if ($inscripciones->groupBy('pro_id')->count() > 1)
+                                            @foreach ($inscripciones->groupBy('pro_id') as $pro_id => $inscripcionesGrouped)
+                                                <li class="nav-item">
+                                                    <a class="nav-link" data-toggle="tab" href="#tab_{{ $pro_id }}" role="tab">
+                                                        {{ $inscripcionesGrouped->first()->pro_nombre_abre }}
+                                                    </a>
+                                                    <div class="slide"></div>
+                                                </li>
+                                            @endforeach
+                                        @else
+                                                <h6>
+                                                    <strong>{{ $inscripciones->first()->pro_nombre_abre }}</strong> 
+                                                </h6>
+    
+                                        @endif
                                     </ul>
                                     <br>
                                     <div class="tab-content tabs">
                                         @foreach ($inscripciones->groupBy('pro_id') as $pro_id => $inscripcionesGrouped)
-                                            <div class="tab-pane {{ $loop->first ? 'active' : '' }}"
+                                            <div class="tab-pane {{ $inscripciones->groupBy('pro_id')->count() > 1 ? '' : 'active' }}"
                                                 id="tab_{{ $pro_id }}" role="tabpanel">
                                                 <div class="d-flex justify-content-between align-items-center mb-3">
                                                     <h5 class="mb-0">{{ $inscripcionesGrouped->first()->pro_nombre }}</h5>
@@ -269,7 +275,45 @@
 
 
 @section('scripts')
-    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var tabLinks = document.querySelectorAll('#inscripcionTabs .nav-link');
+            var activeTabIndex = localStorage.getItem('activeTabIndex');
+            
+            if (activeTabIndex !== null && activeTabIndex < tabLinks.length) {
+                // Desactiva todas las pestañas y contenidos primero
+                tabLinks.forEach(link => {
+                    link.classList.remove('active');
+                    document.querySelector(link.getAttribute('href')).classList.remove('active', 'show');
+                });
+                
+                // Activa la pestaña almacenada en localStorage
+                tabLinks[activeTabIndex].classList.add('active');
+                document.querySelector(tabLinks[activeTabIndex].getAttribute('href')).classList.add('active', 'show');
+            } else {
+                // Si no hay una pestaña almacenada o si el índice es inválido, activa la primera por defecto
+                tabLinks[0].classList.add('active');
+                document.querySelector(tabLinks[0].getAttribute('href')).classList.add('active', 'show');
+            }
+
+            tabLinks.forEach(function (link, index) {
+                link.addEventListener('click', function () {
+                    // Almacena el índice de la pestaña clickeada
+                    localStorage.setItem('activeTabIndex', index);
+
+                    // Desactiva todas las pestañas y contenidos
+                    tabLinks.forEach(l => {
+                        l.classList.remove('active');
+                        document.querySelector(l.getAttribute('href')).classList.remove('active', 'show');
+                    });
+
+                    // Activa la pestaña clickeada y su contenido
+                    link.classList.add('active');
+                    document.querySelector(link.getAttribute('href')).classList.add('active', 'show');
+                });
+            });
+        });
+    </script>
     <script src="{{ asset('backend/files/bower_components/datatables.net/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('backend/files/bower_components/datatables.net-buttons/js/dataTables.buttons.min.js') }}">
     </script>

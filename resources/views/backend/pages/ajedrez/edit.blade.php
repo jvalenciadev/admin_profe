@@ -205,10 +205,10 @@
                                             @csrf
                                             @method('PUT')
 
-                                            {{-- <div class="form-group">
+                                            <div class="form-group">
                                                 <label for="pro_bau_imagen">Imagen</label>
                                                 <input type="file" name="pro_bau_imagen" class="form-control">
-                                            </div> --}}
+                                            </div>
                                             <div class="form-group">
                                                 <label for="pro_bau_nro_deposito">Número de Depósito</label>
                                                 <input type="text" name="pro_bau_nro_deposito" class="form-control" value="{{ $baucher->pro_bau_nro_deposito }}">

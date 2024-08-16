@@ -19,8 +19,6 @@ use App\Http\Controllers\Backend\InscripcionController;
 
 // Auth::routes();
 
-Route::get('/', 'HomeController@redirectAdmin')->name('index');
-Route::get('/home', 'HomeController@index')->name('home');
 // Route::get('/evento/25', 'Frontend\EventoController@index')->name('evento.show');
 // Route::post('/evento/inscripcion', 'Frontend\EventoController@storeParticipante')->name('evento.storeParticipante');
 Route::post('/evento/inscripcion', 'Frontend\EventoController@storeParticipante')->name('evento.storeParticipantes');
@@ -30,6 +28,25 @@ Route::get('evento/comprobanteParticipantePdf/{parametros}', 'Frontend\EventoCon
 // Route::get('/evento/25', 'Frontend\EventoController@index')->name('evento.show');
 // Route::get('/evento/26', 'Frontend\EventoController@show')->name('evento.show');
 Route::get('/evento/27', 'Frontend\EventoController@showDos')->name('evento.showdos');
+
+Route::get('/', 'HomeController@redirectAdmin')->name('index');
+Route::get('/', 'HomeController@index')->name('home');
+
+Route::group(['prefix' => 'programa', 'controller' => 'Frontend\ProgramaController'], function () {
+    Route::get('/', 'index')->name('programa');
+    Route::get('/{pro_id}', 'show')->name('programa.show');
+});
+
+Route::group(['prefix' => 'evento', 'controller' => 'Frontend\EventoController'], function () {
+    Route::get('/', 'eventos')->name('evento');
+    Route::get('/detalle/{eve_id}', 'detalle')->name('eventoDetalle');
+    Route::get('/{eve_id}', 'evento')->name('evento.show');
+});
+
+Route::group(['prefix' => 'blog', 'controller' => 'Frontend\BlogController'], function () {
+    Route::get('/', 'index')->name('blog');
+    Route::get('/{blog_id}', 'show')->name('blog.show');
+});
 
 /**
  * Admin routes
@@ -44,7 +61,7 @@ Route::group(['prefix' => 'admin'], function () {
     Route::resource('inscripcion', 'Backend\InscripcionController', ['names' => 'admin.inscripcion']);
     Route::get('calificacionIn/{sede_id}', 'Backend\CalificacionController@index')->name('admin.calificacion.index');
     Route::post('calificacion/{pi_id}/{pm_id}/{pc_id}', 'Backend\CalificacionController@storeCalificacion')->name('admin.calificacion.storecalificacion');
-   
+
     //Route::post('inscripcion', [InscripcionController::class, 'store'])->name('admin.inscripcion.store');
     //Route::get('inscripcion/{id}/edit', [InscripcionController::class, 'edit'])->name('admin.inscripcion.edit');
     //Route::put('inscripcion/{id}', [InscripcionController::class, 'update'])->name('admin.inscripcion.update');

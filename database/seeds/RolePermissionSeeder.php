@@ -198,6 +198,15 @@ class RolePermissionSeeder extends Seeder
                     'migracion.edit',
                 ]
             ],
+            [
+                'group_name' => 'Ajedrez',
+                'permissions' => [
+                    'ajedrez.create',
+                    'ajedrez.view',
+                    'ajedrez.edit',
+                    'ajedrez.delete',
+                ]
+            ],
         ];
 
 

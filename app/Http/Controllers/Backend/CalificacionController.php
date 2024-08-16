@@ -60,14 +60,13 @@ class CalificacionController extends Controller
                         'programa.pro_id', 
                         'programa.pro_nombre', 
                         'programa.pro_nombre_abre', 
-                        'programa.pro_costo', 
+                        'programa_turno.pro_tur_id', 
                         'programa_turno.pro_tur_nombre', 
                         'sede.sede_nombre',
                         'sede.sede_nombre_abre', 
                         'departamento.dep_nombre', 
                         'programa_inscripcion_estado.pie_nombre'
             );
-        
         if (!is_null($this->user->pro_ids)) {
             $proIds = json_decode($this->user->pro_ids);
             if (!empty($proIds)) { // Verifica si $proIds no está vacío
@@ -75,7 +74,77 @@ class CalificacionController extends Controller
             }
         }
         $inscripciones = $inscripciones->get();
-        $calificaciones = DB::table('calificacion_participante')->get();
+        $calificaciones = DB::table('calificacion_participante')
+                ->join('programa_calificacion', 'calificacion_participante.pc_id', "=", "programa_calificacion.pc_id")
+                ->join('programa_tipo_calificacion', 'programa_calificacion.ptc_id', "=", "programa_tipo_calificacion.ptc_id")
+                ->get();
+        $modulos = DB::table('programa_modulo')
+            ->join('programa', 'programa.pro_id', "=", "programa_modulo.pro_id")
+            ->join('programa_tipo', 'programa.pro_tip_id', "=", "programa_tipo.pro_tip_id")
+            ->join('programa_calificacion', 'programa_tipo.pro_tip_id', "=", "programa_calificacion.pro_tip_id")
+            ->join('programa_tipo_calificacion', 'programa_calificacion.ptc_id', "=", "programa_tipo_calificacion.ptc_id")
+            ->select(
+                    'programa_modulo.pm_id', 
+                    'programa_modulo.pm_nombre', 
+                    'programa_modulo.pro_id', 
+                    'programa_calificacion.pc_id', 
+                    'programa_tipo_calificacion.ptc_id', 
+                    'programa_tipo_calificacion.ptc_nombre', 
+                    'programa_tipo_calificacion.ptc_nota', 
+            )->where('programa_modulo.pm_estado','activo')
+            ->orderBy('programa_modulo.pm_nombre')
+            ->orderBy('programa_tipo_calificacion.ptc_id')
+            ->get();
+        
+        // Agrupar las inscripciones por pro_id
+        // $baucheres= ProgramaBaucher::all();
+        // Contar los baucheres por sede usando el sede_id
+       
+        //$mapPersona = MapPersona::paginate(100);
+        return view('backend.pages.calificacion.index', compact(['inscripciones','sede_id', 'modulos', 'calificaciones']));
+    }
+    public function indexx(Request $request)
+    {
+        if (is_null($this->user) || !$this->user->can('calificacion.view')) {
+            abort(403, 'Lo siento !! ¡No estás autorizado a ver ningún calificacion!');
+        }
+
+        $sede_id = $request->sede_id;
+        $pro_id = $request->pro_id;
+        
+        $inscripciones = DB::table('programa_inscripcion')
+            ->join('map_persona', 'programa_inscripcion.per_id', '=', 'map_persona.per_id')
+            ->join('programa', 'programa_inscripcion.pro_id', '=', 'programa.pro_id')
+            ->join('programa_turno', 'programa_inscripcion.pro_tur_id', '=', 'programa_turno.pro_tur_id')
+            ->join('sede', 'programa_inscripcion.sede_id', '=', 'sede.sede_id')
+            ->join('departamento', 'sede.dep_id', '=', 'departamento.dep_id')
+            ->join('programa_inscripcion_estado', 'programa_inscripcion.pie_id', '=', 'programa_inscripcion_estado.pie_id')
+            ->where('sede.sede_id', decrypt($sede_id))
+            ->where('programa.pro_id', decrypt($pro_id))
+            ->select(
+                        'programa_inscripcion.*', 
+                        'map_persona.*', 
+                        'programa.pro_id', 
+                        'programa.pro_nombre', 
+                        'programa.pro_nombre_abre', 
+                        'programa_turno.pro_tur_id', 
+                        'programa_turno.pro_tur_nombre', 
+                        'sede.sede_nombre',
+                        'sede.sede_nombre_abre', 
+                        'departamento.dep_nombre', 
+                        'programa_inscripcion_estado.pie_nombre'
+            )->orderBy("map_persona.per_apellido1");
+        if (!is_null($this->user->pro_ids)) {
+            $proIds = json_decode($this->user->pro_ids);
+            if (!empty($proIds)) { // Verifica si $proIds no está vacío
+                $inscripciones->whereIn('programa.pro_id', $proIds);
+            }
+        }
+        $inscripciones = $inscripciones->get();
+        $calificaciones = DB::table('calificacion_participante')
+                ->join('programa_calificacion', 'calificacion_participante.pc_id', "=", "programa_calificacion.pc_id")
+                ->join('programa_tipo_calificacion', 'programa_calificacion.ptc_id', "=", "programa_tipo_calificacion.ptc_id")
+                ->get();
         $modulos = DB::table('programa_modulo')
             ->join('programa', 'programa.pro_id', "=", "programa_modulo.pro_id")
             ->join('programa_tipo', 'programa.pro_tip_id', "=", "programa_tipo.pro_tip_id")
@@ -131,27 +200,108 @@ class CalificacionController extends Controller
     }
     public function storeCalificacion(Request $request, $pi_id, $pm_id, $pc_id)
     {
-        // Validación de los datos del formulario
+            // Validación de los datos del formulario
         $request->validate([
             'cp_puntaje' => 'required|numeric|min:0|max:100', // Ejemplo de validación
+        ], [
+            'cp_puntaje.required' => 'El campo de puntaje es obligatorio.',
+            'cp_puntaje.numeric'  => 'El puntaje debe ser un número.',
+            'cp_puntaje.min'      => 'El puntaje no puede ser menor que 0.',
         ]);
 
+        
+
+        // Obtener el tipo de programa
+        $programaTipo = DB::table('programa_modulo')
+            ->join('programa', 'programa_modulo.pro_id', '=', 'programa.pro_id')
+            ->join('programa_tipo', 'programa.pro_tip_id', '=', 'programa_tipo.pro_tip_id')
+            ->where('programa_modulo.pm_id', $pm_id) 
+            ->select('programa_tipo.pro_tip_id')
+            ->first();
+            
+        if (!$programaTipo) {
+            return redirect()->back()->with('error', 'Tipo de programa no encontrado.');
+        }
+
+        // Obtener pc_id para el programa total y la segunda instancia
+        $programaTotal = DB::table('programa_calificacion')
+            ->where('pro_tip_id', $programaTipo->pro_tip_id) 
+            ->where('ptc_id', 4)
+            ->select('pc_id')
+            ->first();
+        $programaSegundaInstancia = DB::table('programa_calificacion')
+            ->where('pro_tip_id', $programaTipo->pro_tip_id) 
+            ->where('ptc_id', 3)
+            ->select('pc_id')
+            ->first();
+        if ($programaSegundaInstancia) {
+            // Comprobar si la calificación de segunda instancia ya está en 70
+            $calificacionSegundaInstancia = CalificacionParticipante::where([
+                'pi_id' => $pi_id,
+                'pm_id' => $pm_id,
+                'pc_id' => $programaSegundaInstancia->pc_id
+            ])->first();
+    
+            if ($calificacionSegundaInstancia && $calificacionSegundaInstancia->cp_puntaje == 70) {
+                // Si la segunda instancia ya tiene 70 puntos, impedir la edición y guardar
+                return redirect()->back()->with('error', 'La segunda instancia ya tiene 70 puntos y no se puede modificar.');
+            }
+        }
+        // Obtener los pc_id para excluir
+        $excludedPcIds = [];
+        if ($programaTotal) {
+            $excludedPcIds[] = $programaTotal->pc_id;
+        }
+        if ($programaSegundaInstancia) {
+            $excludedPcIds[] = $programaSegundaInstancia->pc_id;
+        }
         // Buscar la calificación existente o crear una nueva instancia
         $calificacion = CalificacionParticipante::firstOrNew([
             'pi_id' => $pi_id,
             'pm_id' => $pm_id,
             'pc_id' => $pc_id
         ]);
-        // Asegúrate de que pc_id esté asignado
-        $calificacion->pc_id = $pc_id;
+        // Asignar el puntaje del formulario
         $calificacion->pi_id = $pi_id;
         $calificacion->pm_id = $pm_id;
-        // Asignar el puntaje del formulario
+        $calificacion->pc_id = $pc_id;
         $calificacion->cp_puntaje = $request->cp_puntaje;
 
         // Guardar la calificación (ya sea actualización o nueva)
         $calificacion->save();
-
+        // Calcular el total excluyendo los pc_id
+        $total = DB::table('calificacion_participante')
+            ->where('pi_id', $pi_id)
+            ->where('pm_id', $pm_id)
+            ->whereNotIn('pc_id', $excludedPcIds)
+            ->sum('cp_puntaje');
+        if ($programaSegundaInstancia && $calificacion->pc_id == $programaSegundaInstancia->pc_id) {
+            // Si se asigna 70 puntos a la segunda instancia, actualizar el total con 70 puntos
+            $total = 70;
+        }
+        if ($total > 100) {
+            // Redirigir con mensaje de error si el total es mayor a 100
+            return redirect()->back()->with('error', 'El total de puntos no puede ser mayor a 100. No se guardaron los cambios.');
+        }
+        if ($programaTotal) {
+            // Actualizar o crear la calificación para el programa total
+            $calificacionTotal = CalificacionParticipante::firstOrNew([
+                'pi_id' => $pi_id,
+                'pm_id' => $pm_id,
+                'pc_id' => $programaTotal->pc_id,
+            ]);
+            $calificacionTotal->pi_id = $pi_id;
+            $calificacionTotal->pm_id = $pm_id;
+            $calificacionTotal->pc_id = $programaTotal->pc_id;
+            $calificacionTotal->cp_puntaje = $total;
+            // Determinar el estado basado en el puntaje total
+            if ($total < 70) {
+                $calificacionTotal->cp_estado = 'reprobado';
+            } else {
+                $calificacionTotal->cp_estado = 'aprobado';
+            }
+            $calificacionTotal->save();
+        }
         // Redireccionar con mensaje de éxito
         return redirect()->back()->with('success', 'Calificación guardada correctamente.');
     }
@@ -240,53 +390,7 @@ class CalificacionController extends Controller
 
         $pi_id = decrypt($pi_id);
 
-        // Obtener todas las sedes filtradas por sede_ids del usuario
-        // $sede = Sede::when($this->user->sede_ids, function ($query) {
-        //     $sedeIds = json_decode($this->user->sede_ids);
-        //     if (!empty($sedesIds)) { // Verifica si $sedesIds no está vacío
-        //         $query->whereIn('sede_id', $sedeIds);
-        //     }
-        // })->get();
-       
-
-        // // Obtener todos los programas filtrados por pro_ids del usuario
-        // $programa = Programa::when($this->user->pro_ids, function ($query) {
-        //     $proIds = json_decode($this->user->pro_ids);
-        //     if (!empty($proIds)) { // Verifica si $sedesIds no está vacío
-        //         $query->whereIn('pro_id', $proIds);
-        //     }
-        // })->get();
-
-        // Obtener las inscripciones filtradas por pi_id
-        $inscripcion = DB::table('programa_inscripcion')
-            ->join('map_persona', 'programa_inscripcion.per_id', '=', 'map_persona.per_id')
-            ->join('map_especialidad', 'map_persona.esp_id', '=', 'map_especialidad.esp_id')
-            ->join('map_cargo', 'map_persona.car_id', '=', 'map_cargo.car_id')
-            ->join('map_nivel', 'map_persona.niv_id', '=', 'map_nivel.niv_id')
-            ->join('map_categoria', 'map_persona.cat_id', '=', 'map_categoria.cat_id')
-            ->join('map_subsistema', 'map_persona.sub_id', '=', 'map_subsistema.sub_id')
-            ->join('genero', 'map_persona.gen_id', '=', 'genero.gen_id')
-            ->join('programa', 'programa_inscripcion.pro_id', '=', 'programa.pro_id')
-            ->join('programa_turno', 'programa_inscripcion.pro_tur_id', '=', 'programa_turno.pro_tur_id')
-            ->join('sede', 'programa_inscripcion.sede_id', '=', 'sede.sede_id')
-            ->join('programa_inscripcion_estado', 'programa_inscripcion.pie_id', '=', 'programa_inscripcion_estado.pie_id')
-            ->where('programa_inscripcion.pi_id', $pi_id) // Filtrar por pi_id
-            ->select('programa_inscripcion.*', 'map_persona.*', 'map_especialidad.esp_nombre', 'map_cargo.car_nombre',
-                'programa.pro_nombre', 'programa.pro_costo', 'map_subsistema.sub_nombre', 'map_nivel.niv_nombre',
-                'map_categoria.cat_nombre', 'genero.gen_nombre',
-                'programa_turno.pro_tur_nombre', 'sede.sede_nombre', 'programa_inscripcion_estado.pie_nombre')
-            ->first();
-        $sede = Sede::join('departamento', 'sede.dep_id', '=', 'departamento.dep_id')
-            ->where('sede.sede_id', $inscripcion->sede_id)
-            ->select('sede.*', 'departamento.dep_nombre') // Selecciona los campos necesarios
-            ->first();
-        // Obtener todos los programas filtrados por pro_ids del usuario
-        $programa = Programa::where('pro_id', $inscripcion->pro_id)
-            ->select('programa.*') // Selecciona los campos necesarios
-            ->first();
-        // Obtener los bauchers relacionados con la inscripción filtrada por pi_id
-        $bauchers = ProgramaBaucher::where('pi_id', $pi_id)->get();
-        $inscripcionestado = ProgramaInscripcionEstado::all();
+        
         return view('backend.pages.inscripcion.edit', compact('inscripcion', 'programa', 'sede', 'bauchers','inscripcionestado'));
     }
 
@@ -362,147 +466,6 @@ class CalificacionController extends Controller
         // Redireccionar a una ruta adecuada después de editar la inscripción
         return redirect()->route('admin.inscripcion.index', ['sede_id' => encrypt($request->sede_id)])->with('success', 'La inscripción se ha actualizado correctamente.');
     }
-    public function baucherpost(Request $request, $id)
-    {
-        // Validación de los campos
-        $request->validate([
-            'pro_bau_imagen' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:1048',
-            'pro_bau_nro_deposito' => 'required|numeric',
-            'pro_bau_monto' => 'required|numeric',
-            'pro_bau_fecha' => 'required|date',
-            'pro_bau_tipo_pago' => 'required|string|max:255',
-        ], [
-            'pro_bau_imagen.required' => 'La imagen es obligatoria.',
-            'pro_bau_imagen.image' => 'El archivo debe ser una imagen.',
-            'pro_bau_imagen.mimes' => 'La imagen debe ser de tipo: jpeg, png, jpg, gif, svg.',
-            'pro_bau_imagen.max' => 'La imagen no debe superar los 1048 kilobytes.',
-            'pro_bau_nro_deposito.required' => 'El número de depósito es obligatorio si en caso es descuento por planilla coloque 0.',
-            'pro_bau_nro_deposito.numeric' => 'El número de depósito debe ser numérico.',
-            'pro_bau_monto.required' => 'El monto es obligatorio.',
-            'pro_bau_monto.numeric' => 'El monto debe ser numérico.',
-            'pro_bau_fecha.required' => 'La fecha es obligatoria.',
-            'pro_bau_fecha.date' => 'La fecha debe ser una fecha válida.',
-            'pro_bau_tipo_pago.required' => 'El tipo de pago es obligatorio.',
-            'pro_bau_tipo_pago.string' => 'El tipo de pago debe ser una cadena de texto.',
-            'pro_bau_tipo_pago.max' => 'El tipo de pago no debe superar los 255 caracteres.',
-        ]);
-        // Verifica si el número de depósito ya existe en la base de datos
-        $nro_deposito = $request->input('pro_bau_nro_deposito');
-        $pro_bau_tipo_pago = $request->input('pro_bau_tipo_pago');
-        
-        $existingBaucher = ProgramaBaucher::where('pro_bau_nro_deposito', $nro_deposito)->first();
-        if ($existingBaucher && $pro_bau_tipo_pago == "Baucher") {
-            // Redirige con un mensaje de error si el número de depósito ya existe
-            return redirect()->back()->withErrors(['pro_bau_nro_deposito' => 'El número de depósito ya está registrado en el sistema.'])->withInput();
-        }
-        
-        // Encuentra la inscripción
-        $baucher = new ProgramaBaucher();
-        $persona = DB::table('programa_inscripcion')
-            ->join('map_persona', 'programa_inscripcion.per_id', '=', 'map_persona.per_id')
-            ->where('programa_inscripcion.pi_id', $id) // Filtrar por pi_id
-            ->select('map_persona.per_rda')
-            ->first();
-         // Manejo de la imagen
-        if ($request->hasFile('pro_bau_imagen')) {
-            $image = $request->file('pro_bau_imagen');
-            $nro_deposito = $request->input('pro_bau_nro_deposito');
-            $extension = $image->getClientOriginalExtension();
-            $timestamp = date('Ymd_His'); // Formato de fecha y hora
-            if ($pro_bau_tipo_pago == "Descuento por Planilla") {
-                $name = $persona->per_rda . '_' . $timestamp . '.' . $extension; // Nombre encriptado
-            } else {
-                $name = $nro_deposito . '.' . $extension;
-            }
-
-            // Guarda la imagen en storage/app/public/images/bauchers
-            $path = $request->file('pro_bau_imagen')->storeAs('public/bauchers', $name);
-
-            // Generar URL Correcta
-            $baucher->pro_bau_imagen = str_replace('public/', '', $path);
-        }
-
-        // Guarda otros campos
-        $baucher->pi_id = $id;
-        $baucher->pro_bau_nro_deposito = $request->input('pro_bau_nro_deposito');
-        $baucher->pro_bau_monto = $request->input('pro_bau_monto');
-        $baucher->pro_bau_fecha = $request->input('pro_bau_fecha');
-        $baucher->pro_bau_tipo_pago = $request->input('pro_bau_tipo_pago');
-
-        // Guarda la inscripción
-        $baucher->save();
-        // Redirecciona a la página de edición con el ID encriptado de la inscripción
-        $inscripcionId = encrypt($id); // Asegúrate de que $id sea el ID correcto de la inscripción
-        return Redirect::route('admin.inscripcion.edit', ['inscripcion' => $inscripcionId])->with('success', 'El baucher se ha creado correctamente.');
-    }
-    public function baucherUpdate( $pi_id, $pro_bau_id, Request $request)
-    {
-        // Validación de datos del formulario
-        $request->validate([
-            'pro_bau_nro_deposito' => 'required|string',
-            'pro_bau_monto' => 'required|numeric',
-            'pro_bau_fecha' => 'required|date',
-            'pro_bau_tipo_pago' => 'required|string',
-            'pro_bau_imagen' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:1048', // Validación para imagen
-        ], [
-            'required' => 'Este campo es obligatorio.',
-            'pro_bau_nro_deposito.required' => 'El número de depósito es obligatorio.',
-            'pro_bau_nro_deposito.string' => 'El número de depósito debe ser una cadena de texto.',
-            'pro_bau_monto.required' => 'El monto es obligatorio.',
-            'pro_bau_monto.numeric' => 'El monto debe ser numérico.',
-            'pro_bau_fecha.required' => 'La fecha es obligatoria.',
-            'pro_bau_fecha.date' => 'La fecha debe ser una fecha válida.',
-            'pro_bau_tipo_pago.required' => 'El tipo de pago es obligatorio.',
-            'pro_bau_tipo_pago.string' => 'El tipo de pago debe ser una cadena de texto.',
-            'pro_bau_imagen.image' => 'El archivo debe ser una imagen.',
-            'pro_bau_imagen.mimes' => 'La imagen debe ser de tipo: jpeg, png, jpg, gif.',
-            'pro_bau_imagen.max' => 'La imagen no debe superar los 1048 kilobytes.',
-        ]);
-
-        // Obtener el baucher específico por ID
-        $baucher = ProgramaBaucher::findOrFail($pro_bau_id);
-
-        // Actualizar los campos del baucher
-        $baucher->pro_bau_nro_deposito = $request->input('pro_bau_nro_deposito');
-        $baucher->pro_bau_monto = $request->input('pro_bau_monto');
-        $baucher->pro_bau_fecha = $request->input('pro_bau_fecha');
-        $baucher->pro_bau_tipo_pago = $request->input('pro_bau_tipo_pago');
-        $pro_bau_tipo_pago = $request->input('pro_bau_tipo_pago');
-        $persona = DB::table('programa_inscripcion')
-            ->join('map_persona', 'programa_inscripcion.per_id', '=', 'map_persona.per_id')
-            ->where('programa_inscripcion.pi_id', $pi_id) // Filtrar por pi_id
-            ->select('map_persona.per_rda')
-            ->first();
-       // Manejar la subida de imagen si se ha proporcionado una nueva
-        if ($request->hasFile('pro_bau_imagen')) {
-            // Eliminar la imagen anterior si existe
-            if ($baucher->pro_bau_imagen && Storage::exists($baucher->pro_bau_imagen)) {
-                Storage::delete($baucher->pro_bau_imagen);
-            }
-
-            // Guardar la nueva imagen con el mismo nombre basado en pro_bau_nro_deposito
-            $image = $request->file('pro_bau_imagen');
-            $nro_deposito = $request->input('pro_bau_nro_deposito');
-            $extension = $image->getClientOriginalExtension();
-            $timestamp = date('Ymd_His'); // Formato de fecha y hora
-            if ($pro_bau_tipo_pago == "Descuento por Planilla") {
-                $name = $persona->per_rda . '_' . $timestamp . '.' . $extension; // Nombre encriptado
-            } else {
-                $name = $nro_deposito . '.' . $extension;
-            }
-
-            $path = $request->file('pro_bau_imagen')->storeAs('public/bauchers', $name);
-
-            // Generar URL Correcta
-            $baucher->pro_bau_imagen = str_replace('public/', '', $path);
-        }
-        // Guardar los cambios en el baucher
-        $baucher->save();
-
-        // Redirecciona a la página de edición con el ID encriptado de la inscripción
-        $inscripcionId = encrypt($pi_id);
-        return Redirect::route('admin.inscripcion.edit', ['inscripcion' => $inscripcionId])->with('success', 'El baucher se ha actualizado correctamente.');
-    }
     /**
      * Remove the specified resource from storage.
      */
@@ -510,295 +473,64 @@ class CalificacionController extends Controller
     {
         //
     }
-    public function formularioPdf($pi_id)
-    {
-        $pi_id = decrypt($pi_id);
-        // $pp_id = $parametros[0];
-        // $per_rda = $parametros[1];
-
-        $programaInscripcion = DB::table('programa_inscripcion')
-            ->select(
-                'map_persona.per_nombre1',
-                'map_persona.per_nombre2',
-                'map_persona.per_apellido1',
-                'map_persona.per_apellido2',
-                'map_persona.per_ci',
-                'map_persona.per_rda',
-                'map_persona.per_complemento',
-                'map_persona.per_celular',
-                'map_persona.per_correo',
-                'programa_tipo.pro_tip_nombre',
-                'programa.pro_nombre',
-                'departamento.dep_nombre',
-                'sede.sede_nombre',
-                'programa_turno.pro_tur_nombre',
-                'programa_modalidad.pm_nombre',
-                'programa_version.pv_nombre',
-                'programa_version.pv_numero',
-                'programa_inscripcion.*'
-            )
-            ->join('programa_turno', 'programa_turno.pro_tur_id', '=', 'programa_inscripcion.pro_tur_id')
-            ->join('map_persona', 'map_persona.per_id', '=', 'programa_inscripcion.per_id')
-            ->join('programa', 'programa.pro_id', '=', 'programa_inscripcion.pro_id')
-            ->join('sede', 'sede.sede_id', '=', 'programa_inscripcion.sede_id')
-            ->join('departamento', 'departamento.dep_id', '=', 'sede.dep_id')
-            ->join('programa_version', 'programa_version.pv_id', '=', 'programa.pv_id')
-            ->join('programa_tipo', 'programa_tipo.pro_tip_id', '=', 'programa.pro_tip_id')
-            ->join('programa_modalidad', 'programa_modalidad.pm_id', '=', 'programa.pm_id')
-            // ->where('programa.pro_estado', '=', 1)
-            ->where('programa_inscripcion.pi_id', '=', $pi_id)
-            ->get();
-
-        // dd($programaInscripcion);
-
-        $imagen1 = public_path() . "/img/logos/logominedu.jpg";
-        $logo1 = base64_encode(file_get_contents($imagen1));
-
-        $imagen2 = public_path() . "/img/logos/logoprofe.jpg";
-        $logo2 = base64_encode(file_get_contents($imagen2));
-
-        $imagen3 = public_path() . "/img/logos/fondo.jpg";
-        $fondo = base64_encode(file_get_contents($imagen3));
-
-        $imagen4 = public_path() . "/img/iconos/alerta.png";
-        $icono1 = base64_encode(file_get_contents($imagen4));
-
-        $imagen5 = public_path() . "/img/iconos/check.png";
-        $icono2 = base64_encode(file_get_contents($imagen5));
-
-        $datosQr = route('admin.inscripcion.formulariopdf', encrypt($pi_id));
-        $qr = base64_encode(QrCode::format('svg')->size(180)->errorCorrection('H')->generate($datosQr));
-
-        $pdf = Pdf::loadView(
-            'backend/pages/inscripcion/partials/formularioPdf',
-            compact('logo1', 'logo2', 'fondo', 'icono1', 'icono2', 'qr', 'programaInscripcion')
-        );
-        // VERTICAL
-        $pdf->setPaper('Letter', 'portrait');
-        // HORIZONTAL
-        // $pdf->setPaper('Letter', 'landscape');
-        //
-        return $pdf->download('formularioPreinscripcion' . $programaInscripcion[0]->per_rda . '.pdf');
-        // return $pdf->stream('formularioPreinscripcion'.$per_rda.'.pdf');
-    }
-    public function inscripcionPdf($pi_id)
-    {
-        $pi_id = decrypt($pi_id);
-        // $pp_id = $parametros[0];
-        // $per_rda = $parametros[1];
-
-        $programaInscripcion = DB::table('programa_inscripcion')
-            ->select(
-                'map_persona.per_nombre1',
-                'map_persona.per_nombre2',
-                'map_persona.per_apellido1',
-                'map_persona.per_apellido2',
-                'map_persona.per_ci',
-                'map_persona.per_rda',
-                'map_persona.per_complemento',
-                'map_persona.per_celular',
-                'map_persona.per_correo',
-                'programa_tipo.pro_tip_nombre',
-                'programa.pro_id',
-                'programa.pro_nombre',
-                'programa.pro_costo',
-                'programa.pro_carga_horaria',
-                'programa.pro_fecha_inicio_clase',
-                'programa_duracion.pd_nombre',
-                'departamento.dep_nombre',
-                'sede.sede_id',
-                'sede.sede_nombre',
-                'programa_turno.pro_tur_nombre',
-                'programa_modalidad.pm_nombre',
-                'programa_version.pv_nombre',
-                'programa_version.pv_numero',
-                'programa_version.pv_gestion',
-                'programa_inscripcion.*'
-            )
-            ->join('programa_turno', 'programa_turno.pro_tur_id', '=', 'programa_inscripcion.pro_tur_id')
-            ->join('map_persona', 'map_persona.per_id', '=', 'programa_inscripcion.per_id')
-            ->join('programa', 'programa.pro_id', '=', 'programa_inscripcion.pro_id')
-            ->join('programa_duracion', 'programa.pd_id', '=', 'programa_duracion.pd_id')
-            ->join('sede', 'sede.sede_id', '=', 'programa_inscripcion.sede_id')
-            ->join('departamento', 'departamento.dep_id', '=', 'sede.dep_id')
-            ->join('programa_version', 'programa_version.pv_id', '=', 'programa.pv_id')
-            ->join('programa_tipo', 'programa_tipo.pro_tip_id', '=', 'programa.pro_tip_id')
-            ->join('programa_modalidad', 'programa_modalidad.pm_id', '=', 'programa.pm_id')
-            // ->where('programa.pro_estado', '=', 2) //INSCRITO
-            ->where('programa_inscripcion.pi_id', '=', $pi_id)
-            ->first();
-        $programaBauchers = ProgramaBaucher::where('pi_id', '=', $pi_id)->get();
-        $sedeId = (string) $programaInscripcion->sede_id;
-        $responsable = DB::table('admins')
-                ->select(
-                    'admins.nombre',
-                    'admins.apellidos',
-                    'admins.cargo',
-                    'admins.sede_ids'
-                )
-                    ->join('model_has_roles', 'admins.id', 'model_has_roles.model_id')
-                    ->whereJsonContains('admins.sede_ids', $sedeId)
-                    ->where('model_has_roles.role_id', '=', 2)
-                    ->first();
-        if ($responsable) {
-            // Acceder a las propiedades solo si $responsable no es null
-            $nombre = $responsable->nombre;
-            $apellidos = $responsable->apellidos;
-            $cargo = $responsable->cargo;
-        } else {
-            // Manejar el caso en que no se encontró un registro
-            $nombre = 'No encontrado';
-            $apellidos = 'No encontrado';
-            $cargo = 'No encontrado';
-        }
-        // $tutor = DB::table('admins')
-        //         ->select(
-        //             'admins.nombre',
-        //             'admins.apellidos',
-        //             'admins.cargo'
-        //         )
-        //         ->join('model_has_roles', 'admins.id', 'model_has_roles.model_id')
-        //         ->whereJsonContains('admins.pro_ids', $programaInscripcion->pro_id)
-        //         ->where('model_has_roles.role_id', '=', 3)
-        //         ->whereJsonContains('admins.sede_ids', $programaInscripcion->sede_id)
-        //         ->first();
-        // dd($programaInscripcion);
-
-        $imagen1 = public_path() . "/img/logos/logominedu.jpg";
-        $logo1 = base64_encode(file_get_contents($imagen1));
-
-        $imagen2 = public_path() . "/img/logos/logoprofe.jpg";
-        $logo2 = base64_encode(file_get_contents($imagen2));
-
-        $imagen3 = public_path() . "/img/logos/fondo.jpg";
-        $fondo = base64_encode(file_get_contents($imagen3));
-
-        $imagen4 = public_path() . "/img/iconos/alerta.png";
-        $icono1 = base64_encode(file_get_contents($imagen4));
-
-        $imagen5 = public_path() . "/img/iconos/check.png";
-        $icono2 = base64_encode(file_get_contents($imagen5));
-
-        $datosQr = route('admin.inscripcion.inscripcionpdf', encrypt($pi_id));
-        $qr = base64_encode(QrCode::format('svg')->size(180)->errorCorrection('H')->generate($datosQr));
-
-        $pdf = Pdf::loadView(
-            'backend/pages/inscripcion/partials/inscripcionPdf',
-            compact('logo1', 'logo2', 'fondo', 'icono1', 'icono2', 'qr', 'programaInscripcion', 'programaBauchers', 'responsable')
-        );
-        // VERTICAL
-        $pdf->setPaper('Letter', 'portrait');
-        // HORIZONTAL
-        // $pdf->setPaper('Letter', 'landscape');
-        //
-        return $pdf->download('formularioInscripcion' . $programaInscripcion->per_rda . '.pdf');
-        // return $pdf->stream('formularioPreinscripcion'.$per_rda.'.pdf');
-    }
-    public function reporteInscritoPdf($sede_id, $pro_id)
+    public function reporteCalificacionPdf($sede_id, $pro_id, $pm_id, $pro_tur_id)
     {
         
         // Desencriptar los IDs
         $sede_id = decrypt($sede_id);
         $pro_id = decrypt($pro_id);
+        $pm_id = decrypt($pm_id);
+        $pro_tur_id = decrypt($pro_tur_id);
 
-        // dd($sede_id, $pro_id); // Verifica los valores desencriptados
-        $inscripciones = DB::table('programa_inscripcion')
-            ->join('map_persona', 'programa_inscripcion.per_id', '=', 'map_persona.per_id')
-            ->join('map_especialidad', 'map_persona.esp_id', '=', 'map_especialidad.esp_id')
-            ->join('map_cargo', 'map_persona.car_id', '=', 'map_cargo.car_id')
-            ->join('map_nivel', 'map_persona.niv_id', '=', 'map_nivel.niv_id')
-            ->leftJoin('programa_baucher', 'programa_baucher.pi_id', '=', 'programa_inscripcion.pi_id')
-            ->join('map_categoria', 'map_persona.cat_id', '=', 'map_categoria.cat_id')
-            ->join('map_subsistema', 'map_persona.sub_id', '=', 'map_subsistema.sub_id')
-            ->join('genero', 'map_persona.gen_id', '=', 'genero.gen_id')
-            ->join('programa', 'programa_inscripcion.pro_id', '=', 'programa.pro_id')
-            ->join('programa_turno', 'programa_inscripcion.pro_tur_id', '=', 'programa_turno.pro_tur_id')
-            ->join('sede', 'programa_inscripcion.sede_id', '=', 'sede.sede_id')
-            ->join('departamento', 'sede.dep_id', '=', 'departamento.dep_id')
-            ->join('programa_inscripcion_estado', 'programa_inscripcion.pie_id', '=', 'programa_inscripcion_estado.pie_id')
-            ->where('sede.sede_id', $sede_id)
-            ->where('programa_inscripcion.pro_id', $pro_id)  
+        $inscritos = DB::table('programa_inscripcion as pi')
+            ->join('map_persona as per', 'per.per_id', '=', 'pi.per_id')
+            ->join('sede as sede', 'sede.sede_id', '=', 'pi.sede_id')
+            ->join('programa as pro', 'pro.pro_id', '=', 'pi.pro_id')
             ->select(
-                'programa_inscripcion.pi_id', 
-                'programa_inscripcion.pro_id', 
-                'programa_inscripcion.updated_at', 
-                'map_persona.per_id', 
-                'map_persona.gen_id', 
-                'map_persona.esp_id', 
-                'map_persona.cat_id', 
-                'map_persona.car_id', 
-                'map_persona.sub_id', 
-                'map_persona.niv_id',  
-                'map_persona.per_nombre1', 
-                'map_persona.per_nombre2', 
-                'map_persona.per_apellido1', 
-                'map_persona.per_apellido2', 
-                'map_persona.per_rda', 
-                'map_persona.per_ci', 
-                'map_persona.per_complemento', 
-                'map_persona.per_fecha_nacimiento', 
-                'map_persona.per_celular', 
-                'map_persona.per_correo', 
-                'map_persona.per_en_funcion', 
-                'map_especialidad.esp_nombre', 
-                'map_cargo.car_nombre',
-                'programa.pro_nombre', 
-                'programa.pro_nombre_abre', 
-                'programa.pro_costo', 
-                'map_subsistema.sub_nombre', 
-                'map_nivel.niv_nombre',
-                'map_categoria.cat_nombre', 
-                'genero.gen_nombre',
-                'programa_turno.pro_tur_nombre', 
-                'sede.sede_nombre',
-                'sede.sede_nombre_abre', 
-                'departamento.dep_nombre', 
-                'programa_inscripcion_estado.pie_nombre',
-                DB::raw('COALESCE(SUM(programa_baucher.pro_bau_monto), 0) AS total_pagado'),
-                DB::raw('(programa.pro_costo - COALESCE(SUM(programa_baucher.pro_bau_monto), 0)) AS restante'),
-                DB::raw('CASE
-                            WHEN COALESCE(SUM(programa_baucher.pro_bau_monto), 0) >= programa.pro_costo THEN "Completado"
-                            WHEN COALESCE(SUM(programa_baucher.pro_bau_monto), 0) < programa.pro_costo THEN "Incompleto"
-                            ELSE "Desconocido"
-                        END AS estado_pago')
+                'pi.pi_id',
+                'pi.pro_tur_id',
+                'per.per_ci',
+                DB::raw('CONCAT(
+                    COALESCE(per.per_apellido1, ""), " ", 
+                    COALESCE(per.per_apellido2, ""), ", ",
+                    COALESCE(per.per_nombre1, ""), " ", 
+                    COALESCE(per.per_nombre2, "")
+                ) AS nombre_completo'),
+                'sede.sede_nombre'
             )
-            ->groupBy(
-                'programa_inscripcion.pi_id', 
-                'programa_inscripcion.pro_id', 
-                'programa_inscripcion.updated_at', 
-                'map_persona.per_id', 
-                'map_persona.gen_id', 
-                'map_persona.esp_id', 
-                'map_persona.cat_id', 
-                'map_persona.car_id', 
-                'map_persona.sub_id', 
-                'map_persona.niv_id', 
-                'map_persona.per_nombre1', 
-                'map_persona.per_nombre2', 
-                'map_persona.per_apellido1', 
-                'map_persona.per_apellido2', 
-                'map_persona.per_rda', 
-                'map_persona.per_ci', 
-                'map_persona.per_complemento', 
-                'map_persona.per_fecha_nacimiento', 
-                'map_persona.per_celular', 
-                'map_persona.per_correo', 
-                'map_persona.per_en_funcion', 
-                'map_especialidad.esp_nombre', 
-                'map_cargo.car_nombre',
-                'programa.pro_nombre', 
-                'programa.pro_nombre_abre', 
-                'programa.pro_costo', 
-                'map_subsistema.sub_nombre', 
-                'map_nivel.niv_nombre',
-                'map_categoria.cat_nombre',
-                'genero.gen_nombre',
-                'programa_turno.pro_tur_nombre', 
-                'sede.sede_nombre',
-                'sede.sede_nombre_abre', 
-                'departamento.dep_nombre', 
-                'programa_inscripcion_estado.pie_nombre'
-            )->get();
+            ->where('pi.pro_id', '=', $pro_id)
+            ->where('pi.sede_id', '=', $sede_id)
+            ->where('pi.pro_tur_id', '=', $pro_tur_id)
+            ->orderBy('nombre_completo')
+            ->get();
+
+        $calificacion_participantes = DB::table('calificacion_participante as cp')
+            ->join('programa_calificacion as pc', 'pc.pc_id', '=', 'cp.pc_id')
+            ->select('cp.*', 'pc.ptc_id')
+            ->where('cp.pm_id', '=', $pm_id)
+            ->orderBy('cp.pi_id')
+            ->orderBy('cp.cp_puntaje')
+            ->get();
+
+        $datos_programa = DB::table('programa as pro')
+            ->join('programa_version as pv', 'pv.pv_id', '=', 'pro.pv_id')
+            ->join('programa_modalidad as prom', 'prom.pm_id', '=', 'pro.pm_id')
+            ->join('programa_tipo as pt', 'pt.pro_tip_id', '=', 'pro.pro_tip_id')
+            ->join('programa_modulo as pm', 'pm.pro_id', '=', 'pro.pro_id')
+            ->select(
+                'pv.pv_gestion', 
+                DB::raw('UPPER(pv.pv_nombre) as pv_nombre'),
+                'pv.pv_numero',
+                'pro.pro_nombre_abre',
+                'pro.pro_id',
+                DB::raw('UPPER(prom.pm_nombre) as pm_nombre'),
+                DB::raw('UPPER(CONCAT(pt.pro_tip_nombre, ": ", pro.pro_nombre)) as programa_completo'),
+                DB::raw('UPPER(CONCAT(pm.pm_nombre, " - ", pm.pm_descripcion)) as modulo_completo'),
+                'pm.pm_fecha_inicio', 
+                'pm.pm_fecha_fin'
+            )
+            ->where('pm.pm_id', '=', $pm_id)
+            ->first();
         // Obtener responsable
         $sede_id = (string) $sede_id;
         $pro_id = (string) $pro_id;
@@ -849,9 +581,15 @@ class CalificacionController extends Controller
             $facilitador_apellidos = $facilitador->apellidos;
             $facilitador_cargo = $facilitador->name;
         } else {
-            $facilitador_nombre = 'No encontrado';
-            $facilitador_apellidos = 'No encontrado';
-            $facilitador_cargo = 'No encontrado';
+            if ($pro_id == 9){
+                $facilitador_nombre = 'ROXANA';
+                $facilitador_apellidos = 'ARAUJO ALIAGA';
+                $facilitador_cargo = 'FACILITADOR';
+            }else{
+                $facilitador_nombre = 'No encontrado';
+                $facilitador_apellidos = 'No encontrado';
+                $facilitador_cargo = 'No encontrado';
+            }
         }
          
         //
@@ -866,16 +604,24 @@ class CalificacionController extends Controller
 
         $imagen4 = public_path() . "/img/logos/fondo.jpg";
         $fondo = base64_encode(file_get_contents($imagen4));
+        $fechaActual = date('d \d\e M Y h:i a');
+        // Array para traducir los meses de inglés a español
+        $mesesIngles = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        $mesesEspanol = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
 
-
-        $pdf = PDF::loadView('backend.pages.inscripcion.partials.reporteInscritosPdf', compact('inscripciones', 'responsable_nombre', 'responsable_apellidos', 'responsable_cargo',
-        'facilitador_nombre', 'facilitador_apellidos', 'facilitador_cargo','logo1', 'logo2', 'logo3', 'fondo'));
+        // Reemplazar el nombre del mes en inglés por español
+        $fechaActual = str_replace($mesesIngles, $mesesEspanol, $fechaActual);
+        $totalMatriculados = $inscritos->count();
+        $datosQr = 'FAC: '.$facilitador_nombre.' '.$facilitador_apellidos.' |S:'.$sede_id.' |P:'.$pro_id.' |G:'.$pro_tur_id.' |M:'.$pm_id.' |MATRICULADOS:'.$totalMatriculados.' |F: '.$fechaActual;
+        $qr = base64_encode(QrCode::format('svg')->size(100)->errorCorrection('H')->generate($datosQr));
+        $pdf = PDF::loadView('backend.pages.calificacion.partials.reporteCalificacionPdf', compact('inscritos', 'calificacion_participantes', 'datos_programa' , 'responsable_nombre', 'responsable_apellidos', 'responsable_cargo',
+        'facilitador_nombre', 'facilitador_apellidos', 'facilitador_cargo','logo1', 'qr', 'logo2', 'logo3', 'fondo'));
         // VERTICAL
         $pdf->setPaper('Letter', 'portrait');
         // HORIZONTAL
         // $pdf->setPaper('Letter', 'landscape');
         //
-        return $pdf->stream('Reporte' . $inscripciones[0]->pro_nombre_abre . '.pdf');
+        return $pdf->stream('Calificacion' . $datos_programa->pro_nombre_abre . '.pdf');
         // return $pdf->download('mi-archivo.pdf');
     }
 }

@@ -42,7 +42,7 @@ class EventoController extends Controller
     {
         $departamento = Departamento::all();
         $genero = Genero::all();
-        return view('frontend.pages.evento.index_1',[
+        return view('frontend.pages.evento.index_2',[
             'departamentos' => $departamento,
             'generos' => $genero
         ]);

@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Models\Blog;
+use App\Models\Evento;
+use App\Models\Programa;
+
 class HomeController extends Controller
 {
     /**
@@ -18,7 +22,11 @@ class HomeController extends Controller
 
     public function redirectAdmin()
     {
-        return redirect()->route('evento.show');
+        $programas = Programa::where('pro_estado', 'activo')->orderBy('pro_id', 'DESC')->get();
+        $eventos = Evento::where('eve_estado', 'activo')->orderBy('eve_id', 'DESC')->limit(6)->get();
+        $blogs = Blog::where('blog_estado', 'activo')->orderBy('blog_id', 'DESC')->limit(6)->get();
+
+        return view('frontend.pages.inicio.index', compact('programas', 'eventos', 'blogs'));
     }
 
     /**
@@ -28,6 +36,10 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $programas = Programa::where('pro_estado', 'activo')->orderBy('pro_id', 'DESC')->get();
+        $eventos = Evento::where('eve_estado', 'activo')->orderBy('eve_id', 'DESC')->limit(6)->get();
+        $blogs = Blog::where('blog_estado', 'activo')->orderBy('blog_id', 'DESC')->limit(6)->get();
+
+        return view('frontend.pages.inicio.index', compact('programas', 'eventos', 'blogs'));
     }
 }

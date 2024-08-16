@@ -29,7 +29,7 @@ return new class extends Migration
                 ->onDelete('cascade')
                 ->references('pc_id')
                 ->on('programa_calificacion');
-            $table->enum('cp_estado', ['activo', 'inactivo', 'eliminado'])->default('activo');
+            $table->enum('cp_estado', ['aprobado', 'reprobado', 'baja'])->default('aprobado');
             $table->timestamps();
         });
     }

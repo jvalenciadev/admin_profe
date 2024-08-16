@@ -66,25 +66,32 @@
                                     <div class="sub-title">{{ $inscripciones->first()->dep_nombre ?? '' }} -
                                         {{ $inscripciones->first()->sede_nombre ?? 'Nombre de Sede' }}
                                     </div>
-                                        <!-- El resto de tu contenido aquí -->
+                                    <!-- El resto de tu contenido aquí -->
                                     @include('backend.layouts.partials.messages')
-                                    
+
                                     <ul class="nav nav-tabs tabs" role="tablist" id="calificacionTabs">
-                                        @foreach ($inscripciones->groupBy('pro_id') as $pro_id => $inscripcionesGrouped)
-                                            <li class="nav-item">
-                                                <a class="nav-link" data-toggle="tab"
-                                                    href="#tab_{{ $pro_id }}" role="tab">
-                                                    {{ $inscripcionesGrouped->first()->pro_nombre_abre }}
-                                                </a>
-                                                <div class="slide"></div>
-                                            </li>
-                                        @endforeach
+                                        @if ($inscripciones->groupBy('pro_tur_id')->count() > 1)
+                                            @foreach ($inscripciones->groupBy('pro_tur_id') as $pro_tur_id => $inscripcionesGrouped)
+                                                <li class="nav-item">
+                                                    <a class="nav-link" data-toggle="tab" href="#tab_{{ $pro_tur_id }}"
+                                                        role="tab">
+                                                        {{ $inscripcionesGrouped->first()->pro_tur_nombre ?? '' }}
+                                                    </a>
+                                                    <div class="slide"></div>
+                                                </li>
+                                            @endforeach
+                                        @else
+                                            <h6>
+                                                <strong>{{ $inscripciones->first()->pro_tur_nombre ?? '' }}</strong>
+                                            </h6>
+                                        @endif
                                     </ul>
                                     <br>
                                     <div class="tab-content tabs">
-                                        @foreach ($inscripciones->groupBy('pro_id') as $pro_id => $inscripcionesGrouped)
-                                            <div class="tab-pane"
-                                            id="tab_{{ $pro_id }}" role="tabpanel">
+                                        @foreach ($inscripciones->groupBy('pro_tur_id') as $pro_tur_id => $inscripcionesGrouped)
+                                            <div class="tab-pane {{ $inscripciones->groupBy('pro_tur_id')->count() > 1 ? '' : 'active' }}"
+                                                id="tab_{{ $pro_tur_id }}" role="tabpanel">
+
                                                 <div class="d-flex justify-content-between align-items-center mb-3">
                                                     {{-- <h5 class="mb-0">{{ $inscripcionesGrouped->first()->pro_nombre }}</h5> --}}
                                                     <div>
@@ -92,9 +99,11 @@
                                                             $shownModules = [];
                                                         @endphp
                                                         @foreach ($modulos as $modulo)
-                                                            @if ($modulo->pro_id == $pro_id && !in_array($modulo->pm_id, $shownModules))
-                                                                <a target="_blank" href="" class="btn btn-outline-danger waves-effect waves-light">
-                                                                    <i class="icofont icofont-file-pdf"></i> {{$modulo->pm_nombre}}
+                                                            @if ($modulo->pro_id == $inscripciones->first()->pro_id && !in_array($modulo->pm_id, $shownModules))
+                                                                <a target="_blank" href="{{ route('admin.calificacion.reportecalificacionpdf', ['sede_id' => $sede_id, 'pro_id' => encrypt($modulo->pro_id),'pm_id' => encrypt($modulo->pm_id),'pro_tur_id' => encrypt($pro_tur_id)]) }}"
+                                                                    class="btn btn-outline-danger waves-effect waves-light">
+                                                                    <i class="icofont icofont-file-pdf"></i>
+                                                                    {{ $modulo->pm_nombre }}
                                                                 </a>
                                                                 @php
                                                                     $shownModules[] = $modulo->pm_id;
@@ -104,21 +113,22 @@
                                                     </div>
                                                 </div>
                                                 <div class="dt-responsive table-responsive">
-                                                    
+
                                                     <table id="dataTable{{ $loop->index }}"
-                                                        class="table table-striped table-bordered nowrap" >
+                                                        class="table table-striped table-bordered nowrap">
                                                         <thead>
                                                             <tr>
                                                                 <th>Nro</th>
                                                                 <th>CI</th>
                                                                 <th>Nombre</th>
                                                                 @foreach ($modulos as $modulo)
-                                                                    @if ($modulo->pro_id == $pro_id)
-                                                                        <th>{{$modulo->pm_nombre}}: {{ $modulo->ptc_nombre}} ({{$modulo->ptc_nota}} ptos.)</th>
+                                                                    @if ($modulo->pro_id == $inscripciones->first()->pro_id)
+                                                                        <th>{{ $modulo->pm_nombre }}:
+                                                                            {{ $modulo->ptc_nombre }}
+                                                                            ({{ $modulo->ptc_nota }} ptos.)
+                                                                        </th>
                                                                     @endif
                                                                 @endforeach
-                                                                <th>Estado</th>
-                                                                <th>Acciones</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody>
@@ -127,55 +137,75 @@
                                                                     <td>{{ $loop->index + 1 }}</td>
                                                                     <td>
                                                                         {{ $inscripcion->per_ci }}
-                                                                        
+
                                                                     </td>
-                                                                    
+
                                                                     <td>
+                                                                        {{ $inscripcion->per_apellido1 }}
+                                                                        {{ $inscripcion->per_apellido2 }},
                                                                         {{ $inscripcion->per_nombre1 }}
                                                                         {{ $inscripcion->per_nombre2 }}
-                                                                        {{ $inscripcion->per_apellido1 }}
-                                                                        {{ $inscripcion->per_apellido2 }}
                                                                     </td>
-                                                                    @foreach ($modulos as $modulo)
-                                                                        @if ($modulo->pro_id == $pro_id)
-                                                                            @php
-                                                                                $calificacion = $calificaciones->where('pm_id', $modulo->pm_id)->where('pi_id', $inscripcion->pi_id)->where('pc_id', $modulo->pc_id)->first();
-                                                                                $rowColor = $modulo->pm_id % 2 == 0 ? '#ffe7b8' : '#ffeadb';
-                                                                            @endphp
-                                                                           <td style="background-color: {{ $rowColor }}" onclick="makeEditable(this)">
+                                                                    @php
+                                                                        $filteredModulos = $modulos->where(
+                                                                            'pro_id',
+                                                                            $inscripciones->first()->pro_id,
+                                                                        );
+                                                                        $totalPuntaje = 0;
+                                                                    @endphp
+                                                                    @foreach ($filteredModulos as $modulo)
+                                                                        @php
+                                                                            $calificacion = $calificaciones
+                                                                                ->where('pm_id', $modulo->pm_id)
+                                                                                ->where('pi_id', $inscripcion->pi_id)
+                                                                                ->where('pc_id', $modulo->pc_id)
+                                                                                ->first();
+                                                                            // Sumar puntajes para ptc_id 1 y 2
+                                                                            if (in_array($modulo->ptc_id, [1, 2])) {
+                                                                                $totalPuntaje += $calificacion->cp_puntaje ?? 0;
+                                                                            }
+                                                                        @endphp
+                                                                       @if ($modulo->ptc_id != 3 && $modulo->ptc_id != 4)
+                                                                            <td style="background-color: #e4fbed" onclick="makeEditable(this)">
                                                                                 <span class="display-mode">{{ $calificacion->cp_puntaje ?? 0 }}</span>
-                                                                                <form action="{{ route('admin.calificacion.storecalificacion', 
-                                                                                    ['pi_id' => $inscripcion->pi_id, 'pm_id' => $modulo->pm_id, 'pc_id' => $modulo->pc_id]) }}" 
-                                                                                    method="POST" class="edit-mode" style="display:none;" onsubmit="submitForm(this); return false;">
+                                                                                <form action="{{ route('admin.calificacion.storecalificacion', [
+                                                                                    'pi_id' => $inscripcion->pi_id,
+                                                                                    'pm_id' => $modulo->pm_id,
+                                                                                    'pc_id' => $modulo->pc_id,
+                                                                                ]) }}" method="POST" class="edit-mode" style="display:none;" onsubmit="submitForm(this); return false;">
                                                                                     @csrf
-                                                                                    <input class="form-control input-sm" 
-                                                                                        type="text" 
-                                                                                        name="cp_puntaje" 
-                                                                                        id="cp_puntaje" 
-                                                                                        value="{{ $calificacion->cp_puntaje ?? 0 }}"
-                                                                                        onblur="exitEditMode(this)" 
-                                                                                        onkeypress="handleKeyPress(event, this)">
+                                                                                    <input class="form-control input-sm" type="text" name="cp_puntaje"
+                                                                                        id="cp_puntaje" value="{{ $calificacion->cp_puntaje ?? 0 }}"
+                                                                                        data-max="{{ $modulo->ptc_nota }}"
+                                                                                        onblur="exitEditMode(this)" onkeypress="handleKeyPress(event, this)" oninput="validateInput(this)">
                                                                                 </form>
                                                                             </td>
                                                                         @endif
+                                                                    
+                                                                        @if ($modulo->ptc_id == 3)
+                                                                        <td style="background-color: #acffcf">
+                                                                            @if ($totalPuntaje < 70 && $totalPuntaje > 0)
+                                                                                <form action="{{ route('admin.calificacion.storecalificacion', [
+                                                                                    'pi_id' => $inscripcion->pi_id,
+                                                                                    'pm_id' => $modulo->pm_id,
+                                                                                    'pc_id' => $modulo->pc_id,
+                                                                                ]) }}" method="POST" style="display:inline;">
+                                                                                    @csrf
+                                                                                    <input type="hidden" name="cp_puntaje" value="70">
+                                                                                    <button type="submit" class="btn btn-outline-success waves-effect waves-light"
+                                                                                        onclick="return confirm('¿Estás seguro de que quieres asignar 70 puntos?');">
+                                                                                        Asignar 70 puntos
+                                                                                    </button>
+                                                                                </form>
+                                                                            @endif
+                                                                        </td>
+                                                                        @endif
+                                                                        @if ($modulo->ptc_id == 4)
+                                                                            <td style="background-color: #4bf190">
+                                                                                {{ $calificacion->cp_puntaje ?? 0 }}
+                                                                            </td>
+                                                                        @endif
                                                                     @endforeach
-                                                                    <td>
-                                                                        APROBADO
-                                                                    </td>
-                                                                    <td>
-                                                                        @if (Auth::guard('admin')->user()->can('calificacion.edit'))
-                                                                            <a href="{{ route('admin.inscripcion.edit', encrypt($inscripcion->pi_id)) }}"
-                                                                                class="btn btn-outline-info waves-effect waves-light m-r-20">
-                                                                                <i class="icofont icofont-pencil-alt-5"></i>
-                                                                            </a>
-                                                                        @endif
-                                                                        @if (Auth::guard('admin')->user()->can('calificacion.delete'))
-                                                                            <a href="{{ route('admin.inscripcion.edit', encrypt($inscripcion->pi_id)) }}"
-                                                                                class="btn btn-outline-danger waves-effect waves-light m-r-20">
-                                                                                <i class="icofont icofont-ui-delete"></i>
-                                                                            </a>
-                                                                        @endif
-                                                                    </td>
                                                                 </tr>
                                                             @endforeach
                                                         </tbody>
@@ -203,62 +233,140 @@
 
 
 @section('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var tabLinks = document.querySelectorAll('#calificacionTabs .nav-link');
-        var activeTabIndex = localStorage.getItem('activeTabIndex');
-        
-        if (activeTabIndex !== null) {
-            tabLinks[activeTabIndex].classList.add('active');
-            document.querySelector(tabLinks[activeTabIndex].getAttribute('href')).classList.add('active');
-        } else {
-            tabLinks[0].classList.add('active');
-            document.querySelector(tabLinks[0].getAttribute('href')).classList.add('active');
-        }
+    <script>
+        function validateInput(input) {
+            const max = parseInt(input.dataset.max);
+            const value = parseInt(input.value) || 0;
 
-        tabLinks.forEach(function (link, index) {
-            link.addEventListener('click', function () {
-                localStorage.setItem('activeTabIndex', index);
+            if (value > max) {
+                alert(`No puedes ingresar más de ${max} puntos.`);
+                input.value = max; // Opcional: Ajusta el valor al máximo permitido
+            }
+        }
+        document.addEventListener("DOMContentLoaded", function() {
+            const puntajeInputs = document.querySelectorAll('.puntaje-input');
+            const totalPuntajeElement = document.getElementById('totalPuntaje');
+            const inputTotalPuntaje = document.getElementById('inputTotalPuntaje');
+            const asignar70Btn = document.querySelector('.asignar-70-btn');
+
+            puntajeInputs.forEach(input => {
+                input.addEventListener('input', function() {
+                    calculateTotal();
+                });
+            });
+
+            if (asignar70Btn) {
+                asignar70Btn.addEventListener('click', function() {
+                    setTotalPuntaje(70);
+                });
+            }
+
+            function calculateTotal() {
+                let total = 0;
+                puntajeInputs.forEach(input => {
+                    const ptcId = parseInt(input.dataset.ptcId);
+                    const value = parseInt(input.value) || 0;
+
+                    if ([1, 2].includes(ptcId)) {
+                        total += value;
+                    }
+                });
+
+                if (total >= 70) {
+                    setTotalPuntaje(total);
+                } else if (total === 0) {
+                    setTotalPuntaje(0);
+                } else {
+                    totalPuntajeElement.textContent = total;
+                    inputTotalPuntaje.value = total;
+                }
+            }
+
+            function setTotalPuntaje(value) {
+                totalPuntajeElement.textContent = value;
+                inputTotalPuntaje.value = value;
+                document.getElementById('autoSaveForm_{{ $modulo->pm_id ??""}}').submit();
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var tabLinks = document.querySelectorAll('#calificacionTabs .nav-link');
+            var activeTabIndex = localStorage.getItem('activeTabIndex');
+
+            if (activeTabIndex !== null && activeTabIndex < tabLinks.length) {
+                // Desactiva todas las pestañas y contenidos primero
+                tabLinks.forEach(link => {
+                    link.classList.remove('active');
+                    document.querySelector(link.getAttribute('href')).classList.remove('active', 'show');
+                });
+
+                // Activa la pestaña almacenada en localStorage
+                tabLinks[activeTabIndex].classList.add('active');
+                document.querySelector(tabLinks[activeTabIndex].getAttribute('href')).classList.add('active',
+                    'show');
+            } else {
+                // Si no hay una pestaña almacenada o si el índice es inválido, activa la primera por defecto
+                tabLinks[0].classList.add('active');
+                document.querySelector(tabLinks[0].getAttribute('href')).classList.add('active', 'show');
+            }
+
+            tabLinks.forEach(function(link, index) {
+                link.addEventListener('click', function() {
+                    // Almacena el índice de la pestaña clickeada
+                    localStorage.setItem('activeTabIndex', index);
+
+                    // Desactiva todas las pestañas y contenidos
+                    tabLinks.forEach(l => {
+                        l.classList.remove('active');
+                        document.querySelector(l.getAttribute('href')).classList.remove(
+                            'active', 'show');
+                    });
+
+                    // Activa la pestaña clickeada y su contenido
+                    link.classList.add('active');
+                    document.querySelector(link.getAttribute('href')).classList.add('active',
+                        'show');
+                });
             });
         });
-    });
-    function makeEditable(td) {
-        const span = td.querySelector('.display-mode');
-        const form = td.querySelector('.edit-mode');
-        
-        span.style.display = 'none';
-        form.style.display = 'block';
-        form.querySelector('input').focus();
-    }
 
-    function exitEditMode(input) {
-        const td = input.closest('td');
-        const span = td.querySelector('.display-mode');
-        const form = td.querySelector('.edit-mode');
-        
-        span.style.display = 'block';
-        form.style.display = 'none';
-    }
+        function makeEditable(td) {
+            const span = td.querySelector('.display-mode');
+            const form = td.querySelector('.edit-mode');
 
-    function handleKeyPress(event, input) {
-        if (event.key === 'Enter') {
-            input.form.submit();
+            span.style.display = 'none';
+            form.style.display = 'block';
+            form.querySelector('input').focus();
         }
-    }
 
-    function submitForm(form) {
-        // Aquí puedes manejar la lógica de envío del formulario.
-        // Puedes usar AJAX para enviar los datos sin recargar la página.
-        
-        const td = form.closest('td');
-        const span = td.querySelector('.display-mode');
-        
-        // Actualiza el texto del <span> con el nuevo valor
-        span.textContent = form.querySelector('input').value;
-        
-        exitEditMode(form.querySelector('input'));
-    }
-</script>
+        function exitEditMode(input) {
+            const td = input.closest('td');
+            const span = td.querySelector('.display-mode');
+            const form = td.querySelector('.edit-mode');
+
+            span.style.display = 'block';
+            form.style.display = 'none';
+        }
+
+        function handleKeyPress(event, input) {
+            if (event.key === 'Enter') {
+                input.form.submit();
+            }
+        }
+
+        function submitForm(form) {
+            // Aquí puedes manejar la lógica de envío del formulario.
+            // Puedes usar AJAX para enviar los datos sin recargar la página.
+
+            const td = form.closest('td');
+            const span = td.querySelector('.display-mode');
+
+            // Actualiza el texto del <span> con el nuevo valor
+            span.textContent = form.querySelector('input').value;
+
+            exitEditMode(form.querySelector('input'));
+        }
+    </script>
     <script src="{{ asset('backend/files/bower_components/datatables.net/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('backend/files/bower_components/datatables.net-buttons/js/dataTables.buttons.min.js') }}">
     </script>
@@ -269,7 +377,7 @@
     <script src="{{ asset('backend/files/assets/pages/data-table/js/dataTables.bootstrap4.min.js') }}"></script>
     <script src="{{ asset('backend/files/bower_components/datatables.net-responsive/js/dataTables.responsive.min.js') }}">
     </script>
-  
+
     <script
         src="{{ asset('backend/files/bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js') }}">
     </script>
@@ -278,14 +386,14 @@
         $(document).ready(function() {
             // Inicializar las tablas
             var tables = [];
-            @foreach ($inscripciones->groupBy('pro_id') as $pro_id => $inscripcionesGrouped)
+            @foreach ($inscripciones->groupBy('pro_tur_id') as $pro_tur_id => $inscripcionesGrouped)
                 var table{{ $loop->index }} = $('#dataTable{{ $loop->index }}').DataTable({
                     responsive: false,
                     searching: true // Activa la búsqueda interna de DataTables
                 });
                 tables.push(table{{ $loop->index }});
             @endforeach
-    
+
             // Configurar el buscador general
             $('#searchInput').on('keyup', function() {
                 var searchValue = $(this).val().toLowerCase();
@@ -298,6 +406,4 @@
             });
         });
     </script>
-    
-    
 @endsection
