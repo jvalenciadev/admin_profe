@@ -33,14 +33,22 @@ use App\Http\Controllers\Backend\InscripcionController;
 
 
 Route::post('/evento/registrar', 'Frontend\EventoController@storeParticipante')->name('evento.storeParticipante');
+Route::post('/ofertas-academicas/registrar', 'Frontend\ProgramaController@storeParticipante')->name('programa.storeParticipante');
+Route::get('/ofertas-academicas/inscribirse', 'Frontend\ProgramaController@viewInscribirse')->name('programa.inscribirse');
+Route::post('/ofertas-academicas/inscribirse', 'Frontend\ProgramaController@postInscribirse')->name('programa.postInscribirse');
 Route::get('/evento/inscribirse', 'Frontend\EventoController@viewInscribirse')->name('evento.inscribirse');
 Route::post('/evento/inscribirse', 'Frontend\EventoController@postInscribirse')->name('evento.postInscribirse');
 
 Route::post('/evento/asistencia', 'Frontend\EventoController@storeAsistencia')->name('evento.storeAsistencia');
 
-Route::get('/logout', 'Frontend\EventoController@logout')->name('evento.logout');
+Route::get('/logout-evento', 'Frontend\EventoController@logout')->name('evento.logout');
+Route::get('/logout-programa', 'Frontend\ProgramaController@logout')->name('programa.logout');
 
 
+Route::get('ofertas-academicas/comprobanteParticipante/{per_id}/{pro_id}','Frontend\ProgramaController@comprobanteParticipante')->name('programa.comprobanteParticipante');
+Route::get('ofertas-academicas/comprobanteParticipantePdf/{per_id}/{pro_id}', 'Frontend\ProgramaController@comprobanteParticipantePdf')->name('programa.comprobanteParticipantePdf');
+Route::get('ofertas-academicas/compromisoParticipantePdf/{per_id}/{pro_id}', 'Frontend\ProgramaController@compromisoParticipantePdf')->name('programa.compromisoParticipantePdf');
+Route::get('ofertas-academicas/rotuloParticipantePdf/{per_id}/{pro_id}', 'Frontend\ProgramaController@rotuloParticipantePdf')->name('programa.rotuloParticipantePdf');
 Route::get('evento/comprobanteParticipante/{eve_per_id}/{eve_id}','Frontend\EventoController@comprobanteParticipante')->name('evento.comprobanteParticipante');
 Route::get('evento/comprobanteParticipantePdf/{eve_per_id}/{eve_id}', 'Frontend\EventoController@comprobanteParticipantePdf')->name('evento.comprobanteParticipantePdf');
 
@@ -56,6 +64,11 @@ Route::get('/', 'HomeController@index')->name('home');
 Route::group(['prefix' => 'ofertas-academicas', 'controller' => 'Frontend\ProgramaController'], function () {
     Route::get('/', 'index')->name('programa');
     Route::get('/{pro_id}', 'show')->name('programa.show');
+    Route::get('/inscripcion/{pro_id}', 'inscripcion')->name('programaInscripcion');
+
+    // Rutas para AJAX
+    Route::get('/get-sedes/{dep_id}/{pro_id}', 'getSedes')->name('programa.getSedes');
+    Route::get('/get-turnos/{sede_id}/{pro_id}', 'getTurnos')->name('programa.getTurnos');
 });
 Route::group(['prefix' => 'profebotics', 'controller' => 'Frontend\BoticsController'], function () {
     Route::get('/', 'index')->name('profebotics');
@@ -66,6 +79,16 @@ Route::group(['prefix' => 'comunicado', 'controller' => 'Frontend\ComunicadoCont
     Route::get('/', 'index')->name('comunicado');
     Route::get('/{pro_id}', 'show')->name('comunicado.show');
 });
+Route::group(['prefix' => 'sedes', 'controller' => 'Frontend\SedeController'], function () {
+    Route::get('/', 'index')->name('sede');
+    Route::get('/{sede_id}', 'show')->name('sede.show');
+});
+Route::group(['prefix' => 'videos', 'controller' => 'Frontend\VideosController'], function () {
+    Route::get('/', 'index')->name('videos');
+});
+Route::group(['prefix' => 'quienesSomos', 'controller' => 'Frontend\QuienesSomosController'], function () {
+    Route::get('/', 'index')->name('quienesSomos');
+});
 
 Route::get('/reload-captcha', 'Frontend\EventoController@reloadCaptcha')->name('reload-captcha');
 
@@ -75,13 +98,13 @@ Route::group(['prefix' => 'evento', 'controller' => 'Frontend\EventoController']
     Route::get('/inscripcion/{eve_id}', 'inscripcion')->name('eventoInscripcion');
 
     // ASISTENCIA EVENTO
-    
+
     Route::get('/asistencia/{eve_id}', 'asistencia')->name('eventoAsistencia');
     Route::get('/{eve_id}', 'evento')->name('evento.show');
 });
 
 
-//VERIFICAR 
+//VERIFICAR
 Route::group(['prefix' => 'barcode', 'controller' => 'Backend\VerificarBarcodeController'], function () {
     Route::get('/certificado-nota/{barcode}', 'verificarCertificadoNota')->name('verificarCertificadoNota');
 });
@@ -151,14 +174,14 @@ Route::group(['prefix' => 'admin'], function () {
     Route::resource('blog', 'Backend\BlogController', ['names' => 'admin.blog']);
     Route::resource('galeria', 'Backend\GaleriaController', ['names' => 'admin.galeria']);
     Route::resource('comunicado', 'Backend\ComunicadoController', ['names' => 'admin.comunicado']);
-    
+
     // Estados
     Route::get('responsable/estado/{resp_profe_id}', 'Backend\ResponsableController@estado')->name('admin.responsable.estado');
     Route::get('programa/estado/{pro_id}', 'Backend\ProgramaController@estado')->name('admin.programa.estado');
     Route::get('evento/estado/{eve_id}', 'Backend\EventoController@estado')->name('admin.evento.estado');
     Route::get('blog/estado/{blog_id}', 'Backend\BlogController@estado')->name('admin.blog.estado');
     Route::get('galeria/estado/{galeria_id}', 'Backend\GaleriaController@estado')->name('admin.galeria.estado');
-    
+
     Route::get('comunicado/estado/{comun_id}', 'Backend\ComunicadoController@estado')->name('admin.comunicado.estado');
 
 
@@ -173,7 +196,7 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('calificacioninvestigacion/{sede_id}/{pro_id}', 'Backend\CalificacionController@investigacion')->name('admin.calificacion.investigacion');
     Route::get('calificacionx/{sede_id}/{pro_id}', 'Backend\CalificacionController@indexxx')->name('admin.calificacion.indexxx');
     Route::post('calificacion/{pi_id}/{pm_id}/{pc_id}', 'Backend\CalificacionController@storeCalificacion')->name('admin.calificacion.storecalificacion');
-   
+
     //Route::post('inscripcion', [InscripcionController::class, 'store'])->name('admin.inscripcion.store');
     //Route::get('inscripcion/{id}/edit', [InscripcionController::class, 'edit'])->name('admin.inscripcion.edit');
     Route::put('residencia-nacimiento/{per_id}', 'Backend\InscripcionController@datosNacimientoResidencia')->name('admin.datosnacres.update');
@@ -214,8 +237,8 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('/acta-conclusion-pdf/{pi_id}', 'Backend\ActaConclusionController@gereararActaConclusionpdf')->name('admin.participante.actaconclusionpdf');
     Route::get('/certificado-notas-pdf/{pi_id}', 'Backend\ActaConclusionController@gereararCertificadoNotaspdf')->name('admin.participante.certificadonotanpdf');
     Route::get('/registro-universitario-pdf/{pi_id}', 'Backend\ActaConclusionController@gereararRegistroUniversitariopdf')->name('admin.participante.registrouniversitariopdf');
-   
-   
+
+
     Route::get('/participantes', 'Backend\ActaConclusionController@indexParticipantes')->name('admin.participantes.index');
     Route::post('/guardar-acta', 'Backend\ActaConclusionController@guardarActa')->name('admin.guardar.acta');
     Route::post('/certificacion-diplomado', 'Backend\ActaConclusionController@guardarCertificado')->name('admin.guardar.certificado');

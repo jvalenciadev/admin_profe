@@ -26,7 +26,7 @@
             /* Añade sombra */
         }
 
-        
+
     </style>
     <section class="breadcrumb-area d-flex  p-relative align-items-center">
         <div class="container">
@@ -56,19 +56,52 @@
                     <div class="text-column col-lg-9 col-md-9 col-sm-12">
                         <div class="upper-box">
                             <div class="single-item-carousel owl-carousel owl-theme">
-                                    <img 
+                                    <img
                                         src="{{ asset('storage/programa_banners/' . $programa->pro_banner) }}"
                                        />
                             </div>
                         </div>
                         <div class="inner-column">
-                           
+
                             <div>
                                 {!! $programa->pro_contenido !!}
                             </div>
-                            
+
                         </div>
-                        
+                        <br><br>
+                        <div class="container">
+                            <div class="portfolio">
+                                <div class="row align-items-end mb-50">
+                                    <div class="col-lg-12">
+                                        <div class="my-masonry text-center">
+                                            <div class="button-group filter-button-group">
+                                                <button class="active" data-filter="*">Ver Todos</button>
+                                                @foreach($galeriasPorPrograma as $sede_id => $galerias)
+                                                    <button data-filter=".{{ $sede_id }}">{{ $galerias->first()->sede_nombre_abre }}</button>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="grid col3">
+                                    @foreach($galeriasPorPrograma as $galerias)
+                                        @foreach($galerias as $galeria)
+                                            <div class="grid-item {{ $galeria->sede_id }}">
+                                                <a href="{{ asset('storage/galeria/' . $galeria->galeria_imagen) }}" class="image-popup">
+                                                    <figure class="gallery-image">
+                                                        <img src="{{ asset('storage/galeria/' . $galeria->galeria_imagen) }}" alt="{{ $galeria->pro_nombre_abre }}" />
+                                                        <figcaption>
+                                                            <h4>{{ $galeria->sede_nombre_abre }}</h4>
+                                                        </figcaption>
+                                                    </figure>
+                                                </a>
+                                            </div>
+                                        @endforeach
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="col-lg-3">
                         <aside class="sidebar-widget info-column">
@@ -107,21 +140,32 @@
                                     </li>
                                     {{-- <li> <span class="icon fal fa-user"></span> <strong>Inscritos: </strong> <span>20
                                             students</span></li> --}}
-                                    <li> <span class="icon fal fa-users"></span> <strong>Versión: </strong>
-                                        <span>{{ $programa->version->pv_nombre }}
-                                            {{ $programa->version->pv_numero }}</span>
-                                    </li>
+
                                     <li> <span class="icon fal fa-users"></span> <strong>Tipo: </strong>
                                         <span>{{ $programa->tipo->pro_tip_nombre }}</span>
                                     </li>
                                     <li> <span class="icon fal fa-globe"></span> <strong>Modalidad: </strong>
                                         <span>{{ $programa->modalidad->pm_nombre }}</span>
                                     </li>
-                                    {{-- <li>
-                                        <div class="slider-btn"> <a href="../../contact/index.html"
-                                                class="btn ss-btn smoth-scroll"> Inscríbete <i
-                                                    class="fal fa-long-arrow-right"></i> </a></div>
-                                    </li> --}}
+
+
+                                    <li> <span class="icon fal fa-users"></span> <strong>Versión: </strong>
+                                        <span>
+                                            {{ $programa->version->pv_romano }} - {{ $programa->version->pv_gestion }}  </span>
+                                    </li>
+                                    @if (now()->between(
+                                        Carbon::parse($programa->pro_fecha_inicio_inscripcion),
+                                        Carbon::parse($programa->pro_fecha_fin_inscripcion)
+                                    ))
+                                        <li>
+                                            <div class="slider-btn">
+                                                <a href="{{ route('programaInscripcion', $programa->pro_id) }}"
+                                                class="btn ss-btn smoth-scroll">
+                                                Inscríbete <i class="fal fa-long-arrow-right"></i>
+                                                </a>
+                                            </div>
+                                        </li>
+                                    @endif
                                 </ul>
                             </div>
                         </aside>
@@ -130,4 +174,17 @@
             </div>
         </div>
     </section> <!--End Project Detail -->
+@endsection
+
+@section('scripts')
+    <script>
+        $(document).ready(function() {
+            $('.image-popup').magnificPopup({
+                type: 'image',
+                gallery: {
+                    enabled: true // Habilitar la galería para navegar entre las imágenes
+                }
+            });
+        });
+    </script>
 @endsection

@@ -20,9 +20,9 @@
                                             data-animation="fadeInDown" data-delay=".4s">
                                             <h5>
                                                 <i class="fal fa-graduation-cap"></i>
-                                                Nuestros programas
+                                                Nuestros ofertas
                                             </h5>
-                                            <h2> PROGRAMAS</h2>
+                                            <h2>Ofertas Académicas</h2>
                                         </div>
                                     </div>
                                 </div>

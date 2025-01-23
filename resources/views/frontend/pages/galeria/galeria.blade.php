@@ -164,14 +164,14 @@
                                     <div>
                                         {!! $blog->blog_descripcion !!}
                                     </div>
-                                    
-                                    
-                                    
-                                    
+
+
+
+
                                 </div>
                             </div>
                         </article><!-- #post-## -->
-                        
+
                     </div>
                 </div> <!-- #right side -->
                 <div class="col-sm-12 col-md-12 col-lg-4">

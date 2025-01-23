@@ -7,8 +7,8 @@
         html{
             height: 100%; /* Asegura que el html y el body ocupen toda la altura de la ventana */
             margin: 0px 0px 0px 0px; /* Eliminar márgenes */
-           
-            overflow: hidden; 
+
+            overflow: hidden;
         }
         body {
             font-size: 11px;
@@ -70,7 +70,7 @@
         .page-break {
             page-break-before: always;
         }
-        
+
         header {
             position: fixed;
             top: 0;
@@ -100,10 +100,10 @@
                 <td style="text-align:left; vertical-align: middle;">
                     <img src="data:image/jpeg;base64,{{ $logo5 }}" alt="" width="500">
                 </td>
-               
+
             </tr>
         </table>
-        
+
     </header>
     <div class="content">
     <main style="text-align: left; padding: 0px 55px 120px 55px; ">
@@ -131,7 +131,7 @@
                     {{ $datos_programa->pm_nombre }}
                 </th>
             </tr>
-            
+
             <tr>
                 <th style="background-color: #cdcdcd;" width="20%">SEDE:</th>
                 <th colspan="7" style="font-weight: normal;">{{ $inscritos[0]->sede_nombre }}</th>
@@ -161,15 +161,15 @@
                     $fechaInicio = \Carbon\Carbon::parse($datos_programa->pm_fecha_inicio)->format('d/M/Y');
                     // Formatear la fecha de fin
                     $fechaFin = \Carbon\Carbon::parse($datos_programa->pm_fecha_fin)->format('d/M/Y');
-                    
+
                     // Array para traducir los meses de inglés a español
                     $mesesIngles = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
                     $mesesEspanol = ['ENE', 'FEB', 'MAR', 'ABR', 'MAY', 'JUN', 'JUL', 'AGO', 'SEP', 'OCT', 'NOV', 'DIC'];
-                    
+
                     // Reemplazar los meses en las fechas
                     $fechaInicio = str_replace($mesesIngles, $mesesEspanol, $fechaInicio);
                     $fechaFin = str_replace($mesesIngles, $mesesEspanol, $fechaFin);
-                    
+
                     // Mostrar las fechas
                     echo $fechaInicio;
                     ?>
@@ -209,7 +209,7 @@
                     $totalReprobados = 0;
                     $totalAbandono = 0;
                 @endphp
-                
+
                 @foreach ($inscritos as $index => $inscripcion)
                     @if ($index == 30 && $totalMatriculados < 70)
                         <div class="page-break"></div>
