@@ -214,20 +214,24 @@
                                 <select class="form-control" name="pi_nivel" id="pi_nivel" required>>
                                     <option value="">Seleccione una opción</option>
                                     @foreach ($nivel as $niv)
-                                        <option value="{{ $niv->niv_nombre }}">{{ $niv->niv_nombre }}</option>
+                                        <option value="{{ $niv->niv_nombre }}"
+                                            @if ($niv->niv_id == 1) selected @endif>
+                                            {{ $niv->niv_id == 1 ? 'Ninguno' : $niv->niv_nombre }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="pi_subnivel">Subsistema:</label>
                                 <select class="form-control" name="pi_subsistema" id="pi_subsistema" required>>
-                                    <option value="">Seleccione una opción</option>
                                     @foreach ($subsistema as $sub)
-                                        <option value="{{ $sub->sub_nombre }}">{{ $sub->sub_nombre }}</option>
+                                        <option value="{{ $sub->sub_nombre }}"
+                                            @if ($sub->sub_id == 1) selected @endif>
+                                            {{ $sub->sub_id == 1 ? 'Ninguno' : $sub->sub_nombre }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
-
                         </div>
                         @endif
                         <!-- Título para otra sección -->

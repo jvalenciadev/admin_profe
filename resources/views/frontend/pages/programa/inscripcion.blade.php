@@ -118,22 +118,17 @@
                 <div class="form-container">
                     <img src="{{ asset('storage/programa_afiches/' . $programa->pro_afiche) }}" alt="Afiche del programa"
                         class="afiche-image img-fluid mb-3">
-                    <h2 class="form-title">Inscripciones</h2>
+                    <h2 class="form-title">Inscripción</h2>
 
                     <form action="{{ route('programa.storeParticipante') }}" method="POST" enctype="multipart/form-data"
                         id="inscripcionForm">
                         @csrf
-                        @error('error')
-                                <div class="error-message">{{ $message }}</div>
-                            @enderror
                         <div class="form-group">
                             <label for="per_ci">CARNET DE IDENTIDAD:</label>
                             <input type="text" class="form-control" name="per_ci" id="per_ci" autofocus
                                 placeholder="Ingrese su número de carnet de identidad" required pattern="[0-9]{4,15}"
                                 title="Debe tener entre 4 y 15 dígitos." />
-                            @error('per_ci')
-                                <div class="error-message">{{ $message }}</div>
-                            @enderror
+
                         </div>
                         <div class="form-group">
                             <label for="per_fecha_nacimiento">FECHA DE NACIMIENTO:</label>
@@ -185,7 +180,21 @@
 
 @section('scripts')
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script defer type="text/javascript" src="{{ asset('backend/assets/js/sweetalert2.js') }}"></script>
     <script>
+        document.addEventListener('DOMContentLoaded', function () {
+           @if($errors->has('error'))
+                   Swal.fire({
+                       icon: 'error',
+                       title: '¡Error!',
+                       text: '{{ $errors->first('error') }}', // Muestra el mensaje del error
+                       confirmButtonText: 'Entendido'
+                   });
+           @endif
+       });
+   </script>
+    <script>
+
         document.getElementById('per_fecha_nacimiento').addEventListener('input', function() {
             const input = this;
             const minDate = new Date(input.min);
@@ -201,6 +210,7 @@
                 errorMessage.style.display = 'none';
             }
         });
+
         $('#reload').click(function() {
             $.ajax({
                 type: 'GET',
@@ -229,7 +239,6 @@
             });
         });
     </script>
-    <script defer type="text/javascript" src="{{ asset('backend/assets/js/sweetalert2.js') }}"></script>
     <script>
         document.getElementById("inscribir-btn").addEventListener("click", function(e) {
             e.preventDefault(); // Prevenir el envío inmediato del formulario

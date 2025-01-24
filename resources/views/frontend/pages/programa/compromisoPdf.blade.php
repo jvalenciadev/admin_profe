@@ -109,7 +109,7 @@
     <main>
         <img src="data:image/jpeg;base64,{{ $logo1 }}" alt="Logo 1" class="logo">
         <div class="header">
-            DECLARACIÓN Y COMPROMISO ACADÉMICO Y ADMINISTRATIVO –
+            DECLARACIÓN JURADA, COMPROMISO ACADÉMICO Y ADMINISTRATIVO –
             {{ mb_strtoupper($participante->pro_tip_nombre, 'UTF-8') }}
         </div>
 
@@ -118,8 +118,11 @@
             Yo, <strong>{{ strtoupper($participante->per_nombre1) }} {{ strtoupper($participante->per_nombre2) }}
                 {{ strtoupper($participante->per_apellido1) }} {{ strtoupper($participante->per_apellido2) }}</strong>,
             con documento de identidad N.º
-            <strong>{{ strtoupper($participante->per_ci) }}{{ $participante->per_complemento ? '-' . strtoupper($participante->per_complemento) : '' }}</strong>,
-            en mi condición de
+            <strong>{{ strtoupper($participante->per_ci) }}{{ $participante->per_complemento ? '-' . strtoupper($participante->per_complemento) : '' }}</strong>
+            con Licenciatura en <strong>{{ mb_strtoupper($participante->pi_licenciatura, 'UTF-8') }}</strong>
+            que desempeña su funcion en <strong>{{ mb_strtoupper($participante->pi_materia, 'UTF-8') }}</strong>  en la institución
+             <strong>{{ mb_strtoupper($participante->pi_unidad_educativa, 'UTF-8') }}</strong> con el nivel de <strong>{{ mb_strtoupper($participante->pi_nivel, 'UTF-8') }}</strong> y subsistema
+             <strong>{{ mb_strtoupper($participante->pi_subsistema, 'UTF-8') }}</strong>, en mi condición de
             <strong>{{ mb_strtoupper($participante->pro_tip_nombre, 'UTF-8') }} EN
                 {{ mb_strtoupper($participante->pro_nombre, 'UTF-8') }}</strong>,
             del Programa de Formación Especializada – PROFE, para fines académicos, administrativos y legales, declaro
@@ -179,11 +182,11 @@
                 {{ strtoupper($participante->per_ci) }}{{ $participante->per_complemento ? '-' . strtoupper($participante->per_complemento) : '' }}
             </p>
         </div>
-
+{{--
         <div class="footer">
             <p><em class="important-text">Nota: El participante debe imprimir la presente Declaración y Compromiso
                     Académico y Administrativo firmada y adjuntar al folder I conjuntamente los requisitos mencionado en la convocatoria.</em></p>
-        </div>
+        </div> --}}
     </main>
 </body>
 

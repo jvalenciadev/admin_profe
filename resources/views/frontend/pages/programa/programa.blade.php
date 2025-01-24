@@ -1,6 +1,17 @@
 @extends('frontend.layouts.master')
 @section('title')
-    Programas
+    Oferta Académica - {{ $programa->pro_nombre }}
+@endsection
+@section('og-meta-tags')
+    <meta property="og:locale" content="es_ES" />
+    {{-- <meta property="og:type" content="article" /> --}}
+    <meta property="og:title" content="{{ $programa->pro_nombre }}" />
+    <meta name="og:description" content="Participa en los diplomados, ciclos formativos y especialidades del Programa PROFE y descubre nuevas herramientas y estrategias para enriquecer tu enseñanza. ¡Inscríbete ahora!" />
+    <meta property="og:image" content="{{ asset('storage/programa_afiches/' . $programa->pro_afiche) }}" />
+    {{-- <meta property="og:url" content="{{ url()->current() }}" /> --}}
+    <meta property="og:image:width" content="545" />
+    <meta property="og:image:height" content="493" />
+    <meta property="og:image:type" content="image/jpeg" />
 @endsection
 @section('frontend-content')
     @php
@@ -165,6 +176,15 @@
                                                 </a>
                                             </div>
                                         </li>
+                                        @if ($programa->pro_tip_id == 2 && $programa->pm_id == 1 || $programa->pm_id == 2 )
+                                            <li>
+                                                <div class="slider-btn">
+                                                    <a href="{{ route ('programa.solicitarSede', $programa->pro_id ) }}" class="btn ss-btn smoth-scroll btn-secondary solicitar-envio">
+                                                        Solicitar para Mi Sede <i class="fal fa-map-marker-alt"></i>
+                                                    </a>
+                                                </div>
+                                            </li>
+                                        @endif
                                     @endif
                                 </ul>
                             </div>
@@ -177,6 +197,52 @@
 @endsection
 
 @section('scripts')
+    <script defer type="text/javascript" src="{{ asset('backend/assets/js/sweetalert2.js') }}"></script>
+    <script>
+        // Seleccionar todos los botones con la clase "solicitar-envio"
+        document.querySelectorAll(".solicitar-envio").forEach(button => {
+            button.addEventListener("click", function (e) {
+                e.preventDefault(); // Evita que el enlace se ejecute automáticamente
+
+                const url = this.getAttribute("href"); // Obtiene la URL del botón
+
+                // Mostrar mensaje de confirmación
+                Swal.fire({
+                    title: 'Confirma tu solicitud',
+                    html: `
+                        <p>Estamos encantados de que desees habilitar este curso en tu sede.</p>
+                        <p>Para hacerlo posible, necesitamos contar con al menos <b>30 participantes</b> inscritos.</p>
+                        <p>¿Deseas enviar la solicitud?</p>
+                    `,
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Sí, enviar solicitud',
+                    cancelButtonText: 'No, cancelar',
+                    reverseButtons: true,
+                    customClass: {
+                        confirmButton: 'btn-confirmar', // Clase personalizada para el botón confirmar
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Redirige al usuario a la URL si confirma
+                        window.location.href = url;
+                    }
+                });
+            });
+        });
+
+    </script>
+    <style>
+        .btn-confirmar {
+            background-color: #125875 !important; /* Color verde */
+            color: #fff !important;              /* Texto blanco */
+            border: none !important;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/jquery.magnific-popup.min.js"></script>
+
     <script>
         $(document).ready(function() {
             $('.image-popup').magnificPopup({
@@ -188,3 +254,4 @@
         });
     </script>
 @endsection
+

@@ -62,7 +62,7 @@
                                         @endforeach
                                     @else
                                         <h4>
-                                            No hay programas
+                                            No hay ofertas académicas
                                         </h4>
                                     @endif
                                 </div>

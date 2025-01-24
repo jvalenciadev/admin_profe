@@ -69,6 +69,8 @@ Route::group(['prefix' => 'ofertas-academicas', 'controller' => 'Frontend\Progra
     // Rutas para AJAX
     Route::get('/get-sedes/{dep_id}/{pro_id}', 'getSedes')->name('programa.getSedes');
     Route::get('/get-turnos/{sede_id}/{pro_id}', 'getTurnos')->name('programa.getTurnos');
+    Route::get('/solicitar-sede/{pro_id}', 'solicitarSedeInscripcion')->name('programa.solicitarSede');
+    Route::post('/registrar-solicitud', 'solicitarSedePost')->name('programa.solicitarSedePost');
 });
 Route::group(['prefix' => 'profebotics', 'controller' => 'Frontend\BoticsController'], function () {
     Route::get('/', 'index')->name('profebotics');

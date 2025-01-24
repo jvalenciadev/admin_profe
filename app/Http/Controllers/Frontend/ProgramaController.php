@@ -24,6 +24,7 @@ use App\Models\ProgramaModalidad;
 use App\Models\ProgramaSedeTurno;
 use App\Models\Sede;
 use App\Models\ProgramaTurno;
+use App\Models\SolicitudInscripcionSede;
 use App\Models\ProgramaInscripcion;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -33,14 +34,19 @@ class ProgramaController extends Controller
     // Programas
     public function index()
     {
-        $programas = Programa::where('pro_estado', 'activo')->orderBy('pro_id', 'DESC')->get();
-
+        $programas = Programa::join('programa_tipo', 'programa_tipo.pro_tip_id', '=', 'programa.pro_tip_id')
+                ->where('pro_estado', 'activo')
+                ->orderBy('programa_tipo.pro_tip_nombre', 'ASC') // Ordenar por tipo
+                ->orderBy('programa.pro_id', 'DESC') // Ordenar dentro del tipo
+                ->get()
+                ->groupBy('pro_tip_nombre'); // Agrupar por tipo
         return view('frontend.pages.programa.index', compact('programas'));
     }
 
     public function show($pro_id)
     {
         $programa = Programa::where('pro_estado', 'activo')->where('pro_id', $pro_id)->first();
+
         $galeriasPorPrograma = Galeria::selectRaw(
                     'galeria.*,
                     programa.pro_nombre_abre,
@@ -54,6 +60,39 @@ class ProgramaController extends Controller
                 ->get()
                 ->groupBy('sede_id');
         return view('frontend.pages.programa.programa', compact('programa','galeriasPorPrograma'));
+    }
+    public function solicitarSedeInscripcion($pro_id){
+        $programa = Programa::where('pro_id', $pro_id)->first();
+        $restriccion = ProgramaRestriccion::where('pr_estado', 'activo')->where('pro_id', $pro_id)->first();
+        $departamentos = Departamento::where('dep_estado', 'activo')->get();
+        if($programa->pm_id !=3 && $programa->pro_tip_id == 2 ){
+            return view('frontend.pages.programa.solicitarSedeInscripcion', compact('programa','departamentos','restriccion'));
+        }
+        else{
+            return redirect('/ofertas-academicas')->with('error', 'Este programa no permite solicitar inscripciones a sedes.');
+        }
+    }
+    public function solicitarSedePost(Request $request) {
+        // Desencriptar el pro_id
+        $pro_id = decrypt($request->input('pro_id'));
+
+        // Crear la solicitud
+        $solicitud = new SolicitudInscripcionSede();
+        $solicitud->sis_ci = $request->input('sis_ci');
+        $solicitud->sis_nombre_completo = $request->input('sis_nombre') . " " . $request->input('sis_apellido');
+        $solicitud->sis_celular = $request->input('sis_celular');
+        $solicitud->sis_correo = $request->input('sis_correo');
+        $solicitud->sis_departamento = $request->input('sis_departamento');
+        $solicitud->sis_sede = $request->input('sis_sede');
+        $solicitud->sis_turno = $request->input('sis_turno');
+        $solicitud->sis_estado = 'no confirmado';
+        $solicitud->pro_id = $pro_id;
+
+        // Guardar la solicitud
+        $solicitud->save();
+
+        // Redirigir al usuario con un mensaje de éxito
+        return redirect('/ofertas-academicas')->with('success', 'La inscripción a la sede de su preferencia ha sido solicitada. Dentro de 48 horas se realizará la llamada para coordinar.');
     }
     public function inscripcion($pro_id){
 
@@ -508,6 +547,8 @@ class ProgramaController extends Controller
                 'programa_inscripcion.pi_licenciatura',
                 'programa_inscripcion.pi_unidad_educativa',
                 'programa_inscripcion.pi_materia',
+                'programa_inscripcion.pi_nivel',
+                'programa_inscripcion.pi_subsistema',
                 // 'evento_inscripcion.ei_autorizacion',
                 'programa.pro_id',
                 'programa_inscripcion.created_at',
