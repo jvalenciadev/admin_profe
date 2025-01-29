@@ -176,7 +176,7 @@
                                                 </a>
                                             </div>
                                         </li>
-                                        @if ($programa->pro_tip_id == 2 && $programa->pm_id == 1 || $programa->pm_id == 2 )
+                                        @if ($programa->pro_tip_id == 2 && ($programa->pm_id == 1 || $programa->pm_id == 2) )
                                             <li>
                                                 <div class="slider-btn">
                                                     <a href="{{ route ('programa.solicitarSede', $programa->pro_id ) }}" class="btn ss-btn smoth-scroll btn-secondary solicitar-envio">
@@ -234,7 +234,7 @@
     </script>
     <style>
         .btn-confirmar {
-            background-color: #125875 !important; /* Color verde */
+            background-color: #1474a6 !important; /* Color verde */
             color: #fff !important;              /* Texto blanco */
             border: none !important;
         }

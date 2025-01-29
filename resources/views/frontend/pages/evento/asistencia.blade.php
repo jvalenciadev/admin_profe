@@ -31,7 +31,7 @@
             /* Ancho máximo */
             margin: 20px auto;
             /* Centrar el contenedor */
-            border: 1px solid #125875;
+            border: 1px solid #1474a6;
             /* Borde azul */
         }
 
@@ -39,7 +39,7 @@
             text-align: center;
             font-size: 2.5em;
             font-weight: bold;
-            color: #125875;
+            color: #1474a6;
             /* Color del título */
             margin-bottom: 20px;
         }
@@ -54,7 +54,7 @@
         }
 
         .form-control:focus {
-            border-color: #125875;
+            border-color: #1474a6;
             /* Borde azul en enfoque */
             box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
             /* Sombra azul */
@@ -130,7 +130,7 @@
                         class="afiche-image img-fluid mb-3">
                     <h2 class="form-title">Asistencia</h2>
                     <div class="alert alert-info text-center py-3 my-3" role="alert">
-                        <i class="bi bi-clock-history me-2"></i> 
+                        <i class="bi bi-clock-history me-2"></i>
                         La asistencia estará habilitada <strong>24 horas</strong>.
                     </div>
                     @error('asistencia')

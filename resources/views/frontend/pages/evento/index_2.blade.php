@@ -19,23 +19,23 @@
         .widget_categories a {
             color: #6e6e6e;
         }
-    
+
         .site-content {
             background-color: #ffffff;
         }
-    
+
         .breadcrumb-area {
             background-color: rgba(32, 40, 46, 0.8); /* Fondo con un poco de transparencia */
             background-image: url('{{ asset('assets/evento/12082024_banner.jpg') }}');
             background-blend-mode: overlay; /* Mezcla el color de fondo y la imagen */
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Añade sombra */
         }
-    
+
         .footer-bg {
             background-color: #00173c;
             background-image: url('{{ asset('frontend/wp-content/uploads/2023/03/footer-bg.png') }}');
         }
-    
+
         .footer-social a:hover,
         .contact-form .btn,
         .about-area .btn:hover::before,
@@ -88,7 +88,7 @@
         .contact-bg02 .btn.ss-btn.active {
             background-color: #ff7350;
         }
-    
+
         .event03 .event-content .time i,
         .faq-wrap .card-header h2 button::after,
         .bsingle__content h2:hover a,
@@ -130,7 +130,7 @@
         .about-content li .icon i {
             color: #ff7350;
         }
-    
+
         .slider-active .slider-btn .btn,
         .contact-form .btn,
         .faq-btn,
@@ -152,7 +152,7 @@
         .contact-bg02 .btn.ss-btn.active {
             border-color: #ff7350;
         }
-    
+
         .btn.ss-btn.active,
         .second-header a,
         .second-header span,
@@ -170,7 +170,7 @@
         .btn-style-one {
             color: #fff;
         }
-    
+
         .event-item:hover .event-content,
         .header-three .second-header,
         .project-detail .info-column .inner-column2 h3,
@@ -178,35 +178,35 @@
         .conterdown,
         .s-about-content .footer-social a,
         .about-area .btn {
-            background-color: #125875;
+            background-color: #1474a6;
         }
-    
+
             {
-            color: #125875;
+            color: #1474a6;
         }
-    
+
         .about-area .btn,
         .second-header-btn .btn:hover {
-            border-color: #125875;
+            border-color: #1474a6;
         }
-    
+
         .blog-area3 .blog-thumb2 .date-home {
             background-color: #4ea9b4;
         }
-    
+
             {
             color: #4ea9b4;
         }
-    
+
             {
             border-color: #4ea9b4;
         }
-    
+
         .copyright-wrap .text,
         .btn-style-one {
             background-color: #232323;
         }
-    
+
         h1,
         h2,
         h3,
@@ -281,7 +281,7 @@
             <div class="lower-content2">
                 <div class="form-container">
                     <h2 class="form-title">Formulario de preinscripción</h2>
-                    
+
                     <form action="{{ route('evento.storeParticipantes') }}" method="POST" enctype="multipart/form-data" id="inscripcionForm">
                         @csrf
                         <div class="form-group">

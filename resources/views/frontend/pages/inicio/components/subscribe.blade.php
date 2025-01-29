@@ -8,7 +8,7 @@
                 <div class="elementor-element elementor-element-536acf8 elementor-widget elementor-widget-Elementor-newsletter-widget"
                     data-id="536acf8" data-element_type="widget" data-widget_type="Elementor-newsletter-widget.default">
                     <div class="elementor-widget-container"> <!-- newslater-area -->
-                        <section class="newslater-area pt-60 pb-60" style="background-color: #125875;">
+                        <section class="newslater-area pt-60 pb-60" style="background-color: #1474a6;">
                             <div class="container">
                                 <div class="row align-items-center">
                                     <div class="col-xl-7 col-lg-7">

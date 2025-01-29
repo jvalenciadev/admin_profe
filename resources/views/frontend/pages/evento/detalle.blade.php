@@ -90,7 +90,7 @@
         }
 
         .styled-table thead tr {
-            background-color: #125875;
+            background-color: #1474a6;
             color: #ffffff;
         }
 
@@ -165,7 +165,7 @@
                         class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="Afiche del evento"
                         decoding="async" />
                 </figure>
-            
+
                 <!-- Imagen para tabletas y computadoras (banner) -->
                 <figure class="image desktop-only" id="desktop-only">
                     <img fetchpriority="high"
@@ -180,7 +180,7 @@
 
                         <div class="s-about-content wow fadeInRight" data-animation="fadeInRight" data-delay=".2s">
                             <h2>{{ $evento->eve_nombre }}</h2>
-                            
+
                             <div class="evento-descripcion styled-table">
                                 {!! $evento->eve_descripcion !!}
                             </div>

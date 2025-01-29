@@ -18,14 +18,14 @@
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
             max-width: 800px;
             margin: 40px auto;
-            border: 1px solid #125875;
+            border: 1px solid #1474a6;
         }
 
         .form-title {
             text-align: center;
             font-size: 1.5em;
             font-weight: bold;
-            color: #125875;
+            color: #1474a6;
             margin-bottom: 20px;
         }
 
@@ -94,7 +94,7 @@
         .download-btn {
             font-size: 1.2rem;
             padding: 12px 25px;
-            background-color: #125875;
+            background-color: #1474a6;
             color: #fff;
             border-radius: 5px;
             text-decoration: none;

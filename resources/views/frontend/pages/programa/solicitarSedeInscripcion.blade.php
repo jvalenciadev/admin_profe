@@ -23,19 +23,19 @@
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
             max-width: 600px;
             margin: 40px auto;
-            border: 1px solid #125875;
+            border: 1px solid #1474a6;
         }
 
         .form-title {
             text-align: center;
             font-size: 2.5em;
             font-weight: bold;
-            color: #125875;
+            color: #1474a6;
             margin-bottom: 30px;
         }
 
         .form-control:focus {
-            border-color: #125875;
+            border-color: #1474a6;
             box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
         }
 
@@ -155,11 +155,9 @@
 
                     // Mostrar mensaje de confirmación
                     Swal.fire({
-                        title: 'Confirma tu solicitud',
+                        title: '¿Deseas enviar la solicitud?',
                         html: `
-                            <p>Estamos encantados de que desees habilitar este curso en tu sede.</p>
-                            <p>Para hacerlo posible, necesitamos contar con al menos <b>30 participantes</b> inscritos.</p>
-                            <p>¿Deseas enviar la solicitud?</p>
+                            <p>Antes de enviar, por favor verifique que haya llenado correctamente todos los campos.</p>
                         `,
                         icon: 'question',
                         showCancelButton: true,
@@ -178,13 +176,13 @@
             });
         </script>
     <script>
-        document.getElementById('per_correo').addEventListener('input', function() {
+        document.getElementById('sis_correo').addEventListener('input', function() {
             const patternCorreo = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
             const errorMessageCorreo = document.getElementById('error-message-correo');
             errorMessageCorreo.style.display = patternCorreo.test(this.value) ? 'none' : 'block';
         });
 
-        document.getElementById('per_celular').addEventListener('input', function() {
+        document.getElementById('sis_celular').addEventListener('input', function() {
             const patternCel = /^[67]\d{7}$/;
             const errorMessageCel = document.getElementById('error-message-cel');
             errorMessageCel.style.display = patternCel.test(this.value) ? 'none' : 'block';

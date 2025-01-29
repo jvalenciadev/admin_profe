@@ -133,7 +133,7 @@
     .blog-content2 .date-home,
     .f-cta-icon i,
     .contact-bg02 .btn.ss-btn.active {
-        background-color: #274470;
+        background-color: #234471;
     }
     .footer-bg {
             background-color: #00173c;
@@ -190,7 +190,7 @@
         .blog-content2 .date-home,
         .f-cta-icon i,
         .contact-bg02 .btn.ss-btn.active {
-            background-color: #274470;
+            background-color: #234471;
         }
 
         .event03 .event-content .time i,
@@ -232,7 +232,7 @@
         .bsingle__post .video-p .video-i,
         .bsingle__content .meta-info ul li i,
         .about-content li .icon i {
-            color: #274470;
+            color: #234471;
         }
 
         .slider-active .slider-btn .btn,
@@ -254,7 +254,7 @@
         .team-info .text,
         .blog-btn a,
         .contact-bg02 .btn.ss-btn.active {
-            border-color: #274470;
+            border-color: #234471;
         }
 
         .btn.ss-btn.active,
@@ -282,16 +282,16 @@
         .conterdown,
         .s-about-content .footer-social a,
         .about-area .btn {
-            background-color: #125875;
+            background-color: #1474a6;
         }
 
             {
-            color: #125875;
+            color: #1474a6;
         }
 
         .about-area .btn,
         .second-header-btn .btn:hover {
-            border-color: #125875;
+            border-color: #1474a6;
         }
 
         .blog-area3 .blog-thumb2 .date-home {

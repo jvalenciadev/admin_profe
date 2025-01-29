@@ -71,8 +71,10 @@ class AdminsController extends Controller
         }
 
         $roles  = Role::all();
-        $sedes  = Sede::all();
-        $programas  = Programa::all();
+        $sedes = Sede::join('departamento', 'departamento.dep_id', '=', 'sede.dep_id')
+                    ->where('sede.sede_estado', 'activo')->get();
+        $programas = Programa::join('programa_version', 'programa_version.pv_id', '=', 'programa.pv_id')
+                        ->where('programa.pro_estado', 'activo')->get();
         return view('backend.pages.admins.create', compact('roles','sedes','programas'));
     }
 

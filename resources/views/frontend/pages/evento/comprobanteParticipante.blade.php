@@ -18,14 +18,14 @@
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
             max-width: 700px; /* Ancho máximo */
             margin: 40px auto; /* Centrar el contenedor */
-            border: 1px solid #125875; /* Borde azul */
+            border: 1px solid #1474a6; /* Borde azul */
         }
 
         .form-title {
             text-align: center;
             font-size: 2.5em;
             font-weight: bold;
-            color: #125875; /* Color del título */
+            color: #1474a6; /* Color del título */
             margin-bottom: 20px;
         }
 
@@ -70,14 +70,14 @@
         <section>
             <div class="form-container">
                 <img src="{{ asset('storage/evento_afiches/' . $evento[0]->eve_afiche) }}" alt="Afiche del evento" class="afiche-image img-fluid">
-                
+
                 <!-- Mostrar mensaje de sesión -->
                 @if (session('danger'))
                     <div class="alert alert-danger">
                         {{ session('danger') }}
                     </div>
                 @endif
-                
+
                 <h2 class="form-title">¡Descargar formulario de inscripción!</h2>
                 <h6 class="font-weight-normal text-center">
                     {{ $evento[0]->eve_per_nombre_1 . ' ' . $evento[0]->eve_per_apellido_1 . ' ' . $evento[0]->eve_per_apellido_2 }}

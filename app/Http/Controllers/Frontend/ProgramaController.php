@@ -55,7 +55,7 @@ class ProgramaController extends Controller
                 ->join('sede', 'galeria.sede_id', '=', 'sede.sede_id')
                 ->join('programa', 'galeria.pro_id', '=', 'programa.pro_id')
                 ->where('galeria.galeria_estado', 'activo')
-                ->where('programa.pro_id', $pro_id)
+                ->where('programa.pro_codigo', $programa->pro_codigo)
                 ->orderBy('galeria.updated_at', 'desc')
                 ->get()
                 ->groupBy('sede_id');
@@ -116,7 +116,7 @@ class ProgramaController extends Controller
             }
         } else {
             // Si no se encuentra el programa, redirigir con un mensaje de error
-            return redirect('/ofertas-academicas')->with('error', 'El programa solicitado no existe.');
+            return redirect('/ofertas-academicas')->with('error', 'La oferta académica solicitado no existe.');
         }
     }
     public function storeParticipante(Request $request)
@@ -171,22 +171,23 @@ class ProgramaController extends Controller
                 ->join('programa_version', 'programa_version.pv_id', '=', 'programa.pv_id')
                 ->join('programa_tipo', 'programa_tipo.pro_tip_id', '=', 'programa.pro_tip_id')
                 ->where('map_persona.per_ci', $request->per_ci)
-                ->where('programa_tipo.pro_tip_id', $programa->pro_tip_id)
+                ->where('programa_tipo.pro_tip_id', 3)
                 ->where('programa_version.pv_gestion', (int)now()->year)
                 ->where('programa_inscripcion.pro_id', '!=' , $programa->pro_id)
                 ->first();
             if ($verinscripcion){
                 return back()->withErrors(['error' => 'Usted ya se inscribió en otro diplomado de esta gestión. No puede inscribirse nuevamente.']);
             }
-            // $admin = Admin::where('per_id',$usuario->per_rda)->where("estado",'activo')->first();
-                // Verificar si la inscripción ya existe
+            $admin = Admin::where('per_id',$usuario->per_rda)->where("estado",'activo')->first();
+            if ($admin) {
+                return back()->withErrors(['error'=> 'Usted es personal del programa PROFE, no puede realizar su inscripción.']);
+            }
+            // Verificar si la inscripción ya existe
             if ($inscripcion && (int)$inscripcion->pv_gestion !== (int)now()->year) {
                 return back()->withErrors(['error' => 'Usted ya se inscribió anteriormente a la oferta formativa. No puede inscribirse nuevamente.']);
             }
 
-            // if ($admin) {
-            //     return back()->withErrors(['error'=> 'Usted es personal del programa PROFE, no puede realizar su inscripción.']);
-            // }
+
 
             $restriccion = ProgramaRestriccion::where('pro_id',$pro_id)->first();
             if ($restriccion) {
@@ -282,7 +283,7 @@ class ProgramaController extends Controller
         else {
             // Redirigir al formulario si no se encuentra el usuario
             return back()->withErrors([
-                'error' => 'Usted no es personal del Sistema Educativo Plurinacional, no puede inscribirse. Comuníquese con la sede más cercana del programa PROFE.',
+                'error' => 'Lamentablemente, no está registrado como personal del Sistema Educativo Plurinacional. Para obtener más información o asistir al programa PROFE, por favor comuníquese con la sede más cercana.',
             ]);
         }
     }
@@ -301,9 +302,14 @@ class ProgramaController extends Controller
         // $especialidad = MapEspecialidad::where('esp_estado', 'activo')->get();
         // $cargo = MapCargo::where('car_estado', 'activo')->get();
         // $uniEducativa = UnidadEducativa::where('uni_edu_estado', 'activo')->get();
-        $nivel = MapNivel::where('niv_estado', 'activo')->get();
-        $subsistema = MapSubsistema::where('sub_estado', 'activo')->get();
+        $nivel = MapNivel::where('niv_estado', 'activo')
+        ->whereNotIn('niv_id', [1, 4, 10])
+        ->get();
 
+        // Para MapSubsistema
+        $subsistema = MapSubsistema::where('sub_estado', 'activo')
+            ->whereNotIn('sub_id', [1, 2])
+            ->get();
         // Si no se encuentra el evento, redirige a la página de eventos
         if (!$programa) {
             return redirect()->route('programa');
@@ -391,7 +397,7 @@ class ProgramaController extends Controller
                     'pro_tur_id' => $request['pro_tur_id'],
                     'sede_id' => $request['sede_id'],
                     'pro_id' => $pro_id,
-                    'pie_id' => 1,
+                    'pie_id' => 2,
                 ]
             );
 
@@ -554,6 +560,7 @@ class ProgramaController extends Controller
                 'programa_inscripcion.created_at',
                 'programa_inscripcion.updated_at',
                 'programa_modalidad.pm_nombre',
+                'programa_tipo.pro_tip_id',
                 'programa_tipo.pro_tip_nombre',
                 'programa_turno.pro_tur_nombre',
                 'programa_version.pv_nombre',
@@ -683,6 +690,4 @@ class ProgramaController extends Controller
         // Retornar la respuesta con los turnos
         return response()->json($programaTurno);
     }
-
-
 }

@@ -12,7 +12,7 @@
             margin: 0 auto;
             padding: 20px;
             border-radius: 25px;
-            border: 4px solid #125875;
+            border: 4px solid #1474a6;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             font-family: Arial, sans-serif;
         }
@@ -33,7 +33,7 @@
         .rotulo-header h2 {
             font-size: 1.5em;
             font-weight: bold;
-            color: #125875;
+            color: #1474a6;
             margin-top: 10px;
         }
 
@@ -50,7 +50,7 @@
 
         .rotulo-body .data-label {
             font-weight: bold;
-            color: #125875;
+            color: #1474a6;
         }
 
         /* Pie de página */
@@ -58,23 +58,23 @@
             margin-top: 20px;
             font-size: 1.2em;
             text-align: center;
-            color: #125875;
+            color: #1474a6;
         }
 
         /* Ajuste para el contenedor del nombre del participante */
         .name-container {
             margin-top: 40px;
             padding: 10px;
-            border-top: 8px solid #125875;
+            border-top: 8px solid #1474a6;
             /* Borde superior más grueso */
-            border-bottom: 3px solid #125875;
+            border-bottom: 3px solid #1474a6;
             /* Borde inferior más delgado */
             font-weight: bold;
             background-color: #e6f7ff;
             /* Fondo suave */
             text-align: center;
             font-size: 1.3em;
-            color: #125875;
+            color: #1474a6;
             border-radius: 40px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             /* Sombra suave para el contenedor */

@@ -24,19 +24,19 @@
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
             max-width: 600px;
             margin: 40px auto;
-            border: 1px solid #125875;
+            border: 1px solid #1474a6;
         }
 
         .form-title {
             text-align: center;
             font-size: 2.5em;
             font-weight: bold;
-            color: #125875;
+            color: #1474a6;
             margin-bottom: 30px;
         }
 
         .form-control:focus {
-            border-color: #125875;
+            border-color: #1474a6;
             box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
         }
 
@@ -211,23 +211,22 @@
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="pi_nivel">Nivel:</label>
-                                <select class="form-control" name="pi_nivel" id="pi_nivel" required>>
+                                <select class="form-control" name="pi_nivel" id="pi_nivel" required>
                                     <option value="">Seleccione una opción</option>
                                     @foreach ($nivel as $niv)
-                                        <option value="{{ $niv->niv_nombre }}"
-                                            @if ($niv->niv_id == 1) selected @endif>
-                                            {{ $niv->niv_id == 1 ? 'Ninguno' : $niv->niv_nombre }}
+                                        <option value="{{ $niv->niv_nombre }}">
+                                            {{ $niv->niv_nombre }}
                                         </option>
                                     @endforeach
                                 </select>
                             </div>
                             <div class="form-group col-md-6">
                                 <label for="pi_subnivel">Subsistema:</label>
-                                <select class="form-control" name="pi_subsistema" id="pi_subsistema" required>>
+                                <select class="form-control" name="pi_subsistema" id="pi_subsistema" required>
+                                    <option value="">Seleccione una opción</option>
                                     @foreach ($subsistema as $sub)
-                                        <option value="{{ $sub->sub_nombre }}"
-                                            @if ($sub->sub_id == 1) selected @endif>
-                                            {{ $sub->sub_id == 1 ? 'Ninguno' : $sub->sub_nombre }}
+                                        <option value="{{ $sub->sub_nombre }}">
+                                            {{ $sub->sub_nombre }}
                                         </option>
                                     @endforeach
                                 </select>

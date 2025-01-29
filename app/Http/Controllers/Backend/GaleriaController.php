@@ -35,15 +35,29 @@ class GaleriaController extends Controller
                     ->join('sede', 'sede.sede_id', "=", "galeria.sede_id")
                     ->join('programa', 'programa.pro_id', "=", "galeria.pro_id")
                     ->select(
-                        'galeria.*', 
-                        'programa.pro_nombre_abre', 
+                        'galeria.*',
+                        'programa.pro_nombre_abre',
                         'sede.sede_nombre_abre',
                     )
                     ->orderBy('galeria.updated_at', 'desc')
                     ->orderBy('sede.sede_nombre_abre')
-                    ->orderBy('programa.pro_nombre_abre')
-                    ->get();
+                    ->orderBy('programa.pro_nombre_abre');
+        if (!is_null($this->user->pro_ids)) {
+            $proIds = json_decode($this->user->pro_ids, true);
+            if (!empty($proIds)) {
+                $galerias = $galerias->whereIn('galeria.pro_id', $proIds);
+            }
+        }
 
+        // Filtrar por sedes si existen
+        if (!is_null($this->user->sede_ids)) {
+            $sedeIds = json_decode($this->user->sede_ids, true);
+            if (!empty($sedeIds)) {
+                $galerias = $galerias->whereIn('galeria.sede_id', $sedeIds);
+            }
+        }
+
+        $galerias = $galerias->get();
         return view('backend.pages.galeria.index', compact('galerias'));
     }
 
@@ -207,7 +221,7 @@ class GaleriaController extends Controller
             'success' => 'Galería actualizada exitosamente.',
             'galeria_imagen' => asset('storage/galeria/' . $galeria->galeria_imagen),
         ]);
-       
+
     }
 
 
@@ -226,9 +240,9 @@ class GaleriaController extends Controller
             return response()->json(['error' => 'Galería no encontrada.'], 404);
         }
         $galeria = Galeria::where('galeria_id', $id)->first();
-       
+
         $galeria->galeria_estado = 'eliminado';
-        
+
         $galeria->save();
 
         return response()->json(['success' => 'Galería eliminada exitosamente.']);

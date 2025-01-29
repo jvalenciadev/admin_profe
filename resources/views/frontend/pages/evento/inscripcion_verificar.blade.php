@@ -24,19 +24,19 @@
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
             max-width: 600px;
             margin: 40px auto;
-            border: 1px solid #125875;
+            border: 1px solid #1474a6;
         }
 
         .form-title {
             text-align: center;
             font-size: 2.5em;
             font-weight: bold;
-            color: #125875;
+            color: #1474a6;
             margin-bottom: 30px;
         }
 
         .form-control:focus {
-            border-color: #125875;
+            border-color: #1474a6;
             box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
         }
 
@@ -154,7 +154,7 @@
                                 onkeyup="mayusculas(this);"
                                 value="{{ isset($user) ? $user->per_nombre1 . ' ' . $user->per_nombre2 : session('per_nombre1') }}" maxlength="150" {{ isset($user) ? 'readonly' : '' }} />
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="eve_per_apellido_1">Apellido paterno</label>
                             <input type="text" class="form-control" name="eve_per_apellido_1" id="eve_per_apellido_1"

@@ -152,7 +152,7 @@
                 </div>
                 <div class="col-lg-4 text-center"></div>
                 <div class="col-lg-4 text-right text-xl-right">
-                    Copyright © Profe 2025. Todos los derechos reservados.
+                    Copyright © PROFE {{ now()->format('Y') }}. Todos los derechos reservados.
                 </div>
             </div>
         </div>

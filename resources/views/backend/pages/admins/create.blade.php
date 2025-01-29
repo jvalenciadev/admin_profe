@@ -99,7 +99,7 @@
                                     <select class="js-example-tags col-sm-12" name="programas[]" id="programas"
                                         multiple="multiple">
                                         @foreach ($programas as $programa)
-                                            <option value="{{ $programa->pro_id }}">{{ $programa->pro_nombre }}</option>
+                                            <option value="{{ $programa->pro_id }}">{{ $programa->pv_nombre }} {{ $programa->pv_romano }} - {{ $programa->pro_nombre_abre }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -108,7 +108,7 @@
                                     <select class="js-example-tags col-sm-12 " name="sedes[]" id="sedes"
                                         multiple="multiple">
                                         @foreach ($sedes as $sede)
-                                            <option value="{{ $sede->sede_id }}">{{ $sede->sede_nombre }}</option>
+                                            <option value="{{ $sede->sede_id }}">{{ $sede->dep_abreviacion }} - {{ $sede->sede_nombre }}</option>
                                         @endforeach
                                     </select>
                                 </div>

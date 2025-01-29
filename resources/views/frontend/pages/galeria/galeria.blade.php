@@ -89,7 +89,7 @@
         }
 
         .styled-table thead tr {
-            background-color: #125875;
+            background-color: #1474a6;
             color: #ffffff;
         }
 
