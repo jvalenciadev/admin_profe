@@ -59,6 +59,22 @@
                                 </div>
                                 <div class="row form-group">
                                     <div class="col-sm-2 col-form-label">
+                                        <label for="name">Nombre abreviado</label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <input type="text" class="form-control " id="pro_nombre_abre"
+                                            name="pro_nombre_abre" placeholder="Ingrese nombre abreviado">
+                                    </div>
+                                    <div class="col-sm-2 col-form-label">
+                                        <label for="name">CODIGO</label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <input type="text" class="form-control " id="pro_codigo"
+                                            name="pro_codigo" placeholder="Ingrese el codigo del programa">
+                                    </div>
+                                </div>
+                                <div class="row form-group">
+                                    <div class="col-sm-2 col-form-label">
                                         <label for="name ">Contenido</label>
                                     </div>
                                     <div class="col-sm-10">
@@ -69,7 +85,7 @@
                                     <label class="col-sm-2 col-form-label">Carga Horaria</label>
                                     <div class="col-sm-4">
                                         <div class="input-group">
-                                            <input type="number" min="0" max="1000" class="form-control "
+                                            <input type="number" min="0" max="10000" class="form-control "
                                                 placeholder="Ingrese la carga Horaria" id="pro_carga_horaria"
                                                 name="pro_carga_horaria">
                                             <div class="input-group-prepend">
@@ -152,9 +168,11 @@
                                     <label class="col-sm-1 col-form-label">Versión</label>
                                     <div class="col-sm-3">
                                         <select name="pv_id" id="pv_id" class="form-control " required>
-                                            <option value="">Selecciona versión</option>
-                                            @foreach($programaVersiones as $version)
-                                                <option value="{{ $version->pv_id }}">{{ $version->pv_nombre }} {{ $version->pv_numero }}</option>
+                                            <option value="">Seleccione versión
+                                            </option>
+                                            @foreach ($programaVersiones as $version)
+                                                <option value="{{ $version->pv_id }}">{{ $version->pv_nombre }}
+                                                    {{ $version->pv_romano }} - {{ $version->pv_gestion }}</option>
                                             @endforeach
                                         </select>
                                     </div>

@@ -41,13 +41,15 @@ class ProgramaController extends Controller
         $programas = DB::table('programa')
             ->join('programa_version', 'programa.pv_id', '=', 'programa_version.pv_id')
             ->join('programa_duracion', 'programa.pd_id', '=', 'programa_duracion.pd_id')
+            ->join('programa_tipo', 'programa.pro_tip_id', '=', 'programa_tipo.pro_tip_id')
             ->join('programa_modalidad', 'programa.pm_id', '=', 'programa_modalidad.pm_id')
-            ->select('programa.*', 'programa_version.*', 'programa_duracion.pd_nombre',
+            ->select('programa.*', 'programa_version.pv_nombre', 'programa_version.pv_romano',
+                'programa_version.pv_gestion','programa_duracion.pd_nombre','programa_tipo.*',
                 'programa_modalidad.pm_nombre')
             ->where('programa.pro_estado', '<>', 'eliminado')
+            ->orderBy('programa.updated_at', 'DESC')
             ->get();
 
-        confirmDelete('Eliminar programa', 'Esta seguro de eliminar? Esta acción no se puede deshacer.');
 
         //$mapPersona = MapPersona::paginate(100);
         return view('backend.pages.programa.index', compact(['programas']));
@@ -79,10 +81,12 @@ class ProgramaController extends Controller
         // Validación de datos
         $request->validate([
             'pro_nombre' => 'required|string|max:255',
+            'pro_nombre_abre' => 'required|string',
+            'pro_codigo' => 'required|string',
             'pro_contenido' => 'required|string',
             // 'pro_horario' => 'required|string',
             // 'pro_fecha_inicio_formacion' => 'required|string',
-            'pro_carga_horaria' => 'required|integer|min:0|max:1000',
+            'pro_carga_horaria' => 'required|integer|min:0|max:10000',
             'pro_costo' => 'required|integer|min:0|max:10000',
             'pro_banner' => 'required|image|mimes:png,jpg,jpeg|max:2000',
             'pro_afiche' => 'required|image|mimes:png,jpg,jpeg|max:2000',
@@ -132,6 +136,9 @@ class ProgramaController extends Controller
 
         $programa = new Programa();
         $programa->pro_nombre = $request->pro_nombre;
+        $programa->pro_contenido = $request->pro_contenido;
+        $programa->pro_nombre_abre = $request->pro_nombre_abre;
+        $programa->pro_codigo = $request->pro_codigo;
         $programa->pro_contenido = $request->pro_contenido;
         $programa->pro_horario = NULL;
         $programa->pro_carga_horaria = $request->pro_carga_horaria;
@@ -198,10 +205,11 @@ class ProgramaController extends Controller
         $request->validate([
             'pro_nombre' => 'required|string|max:255',
             'pro_nombre_abre' => 'nullable|string|max:255',
+            'pro_codigo' => 'nullable|string|max:255',
             'pro_contenido' => 'required|string',
             // 'pro_horario' => 'required|string',
             // 'pro_fecha_inicio_formacion' => 'required|string',
-            'pro_carga_horaria' => 'required|integer|min:0|max:1000',
+            'pro_carga_horaria' => 'required|integer|min:0|max:10000',
             'pro_costo' => 'required|integer|min:0|max:10000',
             'pro_banner' => 'nullable|image|mimes:png,jpg,jpeg|max:2000',
             'pro_afiche' => 'nullable|image|mimes:png,jpg,jpeg|max:2000',
@@ -273,6 +281,7 @@ class ProgramaController extends Controller
 
         $programa->pro_nombre = $request->pro_nombre;
         $programa->pro_nombre_abre = $request->pro_nombre_abre;
+        $programa->pro_codigo = $request->pro_codigo;
         $programa->pro_contenido = $request->pro_contenido;
         $programa->pro_horario = null;
         $programa->pro_carga_horaria = $request->pro_carga_horaria;

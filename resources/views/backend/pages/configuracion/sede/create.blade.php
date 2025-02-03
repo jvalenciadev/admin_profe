@@ -97,7 +97,7 @@
                                         <select name="sede_id" id="sede_id" class="form-control" required>
                                             <option value="">Selecciona una sede...</option>
                                             @foreach ($sedes as $sede)
-                                            <option value="{{ $sede->sede_id }}">{{ $sede->sede_nombre }}</option>
+                                            <option value="{{ $sede->sede_id }}">{{ $sede->dep_abreviacion }} - {{ $sede->sede_nombre_abre }}</option>
                                             @endforeach
                                         </select>
                                         @error('sede_id')
@@ -111,7 +111,7 @@
                                         <select name="pro_id" id="pro_id" class="form-control" required>
                                             <option value="">Selecciona un programa...</option>
                                             @foreach ($programas as $programa)
-                                            <option value="{{ $programa->pro_id }}">{{ $programa->pro_nombre }}</option>
+                                            <option value="{{ $programa->pro_id }}">{{ $programa->pv_nombre }} {{ $programa->pv_romano }}/{{ $programa->pv_gestion }} - {{ $programa->pro_nombre }}</option>
                                             @endforeach
                                         </select>
                                         @error('pro_id')

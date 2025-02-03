@@ -165,9 +165,9 @@
                                             {{ $programa->version->pv_romano }} - {{ $programa->version->pv_gestion }}  </span>
                                     </li>
                                     @if (now()->between(
-                                        Carbon::parse($programa->pro_fecha_inicio_inscripcion),
-                                        Carbon::parse($programa->pro_fecha_fin_inscripcion)
-                                    ))
+                                            Carbon::parse($programa->pro_fecha_inicio_inscripcion),
+                                            Carbon::parse($programa->pro_fecha_fin_inscripcion)->addDay(1) // Asegura que el último día esté incluido
+                                        ))
                                         <li>
                                             <div class="slider-btn">
                                                 <a href="{{ route('programaInscripcion', $programa->pro_id) }}"

@@ -28,8 +28,8 @@ class SedeController extends Controller
     }
     public function index()
     {
-        if (is_null($this->user) || !$this->user->can('programa.view')) {
-            abort(403, 'Lo siento !! ¡No estás autorizado a ver ningún programa!');
+        if (is_null($this->user) || !$this->user->can('sede.view')) {
+            abort(403, 'Lo siento !! ¡No estás autorizado a ver ninguna sede!');
         }
         $sedes = DB::table('sede')
             ->join('departamento', 'sede.dep_id', '=', 'departamento.dep_id')
@@ -46,7 +46,7 @@ class SedeController extends Controller
     public function create()
     {
         if (is_null($this->user) || !$this->user->can('sede.create')) {
-            abort(403, 'Sorry !! You are Unauthorized to create any role !');
+            abort(403, 'Lo siento !! ¡No estás autorizado para crear sedes');
         }
         $departamentos  = Departamento::all();
         return view('backend.pages.sede.create', compact('departamentos'));
@@ -57,8 +57,8 @@ class SedeController extends Controller
      */
     public function store(Request $request)
     {
-        if (is_null($this->user) || !$this->user->can('programa.create')) {
-            abort(403, 'Sorry !! You are Unauthorized to create any role !');
+        if (is_null($this->user) || !$this->user->can('sede.create')) {
+            abort(403, 'Lo siento !! ¡No estás autorizado para crear sedes');
         }
         // Validación de datos
         $request->validate([
@@ -124,7 +124,14 @@ class SedeController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        if (is_null($this->user) || !$this->user->can('sede.edit')) {
+            abort(403, 'Lo siento !! No estas autorizado a editar ninguna sede !');
+        }
+        $sede = Sede::find($id);
+        if (!$sede) {
+            abort(404, 'Sede no encontrada.');
+        }
+
     }
 
     /**

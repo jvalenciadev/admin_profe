@@ -56,7 +56,7 @@
                                         <select class="form-control" name="pro_id" id="pro_id" required>
                                             <option value="">Selecciona un programa...</option>
                                             @foreach ($programas as $programa)
-                                                <option value="{{ $programa->pro_id }}">{{ $programa->pro_nombre }}</option>
+                                                <option value="{{ $programa->pro_id }}">{{ $programa->pv_nombre }} {{ $programa->pv_romano }}/{{ $programa->pv_gestion }} - {{ $programa->pro_nombre }}</option>
                                             @endforeach
                                         </select>
                                     </div>

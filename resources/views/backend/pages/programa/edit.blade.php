@@ -54,18 +54,28 @@
                                     <div class="col-sm-2 col-form-label">
                                         <label for="name">Nombre del Programa</label>
                                     </div>
-                                    <div class="col-sm-6">
+                                    <div class="col-sm-10">
                                         <input type="text" class="form-control " id="pro_nombre" name="pro_nombre"
                                             placeholder="Ingrese el titulo del programa"
                                             value="{{ $programa->pro_nombre }}">
                                     </div>
+                                </div>
+                                <div class="row form-group">
                                     <div class="col-sm-2 col-form-label">
                                         <label for="name">Nombre abreviado</label>
                                     </div>
-                                    <div class="col-sm-2">
+                                    <div class="col-sm-4">
                                         <input type="text" class="form-control " id="pro_nombre_abre"
                                             name="pro_nombre_abre" placeholder="Ingrese nombre abreviado"
                                             value="{{ $programa->pro_nombre_abre }}">
+                                    </div>
+                                    <div class="col-sm-2 col-form-label">
+                                        <label for="name">CODIGO</label>
+                                    </div>
+                                    <div class="col-sm-4">
+                                        <input type="text" class="form-control " id="pro_codigo"
+                                            name="pro_codigo" placeholder="Ingrese el codigo del programa"
+                                            value="{{ $programa->pro_codigo }}">
                                     </div>
                                 </div>
                                 <div class="row form-group">
@@ -80,7 +90,7 @@
                                     <label class="col-sm-2 col-form-label">Carga Horaria</label>
                                     <div class="col-sm-4">
                                         <div class="input-group">
-                                            <input type="number" min="0" max="1000" class="form-control "
+                                            <input type="number" min="0" max="10000" class="form-control "
                                                 placeholder="Ingrese la carga Horaria" id="pro_carga_horaria"
                                                 name="pro_carga_horaria" value="{{ $programa->pro_carga_horaria }}">
                                             <div class="input-group-prepend">
@@ -171,11 +181,11 @@
                                     <label class="col-sm-1 col-form-label">Versión</label>
                                     <div class="col-sm-3">
                                         <select name="pv_id" id="pv_id" class="form-control " required>
-                                            <option value="{{ $programa->pv_id }}">{{ $programa->version->pv_nombre }}
+                                            <option value="{{ $programa->pv_id }}">{{ $programa->version->pv_nombre }} {{ $programa->version->pv_romano }} - {{ $programa->version->pv_gestion }}
                                             </option>
                                             @foreach ($programaVersiones as $version)
                                                 <option value="{{ $version->pv_id }}">{{ $version->pv_nombre }}
-                                                    {{ $version->pv_numero }}</option>
+                                                    {{ $version->pv_romano }} - {{ $version->pv_gestion }}</option>
                                             @endforeach
                                         </select>
                                     </div>

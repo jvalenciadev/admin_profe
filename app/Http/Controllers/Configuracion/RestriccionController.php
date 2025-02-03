@@ -73,7 +73,8 @@ class RestriccionController extends Controller
         }
 
         // Obtener los programas que aún no tienen restricciones asociadas o que corresponden a los pro_ids del usuario
-        $programas = Programa::whereNotIn('pro_id', function($query) {
+        $programas = Programa::join('programa_version', 'programa_version.pv_id', '=', 'programa.pv_id')
+        ->whereNotIn('pro_id', function($query) {
             $query->select('pro_id')->from('programa_restriccion');
         })
         ->when(!is_null($this->user->pro_ids), function ($query) {

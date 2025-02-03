@@ -70,6 +70,7 @@
                                         <thead>
                                             <tr>
                                                 <th>Nro</th>
+                                                <th>Versión</th>
                                                 <th>Nombre</th>
                                                 <th>Estado</th>
                                                 <th>Fecha Actualizado</th>
@@ -80,7 +81,8 @@
                                             @foreach ($programas as $programa)
                                                 <tr>
                                                     <td>{{ $loop->index + 1 }}</td>
-                                                    <td>{{ $programa->pro_nombre }}</td>
+                                                    <td>{{ $programa->pv_nombre }} {{ $programa->pv_romano}} - {{ $programa->pv_gestion}}</td>
+                                                    <td>{{ $programa->pro_tip_nombre }} en {{ $programa->pro_nombre }}</td>
                                                     <td>
                                                         <a href="{{ route('admin.programa.estado', $programa->pro_id) }}"
                                                             class="btn btn-{{ $programa->pro_estado == 'activo' ? 'success' : 'danger' }}">

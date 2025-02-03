@@ -1,6 +1,17 @@
 @extends('frontend.layouts.master')
 @section('title')
-    Sede - {{ $sede->sede_nombre }}
+    {{ $sede->dep_nombre }} - {{ $sede->sede_nombre }}
+@endsection
+@section('og-meta-tags')
+    <meta property="og:locale" content="es_ES" />
+    {{-- <meta property="og:type" content="article" /> --}}
+    <meta property="og:title" content="{{ $sede->dep_nombre }} - {{ $sede->sede_nombre }}" />
+    <meta name="og:description" content="{{ Str::limit(strip_tags($sede->sede_descripcion), 100) }}" />
+    <meta property="og:image" content="{{ asset('storage/sede_imagen/' . $sede->sede_imagen) }}" />
+    {{-- <meta property="og:url" content="{{ url()->current() }}" /> --}}
+    <meta property="og:image:width" content="545" />
+    <meta property="og:image:height" content="493" />
+    <meta property="og:image:type" content="image/jpeg" />
 @endsection
 @section('frontend-content')
     @php

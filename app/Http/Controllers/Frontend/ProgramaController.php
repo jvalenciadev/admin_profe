@@ -147,6 +147,7 @@ class ProgramaController extends Controller
         $usuario = MapPersona::join('map_especialidad', 'map_especialidad.esp_id', '=', 'map_persona.esp_id')
                         ->join('map_cargo', 'map_cargo.car_id', '=', 'map_persona.car_id')
                         ->join('map_subsistema', 'map_subsistema.sub_id', '=', 'map_persona.sub_id')
+                        ->join('map_nivel', 'map_nivel.niv_id', '=', 'map_persona.niv_id')
                         ->join('map_categoria', 'map_categoria.cat_id', '=', 'map_persona.cat_id')
                         ->where('map_persona.per_ci', $request->per_ci)
                         ->where('map_persona.per_fecha_nacimiento', $request->per_fecha_nacimiento)
@@ -171,12 +172,12 @@ class ProgramaController extends Controller
                 ->join('programa_version', 'programa_version.pv_id', '=', 'programa.pv_id')
                 ->join('programa_tipo', 'programa_tipo.pro_tip_id', '=', 'programa.pro_tip_id')
                 ->where('map_persona.per_ci', $request->per_ci)
-                ->where('programa_tipo.pro_tip_id', 3)
+                ->whereIn('programa_tipo.pro_tip_id', [3,4])
                 ->where('programa_version.pv_gestion', (int)now()->year)
                 ->where('programa_inscripcion.pro_id', '!=' , $programa->pro_id)
                 ->first();
-            if ($verinscripcion){
-                return back()->withErrors(['error' => 'Usted ya se inscribió en otro diplomado de esta gestión. No puede inscribirse nuevamente.']);
+            if ($verinscripcion && $programa->pro_tip_id != 2 ){
+                return back()->withErrors(['error' => 'Usted ya cuenta con una inscripción en esta gestión. No puede inscribirse nuevamente.']);
             }
             $admin = Admin::where('per_id',$usuario->per_rda)->where("estado",'activo')->first();
             if ($admin) {
@@ -202,17 +203,17 @@ class ProgramaController extends Controller
                 // Verificar restricciones para 'sub_ids'
                 if ($subIds && !empty($subIds) && $subIds !== "null" && $subIds !== null && !in_array($usuario->sub_id, $subIds)) {
 
-                    return back()->withErrors(['error' => 'El subsistema al que pertenece el usuario no está permitido para ' . $usuario->sub_nombre . '.']);
+                    return back()->withErrors(['error' => 'La oferta formativa no esta dirigido para subsistema de educación ' . $usuario->sub_nombre . '.']);
                 }
 
                 // Verificar restricciones para 'niv_ids'
                 if ($nivIds && !empty($nivIds) && $nivIds !== "null" && $nivIds !== null && !in_array($usuario->niv_id, $nivIds)) {
-                    return back()->withErrors(['error' => 'El nivel al que pertenece el usuario no está permitido para ' . $usuario->sub_nombre . '.']);
+                    return back()->withErrors(['error' => 'La oferta formativa no esta dirigido para nivel ' . $usuario->niv_nombre . '.']);
                 }
 
                 // Verificar restricciones para 'esp_ids'
                 if ($espIds && !empty($espIds) && $espIds !== "null" && $espIds !== null && !in_array($usuario->esp_id, $espIds)) {
-                    return back()->withErrors(['error' => 'La especialidad al que pertenece el usuario no está permitido para ' . ltrim($usuario->esp_nombre) . '.']);
+                    return back()->withErrors(['error' => 'La oferta formativa no esta dirigido para la especialidad ' . ltrim($usuario->esp_nombre) . '.']);
                 }
 
                 // Verificar restricciones para 'esp_nombres'
@@ -228,17 +229,17 @@ class ProgramaController extends Controller
                     }
 
                     if (!$espNombreValido) {
-                        return back()->withErrors(['error' => 'La especialidad al que pertenece el usuario no está permitido para ' . ltrim($usuario->esp_nombre) . '.']);
+                        return back()->withErrors(['error' => 'La oferta formativa no esta dirigido para la especialidad ' . ltrim($usuario->esp_nombre) . '.']);
                     }
                 }
 
                 // Verificar restricciones para 'cat_ids'
                 if ($catIds && !empty($catIds) && $catIds !== "null" && $catIds !== null && !in_array($usuario->cat_id, $catIds)) {
-                    return back()->withErrors(['error' => 'La categoría al que pertenece el usuario no está permitido para ' . $usuario->cat_nombre . '.']);
+                    return back()->withErrors(['error' => 'La oferta formativa no esta dirigido para la ' . $usuario->cat_nombre . ' categoría.']);
                 }
                 // Verificar restricciones para 'cat_ids'
                 if ($carIds && !empty($carIds) && $carIds !== "null" && $carIds !== null && !in_array($usuario->car_id, $carIds)) {
-                    return back()->withErrors(['error' => 'El cargo al que pertenece el usuario no está permitido para ' . ltrim($usuario->car_nombre) . '.']);
+                    return back()->withErrors(['error' => 'La oferta formativa no esta dirigido para la cargo de  ' . ltrim($usuario->car_nombre) . '.']);
                 }
 
                 // Verificar restricciones para 'car_nombres'
@@ -254,7 +255,7 @@ class ProgramaController extends Controller
                     }
 
                     if (!$carNombreValido) {
-                        return back()->withErrors(['error' => 'El cargo al que pertenece el usuario no está permitido para ' . $usuario->car_nombre . '.']);
+                        return back()->withErrors(['error' => 'La oferta formativa no esta dirigido para la cargo de  ' . $usuario->car_nombre . '.']);
                     }
                 }
             }

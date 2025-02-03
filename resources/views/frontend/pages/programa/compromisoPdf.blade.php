@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Declaración y Compromiso Académico y Administrativo</title>
+    <title>Declaración Jurada y Compromiso Académico y Administrativo</title>
     <style>
         /* Ajustes generales */
         @page {
@@ -42,7 +42,7 @@
             font-size: 12px;
             line-height: 1.8;
             color: #34495e;
-            margin-bottom: 20px;
+            margin-bottom: 0px;
         }
 
         .content strong {
@@ -91,7 +91,7 @@
         .logo {
             display: block;
             margin: 0 auto 10px;
-            max-width: 400px;
+            max-width: 500px;
         }
 
         .highlight {
@@ -143,40 +143,39 @@
         @endif
 
 
+        <ul style="list-style-type: none; margin-left: -40px;">
+            <li>- Todos los documentos presentados para la inscripción al postgrado son auténticos.</li>
+            <li>- Cumpló las normas académicas y administrativas para el desarrollo de los postgrados.</li>
+        </ul>
+        <div class="content"><strong>ME COMPROMETO:</strong></div>
         <ul>
-            <li>Todos los documentos presentados para la postulación al postgrado son auténticos.
-            </li>
-            <li>Conozco las normas académicas y administrativas para el desarrollo de los postgrados del Programa de
-                Formación Especializada – PROFE.</li>
-            <li>Me comprometo a ser responsable con la asistencia al postgrado, teniendo en cuenta que el porcentaje de asistencia mínimo es de 75%
+            <li>A ser responsable con la asistencia al postgrado, teniendo en cuenta que el porcentaje de asistencia mínimo es de 75%
                 a las sesiones virtuales y el 90% a las sesiones presenciales. Considerando que el sistema de calificaciones de cada curso o módulos
                 se lo realiza sobre 100 puntos y para obtener la aprobación en los cursos o módulos
                 regulares se requiere un mínimo de 70 puntos. El Programa de Formación Especializada - PROFE no se responsabiliza por la reprobación
                 por la reprobación de cursos o módulos del programa en caso de incumplimiento al reglamento académico.
             </li>
-            <li>Respeto las normas nacionales e internacionales de protección de los derechos de autoría
+            <li>A Respetar las normas nacionales e internacionales de protección de los derechos de autoría
                 intelectual para trabajos académicos, comprometiéndome a no usar producciones, textos, libros o ideas
                 sin la debida cita y/o referencia bibliográfica según normas APA. Para este efecto, el Programa de Formación Especializada –
                 PROFE podrá recurrir a sistemas anti plagio y otros recursos para la verificación.</li>
-            <li>Tengo las condiciones de conectividad a internet y equipamiento computacional necesarias para el proceso de
+            <li>A Tener las condiciones de conectividad a internet y equipamiento computacional necesarias para el proceso de
                 enseñanza-aprendizaje.</li>
-            <li>Me comprometo a realizar los pagos de colegiatura de manera puntual, evitando cualquier mora que
-                pueda impedir mi habilitación para el desarrollo de los cursos o módulos. Los pagos se
+            <li>A realizar los pagos de colegiatura de manera puntual al inicio de cada módulo, evitando cualquier mora que
+                pueda impedir mi habilitación para el desarrollo de los módulos. Los pagos se
                 realizarán conforme al plan o cronograma proporcionado. El incumplimiento de este compromiso provocará
                 mi inhabilitación académica, lo que resultará en la pérdida del derecho a participar en clases,
                 exámenes y prácticas.</li>
-            <li>Tengo conocimiento que los costos por trámites administrativos y titulación en Ciclos Formativos y Diplomados, incluyendo
-                la obtención de certificaciones de calificaciones, timbres, carpetas y títulos, son adicionales. En el caso de ciclos formativos,
-                los trámites administrativos de certificación son gratuitos.</li>
-            <li>Estoy obligado a cancelar por los cursos y módulos cursados, independientemente de la calificación obtenida. En caso de abandono,
-                no se realizará la devolución de los montos pagados por mátricula y/o colegiatura.
-            </li>
         </ul>
-
+        <div class="content" style="margin-bottom: 0;"><strong>NOTA:</strong></div>
+        <ul style="list-style-type: none; margin-left: -40px; margin-top: 0;"><li>- Tengo conocimiento que los costos por trámites administrativos y titulación del Diplomado, incluyendo
+            la obtención de certificaciones de calificaciones, timbres, carpetas y títulos, son adicionales.<br>
+        - En caso de abandono, no se realizará la devolución de los montos pagados por mátricula y/o colegiatura.</li>
+        </ul>
         <div class="divider"></div>
         <p class="content">Es cuanto declaro, comprometo y suscribo a los <strong
                 class="highlight">{{ now()->format('d') }}</strong> de <strong
-                class="highlight">{{ ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'][now()->format('n') - 1] }}</strong>
+                class="highlight">{{ ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'][now()->format('n') - 1] }}</strong>
             de <strong class="highlight">{{ now()->format('Y') }}</strong>.</p>
 
         <div class="signature-section">
@@ -190,9 +189,9 @@
                 {{ strtoupper($participante->per_ci) }}{{ $participante->per_complemento ? '-' . strtoupper($participante->per_complemento) : '' }}
             </p>
         </div>
-        {{--
-        <div class="footer">
-            <p><em class="important-text">Nota: El participante debe imprimir la presente Declaración y Compromiso
+
+        {{-- <div class="footer">
+            <p><em class="important-text">Nota: El participante debe imprimir la presente Declaración Jurada, Compromiso
                     Académico y Administrativo firmada y adjuntar al folder I conjuntamente los requisitos mencionado en la convocatoria.</em></p>
         </div> --}}
     </main>

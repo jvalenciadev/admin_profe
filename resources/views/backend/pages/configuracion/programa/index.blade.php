@@ -76,7 +76,8 @@
                                             <tr>
                                                 <th>Nro</th>
                                                 <th>Nombre</th>
-                                                <th>Numero</th>
+                                                <th>Romano</th>
+                                                <th>Gestión</th>
                                                 <th>Estado</th>
                                                 <th>Fecha Actualizado</th>
                                                 <th>Acciones</th>
@@ -87,7 +88,8 @@
                                                 <tr>
                                                     <td>{{ $loop->index + 1 }}</td>
                                                     <td>{{ $version->pv_nombre }}</td>
-                                                    <td>{{ $version->pv_numero }}</td>
+                                                    <td>{{ $version->pv_romano}}</td>
+                                                    <td>{{ $version->pv_gestion}}</td>
                                                     <td>
                                                         @if($version->pv_estado == 'activo')
                                                             <span class="label label-success">
@@ -423,6 +425,14 @@
                         <div class="form-group">
                             <label for="descripcion">Numero</label>
                             <input type="number" class="form-control" id="pv_numero" name="pv_numero" placeholder="Ingrese numero versión">
+                        </div>
+                        <div class="form-group">
+                            <label for="descripcion">Romano</label>
+                            <input type="text" class="form-control" id="pv_romano" name="pv_romano" placeholder="Ingrese numero versión en romano">
+                        </div>
+                        <div class="form-group">
+                            <label for="descripcion">Gestión</label>
+                            <input type="number" class="form-control" id="pv_gestion" name="pv_gestion" placeholder="Ingrese la gestión">
                         </div>
                         <button type="submit" class="btn btn-primary" id="configForm">Guardar</button>
                     </form>

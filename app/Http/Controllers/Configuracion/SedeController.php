@@ -86,15 +86,17 @@ class SedeController extends Controller
         })->toArray();
 
         // Obtener programas y sedes originales
-        $programasOriginal = Programa::when(!is_null($this->user->pro_ids), function ($query) use ($proIds) {
+        $programasOriginal = Programa::join('programa_version', 'programa_version.pv_id', '=', 'programa.pv_id')
+        ->when(!is_null($this->user->pro_ids), function ($query) use ($proIds) {
             if (!empty($proIds)) { // Verifica si $proIds no está vacío
                 return $query->whereIn('pro_id', $proIds);
             } else {
                 return $query; // Devuelve el query sin modificar si $proIds está vacío
             }
         })->get();
-        
-        $sedesOriginal = Sede::when(!is_null($this->user->sede_ids), function ($query) use ($sedesIds) {
+
+        $sedesOriginal = Sede::join('departamento','departamento.dep_id', '=', 'sede.dep_id')
+        ->when(!is_null($this->user->sede_ids), function ($query) use ($sedesIds) {
             if (!empty($sedesIds)) { // Verifica si $sedesIds no está vacío
                 return $query->whereIn('sede_id', $sedesIds);
             } else {

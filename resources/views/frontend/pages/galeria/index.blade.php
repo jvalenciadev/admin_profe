@@ -17,7 +17,7 @@
             /* Añade sombra */
         }
     </style>
-    
+
     <section class="breadcrumb-area d-flex  p-relative align-items-center">
         <div class="container">
             <div class="row align-items-center">
@@ -57,26 +57,35 @@
                                             <div class="portfolio">
                                                 <div class="row align-items-end mb-50">
                                                     <div class="col-lg-12">
-                                                        <div class="my-masonry text-center wow fadeInDown animated" data-animation="fadeInDown" data-delay=".4s">
+                                                        <div class="my-masonry text-center wow fadeInDown animated"
+                                                            data-animation="fadeInDown" data-delay=".4s">
                                                             <div class="button-group filter-button-group">
                                                                 <button class="active" data-filter="*">Ver Todos</button>
-                                                                @foreach($galeriasPorPrograma as $pro_id => $galerias) <!-- Cambia esto -->
-                                                                    <button data-filter=".{{ $pro_id }}">{{ $galerias->first()->pro_nombre_abre }}</button> <!-- Cambia esto -->
+                                                                @foreach ($galeriasPorPrograma as $pro_id => $galerias)
+                                                                    <!-- Cambia esto -->
+                                                                    <button
+                                                                        data-filter=".{{ $pro_id }}">{{ $galerias->first()->pro_nombre_abre }}</button>
+                                                                    <!-- Cambia esto -->
                                                                 @endforeach
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                    
-                                                <div class="grid col3 wow fadeInUp animated" data-animation="fadeInUp" data-delay=".4s">
-                                                    @foreach($galeriasPorPrograma as $galerias)
-                                                        @foreach($galerias as $galeria)
+
+                                                <div class="grid col3 wow fadeInUp animated" data-animation="fadeInUp"
+                                                    data-delay=".4s">
+                                                    @foreach ($galeriasPorPrograma as $galerias)
+                                                        @foreach ($galerias as $galeria)
                                                             <div class="grid-item {{ $galeria->pro_id }}">
-                                                                <a href="{{ asset('storage/galeria/' . $galeria->galeria_imagen) }}" class="image-popup">
+                                                                <a href="{{ asset('storage/galeria/' . $galeria->galeria_imagen) }}"
+                                                                    class="image-popup">
                                                                     <figure class="gallery-image">
-                                                                        <img fetchpriority="high" decoding="async" src="{{ asset('storage/galeria/' . $galeria->galeria_imagen) }}" class="attachment-post-thumbnail size-post-thumbnail wp-post-image" alt="" />
+                                                                        <img fetchpriority="high" decoding="async"
+                                                                            src="{{ asset('storage/galeria/' . $galeria->galeria_imagen) }}"
+                                                                            class="attachment-post-thumbnail size-post-thumbnail wp-post-image"
+                                                                            alt="" />
                                                                         <figcaption>
-                                                                            <h4>{{ $galeria->pro_nombre_abre }}</h4>
+                                                                            <h4>{{ $galeria->dep_abreviacion }} - {{ $galeria->sede_nombre_abre }}</h4>
                                                                         </figcaption>
                                                                     </figure>
                                                                 </a>
@@ -87,7 +96,7 @@
                                             </div>
                                         </div>
                                     </section>
-                                    
+
                                     <!-- gallery-area-end -->
                                 </div>
                             </div>
@@ -97,7 +106,7 @@
             </div>
         </div>
     </article>
-    
+
 
 @section('scripts')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/magnific-popup.js/1.1.0/magnific-popup.min.css">
