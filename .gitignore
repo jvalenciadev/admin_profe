@@ -2,6 +2,7 @@
 /public/hot
 /public/storage
 /storage/*
+/public/*
 /vendor
 /template
 .env
