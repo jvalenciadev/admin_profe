@@ -30,7 +30,7 @@ class DashboardController extends Controller
         if (is_null($this->user) || !$this->user->can('dashboard.view')) {
             abort(403, 'Sorry !! You are Unauthorized to view dashboard !');
         }
-
+ 
         $grupo_programa = DB::table('programa_inscripcion')
         ->join('sede', 'sede.sede_id', '=', 'programa_inscripcion.sede_id')
         ->join('departamento', 'departamento.dep_id', '=', 'sede.dep_id')
@@ -44,7 +44,7 @@ class DashboardController extends Controller
             DB::raw('COUNT(programa_inscripcion.pi_id) as CANTIDAD')
         )
         ->groupBy('programa.pro_id', 'programa.pro_nombre_abre',
-         'sede.sede_id', 'departamento.dep_abreviacion',
+         'sede.sede_id', 'departamento.dep_abreviacion', 
          'sede.sede_nombre_abre', 'programa_turno.pro_tur_nombre', 'programa_turno.pro_tur_id')
         ->orderBy('programa.pro_id')
         ->orderBy('sede.sede_id')
@@ -77,6 +77,7 @@ class DashboardController extends Controller
             ->select('dep.dep_abreviacion', DB::raw('COUNT(pi.pi_id) as total_inscripciones'))
             ->groupBy('dep.dep_abreviacion')
             ->where('pi.pi_estado','activo')
+            ->whereBetween('pi.pro_id', [12, 22]) 
             ->get();
         $inscritosSede = DB::table('programa_inscripcion as pi')
             ->join('sede as sed', 'pi.sede_id', '=', 'sed.sede_id')
@@ -84,8 +85,12 @@ class DashboardController extends Controller
             ->select('dep.dep_abreviacion', 'sed.sede_nombre_abre', DB::raw('COUNT(pi.pi_id) as total_inscripciones'))
             ->groupBy('dep.dep_abreviacion', 'sed.sede_nombre_abre')
             ->where('pi.pi_estado','activo')
+            ->whereBetween('pi.pro_id', [12, 22]) 
             ->get();
-        $total_inscritos = count(ProgramaInscripcion::select('pi_id')->where('pi_estado','=',"activo")->where('pie_id','=',"2")->get());
+        $total_inscritos = count(ProgramaInscripcion::select('pi_id')
+        ->where('pi_estado','=',"activo")
+        ->whereBetween('pro_id', [12, 22]) 
+        ->where('pie_id','=',"2")->get());
         $total_roles = count(Role::select('id')->get());
         $total_admins = count(Admin::select('id')->get());
         $total_permissions = count(Permission::select('id')->get());
@@ -94,7 +99,6 @@ class DashboardController extends Controller
             ->join('programa as pro', 'pro.pro_id', '=', 'pi.pro_id')
             ->join('departamento as dep', 'dep.dep_id', '=', 'sed.dep_id')
             ->select(
-                'pro.pro_id',
                 'pro.pro_nombre_abre',
                 DB::raw('SUM(IF(dep.dep_id = 1, 1, 0)) AS CHUQUISACA'),
                 DB::raw('SUM(IF(dep.dep_id = 2, 1, 0)) AS LA_PAZ'),
@@ -109,7 +113,8 @@ class DashboardController extends Controller
             )
             ->where('pi.pi_estado','activo')
             ->where('pi.pie_id',2)
-            ->groupBy('pro.pro_id', 'pro.pro_nombre_abre')
+            ->whereBetween('pi.pro_id', [12, 22]) 
+            ->groupBy('pro.pro_nombre_abre')
             ->orderBy('pro.pro_id', 'ASC')
             ->get();
         return view('backend.pages.dashboard.index', compact(

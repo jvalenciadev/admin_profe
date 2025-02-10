@@ -90,7 +90,7 @@
                                             @endforeach
                                         @else
                                                 <h6>
-                                                    <strong>{{ $inscripciones->first()->pro_nombre_abre }}</strong> 
+                                                    <strong>{{ $inscripciones->first()->pro_nombre_abre ?? '' }}</strong> 
                                                 </h6>
     
                                         @endif
@@ -208,6 +208,15 @@
                                                                         @if (Auth::guard('admin')->user()->can('inscripcion.pdflista'))
                                                                             @if ($inscripcion->pie_nombre == 'INSCRITO')
                                                                                     <a href="{{ route('admin.inscripcion.formulariopdf', encrypt($inscripcion->pi_id)) }}"
+                                                                                        class="btn btn-warning btn-outline-warning waves-effect waves-light m-r-20">
+                                                                                        <i class="icofont icofont-files"></i>
+                                                                                    </a>
+                                                                            @endif
+                                                                            @if ($inscripcion->pie_nombre == 'INSCRITO')
+                                                                                    <a href="{{ route('programa.comprobanteParticipantePdf', [
+                                                                                            'per_id' => encrypt($inscripcion->per_id),
+                                                                                            'pro_id' => encrypt($inscripcion->pro_id),
+                                                                                        ]) }}"
                                                                                         class="btn btn-warning btn-outline-warning waves-effect waves-light m-r-20">
                                                                                         <i class="icofont icofont-files"></i>
                                                                                     </a>

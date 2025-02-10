@@ -214,12 +214,15 @@
                         <li>
                             Depósito bancario a cuenta del Ministerio de Educación, a nombre del participante.
                         </li>
-                        <li>
-                            Para diplomados, el depósito debe ser por módulo de <strong>Bs. 300</strong>.
-                        </li>
+                        @if($participante->pro_tip_id == 2)
                         <li>
                             Para ciclos formativos, el deposito debe de ser el costo total <strong>Bs. 150</strong>.
                         </li>
+                        @else
+                        <li>
+                            Para diplomados, el depósito debe ser por módulo de <strong>Bs. 300</strong>.
+                        </li>
+                        @endif
                     </ul>
                     El monto de los depósitos o transferencias bancarias debe ser sin fraccionamiento al inicio de cada
                     módulo o ciclo formativos a la cuenta: <strong>Nro. 10000004669343</strong> del Ministerio de
@@ -246,18 +249,14 @@
                     <div style=" background-color: #d7d7d7; padding: 15px; font-size: 12px;">
                         <img src="data:image/jpeg;base64,{{ $logo3 }}" alt="" width="50px"> <br>
                         <div style="text-align: justify;">
-                            <strong style="color: #e67e22;">¡ATENCIÓN!
-                            </strong>
+                           
 
                                 {{-- <span style="font-weight: normal; color: #333;">
                                     {!! $participante->res_descripcion ?? '' !!}
                                 </span> --}}
-                                <span style="font-weight:  normal; color: #333;">
-                                    Tiene un plazo máximo de <b>48 horas</b> para habilitar su inscripción en la sede
-                                    registrada.
-                                    Si no realiza la habilitación dentro de este tiempo, perderá su cupo y deberá volver
-                                    a llenar el formulario.
-                                </span>
+                                    <strong>Importante:</strong> Tiene un plazo de <b>48 horas</b> para realizar el depósito y presentar su documentación en la sede en la que se inscribió.
+                                    <br>
+                                    <strong class="fw-bold">Nota:</strong> En caso de haber vencido el plazo, deberá volver a llenar el formulario de inscripción.
                         </div>
 
 

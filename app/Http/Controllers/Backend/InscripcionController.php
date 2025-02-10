@@ -17,6 +17,8 @@ use App\Models\ProgramaRestriccion;
 use App\Models\ProgramaTipo;
 use App\Models\Departamento;
 use App\Models\MapPersonaNr;
+use App\Models\MapNivel;
+use App\Models\MapSubsistema;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Spatie\Permission\Models\Role;
@@ -59,12 +61,14 @@ class InscripcionController extends Controller
             ->join('map_subsistema', 'map_persona.sub_id', '=', 'map_subsistema.sub_id')
             ->join('genero', 'map_persona.gen_id', '=', 'genero.gen_id')
             ->join('programa', 'programa_inscripcion.pro_id', '=', 'programa.pro_id')
+            ->join('programa_version', 'programa_version.pv_id', '=', 'programa.pv_id')
             ->join('programa_turno', 'programa_inscripcion.pro_tur_id', '=', 'programa_turno.pro_tur_id')
             ->join('sede', 'programa_inscripcion.sede_id', '=', 'sede.sede_id')
             ->join('departamento', 'sede.dep_id', '=', 'departamento.dep_id')
             ->join('programa_inscripcion_estado', 'programa_inscripcion.pie_id', '=', 'programa_inscripcion_estado.pie_id')
             ->where('sede.sede_id', decrypt($sede_id))
             ->where('programa_inscripcion.pi_estado', "=",'activo')
+            ->where('programa_version.pv_gestion', "=",'2025')
             ->select(
                 'programa_inscripcion.pi_id', 
                 'programa_inscripcion.pro_id', 
@@ -251,9 +255,11 @@ class InscripcionController extends Controller
         $totalBaucheresPorSede = DB::table('programa_baucher')
             ->join('programa_inscripcion', 'programa_baucher.pi_id', '=', 'programa_inscripcion.pi_id')
             ->join('sede', 'programa_inscripcion.sede_id', '=', 'sede.sede_id')
+            ->join('programa', 'programa_inscripcion.pro_id', '=', 'programa.pro_id')
             ->where('sede.sede_id', '=', decrypt($sede_id))
             ->select('sede.sede_nombre', DB::raw('count(programa_baucher.pro_bau_id) as total_baucheres'))
             ->groupBy('sede.sede_nombre')
+            ->whereBetween('programa.pv_id', [2, 3])
             ->first();
         //$mapPersona = MapPersona::paginate(100);
         return view('backend.pages.inscripcion.index', compact(['inscripciones','sede_id','totalBaucheresPorSede']));
@@ -363,14 +369,20 @@ class InscripcionController extends Controller
             ->select('sede.*', 'departamento.dep_nombre') // Selecciona los campos necesarios
             ->first();
         // Obtener todos los programas filtrados por pro_ids del usuario
-        $programa = Programa::when($this->user->pro_ids, function ($query) {
+        $niveles = MapNivel::where('niv_estado', "=",'activo')->get();
+        $subsistemas = MapSubsistema::where('sub_estado', "=",'activo')->get();
+        $programa = Programa::
+            join('programa_version', 'programa_version.pv_id', '=', 'programa.pv_id')
+            ->join('programa_tipo', 'programa_tipo.pro_tip_id', '=', 'programa.pro_tip_id')
+            ->when($this->user->pro_ids, function ($query) {
             $proIds = json_decode($this->user->pro_ids);
             if (!empty($proIds)) { // Verifica si $sedesIds no está vacío
                 $query->whereIn('pro_id', $proIds);
             }
-        })->get();
+        })->where('programa_version.pv_gestion', "=",'2025')
+        ->get();
 
-        return view('backend.pages.inscripcion.create', compact('sede','programa'));
+        return view('backend.pages.inscripcion.create', compact('sede','programa','subsistemas','niveles'));
     }
     public function getTurnos(Request $request)
     {
@@ -479,9 +491,15 @@ class InscripcionController extends Controller
         $inscripcion = new ProgramaInscripcion();
         $inscripcion->per_id = $persona->per_id; // Asignar el per_id obtenido
         $inscripcion->pro_id = $request->pro_id;
+        $inscripcion->pro_id = $request->pro_id;
         $inscripcion->pro_tur_id = $request->pro_tur_id;
         $inscripcion->sede_id = $request->sede_id;
-        $inscripcion->pie_id = 1;
+        $inscripcion->pi_licenciatura = $request->pi_licenciatura??NULL;
+        $inscripcion->pi_unidad_educativa = $request->pi_unidad_educativa??NULL;
+        $inscripcion->pi_materia = $request->pi_materia??NULL;
+        $inscripcion->pi_nivel = $request->pi_nivel??NULL;
+        $inscripcion->pi_subsistema = $request->pi_subsistema??NULL;
+        $inscripcion->pie_id = 4;
         // Añadir otros campos según tu estructura de datos
 
         // Guardar la inscripción
@@ -541,8 +559,10 @@ class InscripcionController extends Controller
             ->join('programa_inscripcion_estado', 'programa_inscripcion.pie_id', '=', 'programa_inscripcion_estado.pie_id')
             ->where('programa_inscripcion.pi_id', $pi_id) // Filtrar por pi_id
             ->select('programa_inscripcion.*', 'map_persona.*', 'map_especialidad.esp_nombre', 'map_cargo.car_nombre',
-                'programa.pro_nombre', 'programa.pro_costo', 'map_subsistema.sub_nombre', 'map_nivel.niv_nombre',
-                'map_categoria.cat_nombre', 'genero.gen_nombre',
+                'programa.pro_nombre','programa_inscripcion.pi_licenciatura', 'programa_inscripcion.pi_unidad_educativa', 
+                'programa_inscripcion.pi_nivel', 'programa_inscripcion.pi_subsistema', 'programa_inscripcion.pi_materia', 
+                'programa.pro_nombre',  'programa.pro_costo', 'map_subsistema.sub_nombre', 'map_nivel.niv_nombre',
+                'map_categoria.cat_nombre', 'genero.gen_nombre','programa.pro_tip_id',
                 'programa_turno.pro_tur_nombre', 'sede.sede_nombre', 'programa_inscripcion_estado.pie_nombre')
             ->first();
         $sede = Sede::join('departamento', 'sede.dep_id', '=', 'departamento.dep_id')
@@ -559,7 +579,9 @@ class InscripcionController extends Controller
         $inscripcionestado = ProgramaInscripcionEstado::all();
         $mapPersonaNr = MapPersonaNr::where('per_id',$inscripcion->per_id)->first();
         $departamentos = Departamento::all();
-        return view('backend.pages.inscripcion.edit', compact('inscripcion', 'programa', 'sede', 'bauchers','totalMonto','inscripcionestado', 'departamentos', 'mapPersonaNr'));
+        $niveles = MapNivel::where('niv_estado', "=",'activo')->get();
+        $subsistemas = MapSubsistema::where('sub_estado', "=",'activo')->get();
+        return view('backend.pages.inscripcion.edit', compact('inscripcion', 'programa', 'sede','niveles', 'subsistemas','bauchers','totalMonto','inscripcionestado', 'departamentos', 'mapPersonaNr'));
     }
 
     /**
@@ -676,7 +698,11 @@ class InscripcionController extends Controller
 
         // Actualizar la inscripción
         $inscripcion = ProgramaInscripcion::findOrFail($inscripcionId);
-        $inscripcion->sede_id = $request->sede_id;
+        $inscripcion->pi_materia = $request->pi_materia??NULL;
+        $inscripcion->pi_nivel = $request->pi_nivel??NULL;
+        $inscripcion->pi_licenciatura = $request->pi_licenciatura??NULL;
+        $inscripcion->pi_unidad_educativa = $request->pi_unidad_educativa??NULL;
+        $inscripcion->pi_subsistema = $request->pi_subsistema??NULL;
 
         $inscripcion->pro_tur_id = $request->pro_tur_id;
         #$inscripcion->pro_id = $request->pro_id;

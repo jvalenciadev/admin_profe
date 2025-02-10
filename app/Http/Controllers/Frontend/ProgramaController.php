@@ -46,13 +46,12 @@ class ProgramaController extends Controller
     public function show($pro_id)
     {
         $programa = Programa::where('pro_estado', 'activo')->where('pro_id', $pro_id)->first();
-
         $programa_sede_turno = ProgramaSedeTurno::join('sede', 'programa_sede_turno.sede_id', '=', 'sede.sede_id')
             ->join('departamento', 'sede.dep_id', '=', 'departamento.dep_id')
             ->where('pro_id', $pro_id)
             ->select('sede.sede_nombre','departamento.dep_nombre','sede.sede_contacto_1','programa_sede_turno.pro_tur_ids','sede.sede_contacto_2','sede.sede_id')
             ->get();
-        // Obtener turnos disponibles en programa_turno
+        $restriccion = ProgramaRestriccion::where('pr_estado', 'activo')->where('pro_id', $pro_id)->first();
         $galeriasPorPrograma = Galeria::selectRaw(
                     'galeria.*,
                     programa.pro_nombre_abre,
@@ -64,8 +63,11 @@ class ProgramaController extends Controller
                 ->where('programa.pro_codigo', $programa->pro_codigo)
                 ->orderBy('galeria.updated_at', 'desc')
                 ->get()
-                ->groupBy('sede_id');
-        return view('frontend.pages.programa.programa', compact('programa','galeriasPorPrograma', 'programa_sede_turno'));
+                ->groupBy('sede_id') // Agrupa por sede
+                ->map(function ($galerias) {
+                    return $galerias->take(3); // Toma solo 1 imagen por sede
+                });
+        return view('frontend.pages.programa.programa', compact('programa','galeriasPorPrograma', 'programa_sede_turno','restriccion'));
     }
     public function solicitarSedeInscripcion($pro_id){
         $programa = Programa::where('pro_id', $pro_id)->first();
@@ -163,129 +165,159 @@ class ProgramaController extends Controller
 
         // Si se encuentra el usuario en MapPersona
         if ($usuario) {
-            if (!$usuario->per_en_funcion == 1) {
-                return back()->withErrors(['error' => 'Usted no se encuentra en función.']);
-            }
-            $inscripcion = ProgramaInscripcion::join('map_persona', 'programa_inscripcion.per_id', '=', 'map_persona.per_id')
+            $inscripciondo = ProgramaInscripcion::join('map_persona', 'programa_inscripcion.per_id', '=', 'map_persona.per_id')
                 ->join('programa', 'programa.pro_id', '=', 'programa_inscripcion.pro_id')
-                ->join('programa_version', 'programa_version.pv_id', '=', 'programa.pv_id')
-                ->where('map_persona.per_ci', $request->per_ci)
-                ->where('programa.pro_codigo', $programa->pro_codigo)
-                ->select('programa_inscripcion.*', 'map_persona.per_ci', 'programa.pro_codigo','programa_version.pv_gestion')
-                ->first();
-            $verinscripcion = ProgramaInscripcion::join('map_persona', 'programa_inscripcion.per_id', '=', 'map_persona.per_id')
-                ->join('programa', 'programa.pro_id', '=', 'programa_inscripcion.pro_id')
-                ->join('programa_version', 'programa_version.pv_id', '=', 'programa.pv_id')
-                ->join('programa_tipo', 'programa_tipo.pro_tip_id', '=', 'programa.pro_tip_id')
-                ->where('map_persona.per_ci', $request->per_ci)
-                ->whereIn('programa_tipo.pro_tip_id', [3,4])
-                ->where('programa_version.pv_gestion', (int)now()->year)
-                ->where('programa_inscripcion.pro_id', '!=' , $programa->pro_id)
-                ->first();
-            if ($verinscripcion && $programa->pro_tip_id != 2 ){
-                return back()->withErrors(['error' => 'Usted ya cuenta con una inscripción en esta gestión. No puede inscribirse nuevamente.']);
-            }
-            $admin = Admin::where('per_id',$usuario->per_rda)->where("estado",'activo')->first();
-            if ($admin) {
-                return back()->withErrors(['error'=> 'Usted es personal del programa PROFE, no puede realizar su inscripción.']);
-            }
-            // Verificar si la inscripción ya existe
-            if ($inscripcion && (int)$inscripcion->pv_gestion !== (int)now()->year) {
-                return back()->withErrors(['error' => 'Usted ya se inscribió anteriormente a la oferta formativa. No puede inscribirse nuevamente.']);
-            }
-
-
-
-            $restriccion = ProgramaRestriccion::where('pro_id',$pro_id)->first();
-            if ($restriccion) {
-                $subIds = json_decode($restriccion->sub_ids);
-                $nivIds = json_decode($restriccion->niv_ids);
-                $espIds = json_decode($restriccion->esp_ids);
-                $espNombres = json_decode($restriccion->esp_nombres);
-                $catIds = json_decode($restriccion->cat_ids);
-                $carIds = json_decode($restriccion->car_ids);
-                $carNombres = json_decode($restriccion->car_nombres);
-                // dd($usuario);
-                // Verificar restricciones para 'sub_ids'
-                if ($subIds && !empty($subIds) && $subIds !== "null" && $subIds !== null && !in_array($usuario->sub_id, $subIds)) {
-
-                    return back()->withErrors(['error' => 'La oferta formativa no esta dirigido para subsistema de educación ' . $usuario->sub_nombre . '.']);
+                ->where('map_persona.per_ci', $usuario->per_ci)
+                ->where('programa.pro_id', $programa->pro_id)
+                ->exists();
+            if ($inscripciondo) {
+                    // $restricion = ProgramaRestriccion::where();
+                    session([
+                        'pro_id' => $programa->pro_id,
+                        'per_ci' => $usuario->per_ci,
+                    ]);
+                    // Autenticar usando el modelo MapPersona
+                    Auth::guard('map_persona')->login($usuario);
+                        session([
+                            'per_ci' => $usuario->per_ci,
+                            'per_complemento' => $usuario->per_complemento,
+                            'per_fecha_nacimiento' => $usuario->per_fecha_nacimiento,
+                            'per_nombre1' => $usuario->per_nombre1,
+                            'per_apellido1' => $usuario->per_apellido1,
+                            'per_apellido2' => $usuario->per_apellido2,
+                            'per_celular' => $usuario->per_celular,
+                            'per_correo' => $usuario->per_correo,
+                            'gen_id' => $usuario->gen_id,
+                        ]);
+                    return redirect()->route('programa.inscribirse');
+            }else{
+                if (!$usuario->per_en_funcion == 1) {
+                    return back()->withErrors(['error' => 'Usted no se encuentra en función.']);
                 }
-
-                // Verificar restricciones para 'niv_ids'
-                if ($nivIds && !empty($nivIds) && $nivIds !== "null" && $nivIds !== null && !in_array($usuario->niv_id, $nivIds)) {
-                    return back()->withErrors(['error' => 'La oferta formativa no esta dirigido para nivel ' . $usuario->niv_nombre . '.']);
+                
+                $inscripcion = ProgramaInscripcion::join('map_persona', 'programa_inscripcion.per_id', '=', 'map_persona.per_id')
+                    ->join('programa', 'programa.pro_id', '=', 'programa_inscripcion.pro_id')
+                    ->join('programa_version', 'programa_version.pv_id', '=', 'programa.pv_id')
+                    ->where('map_persona.per_ci', $request->per_ci)
+                    ->where('programa.pro_codigo', $programa->pro_codigo)
+                    ->select('programa_inscripcion.*', 'map_persona.per_ci', 'programa.pro_codigo','programa_version.pv_gestion')
+                    ->first();
+                $verinscripcion = ProgramaInscripcion::join('map_persona', 'programa_inscripcion.per_id', '=', 'map_persona.per_id')
+                    ->join('programa', 'programa.pro_id', '=', 'programa_inscripcion.pro_id')
+                    ->join('programa_version', 'programa_version.pv_id', '=', 'programa.pv_id')
+                    ->join('programa_tipo', 'programa_tipo.pro_tip_id', '=', 'programa.pro_tip_id')
+                    ->where('map_persona.per_ci', $request->per_ci)
+                    ->whereIn('programa_tipo.pro_tip_id', [3,4])
+                    ->where('programa_version.pv_gestion', (int)now()->year)
+                    ->where('programa_inscripcion.pro_id', '!=' , $programa->pro_id)
+                    ->first();
+                
+                if ($verinscripcion && $programa->pro_tip_id != 2 ){
+                    return back()->withErrors(['error' => 'Usted ya cuenta con una inscripción en esta gestión. No puede inscribirse nuevamente.']);
                 }
-
-                // Verificar restricciones para 'esp_ids'
-                if ($espIds && !empty($espIds) && $espIds !== "null" && $espIds !== null && !in_array($usuario->esp_id, $espIds)) {
-                    return back()->withErrors(['error' => 'La oferta formativa no esta dirigido para la especialidad ' . ltrim($usuario->esp_nombre) . '.']);
+                $admin = Admin::where('per_id',$usuario->per_rda)->first();
+                if ($admin) {
+                    return back()->withErrors(['error'=> 'Usted es personal del programa PROFE, no puede realizar su inscripción.']);
                 }
-
-                // Verificar restricciones para 'esp_nombres'
-                if ($espNombres && !empty($espNombres) && $espNombres !== "null" && $espNombres !== null) {
-                    $espNombreValido = false;
-
-                    // Recorrer cada valor en $espNombres y verificar si existe en $usuario->esp_nombre
-                    foreach ($espNombres as $espNombre) {
-                        if (stripos($usuario->esp_nombre, $espNombre) !== false) {
-                            $espNombreValido = true;
-                            break;
-                        }
+                // Verificar si la inscripción ya existe
+                if ($inscripcion && (int)$inscripcion->pv_gestion !== (int)now()->year) {
+                    return back()->withErrors(['error' => 'Usted ya se inscribió anteriormente a la oferta formativa. No puede inscribirse nuevamente.']);
+                }
+    
+    
+    
+                $restriccion = ProgramaRestriccion::where('pro_id',$pro_id)->first();
+                if ($restriccion) {
+                    $subIds = json_decode($restriccion->sub_ids);
+                    $nivIds = json_decode($restriccion->niv_ids);
+                    $espIds = json_decode($restriccion->esp_ids);
+                    $espNombres = json_decode($restriccion->esp_nombres);
+                    $catIds = json_decode($restriccion->cat_ids);
+                    $carIds = json_decode($restriccion->car_ids);
+                    $carNombres = json_decode($restriccion->car_nombres);
+                    // dd($usuario);
+                    // Verificar restricciones para 'sub_ids'
+                    if ($subIds && !empty($subIds) && $subIds !== "null" && $subIds !== null && !in_array($usuario->sub_id, $subIds)) {
+    
+                        return back()->withErrors(['error' => 'La oferta formativa no esta dirigido para subsistema de educación ' . $usuario->sub_nombre . '.']);
                     }
-
-                    if (!$espNombreValido) {
+    
+                    // Verificar restricciones para 'niv_ids'
+                    if ($nivIds && !empty($nivIds) && $nivIds !== "null" && $nivIds !== null && !in_array($usuario->niv_id, $nivIds)) {
+                        return back()->withErrors(['error' => 'La oferta formativa no esta dirigido para nivel ' . $usuario->niv_nombre . '.']);
+                    }
+    
+                    // Verificar restricciones para 'esp_ids'
+                    if ($espIds && !empty($espIds) && $espIds !== "null" && $espIds !== null && !in_array($usuario->esp_id, $espIds)) {
                         return back()->withErrors(['error' => 'La oferta formativa no esta dirigido para la especialidad ' . ltrim($usuario->esp_nombre) . '.']);
                     }
-                }
-
-                // Verificar restricciones para 'cat_ids'
-                if ($catIds && !empty($catIds) && $catIds !== "null" && $catIds !== null && !in_array($usuario->cat_id, $catIds)) {
-                    return back()->withErrors(['error' => 'La oferta formativa no esta dirigido para la ' . $usuario->cat_nombre . ' categoría.']);
-                }
-                // Verificar restricciones para 'cat_ids'
-                if ($carIds && !empty($carIds) && $carIds !== "null" && $carIds !== null && !in_array($usuario->car_id, $carIds)) {
-                    return back()->withErrors(['error' => 'La oferta formativa no esta dirigido para la cargo de  ' . ltrim($usuario->car_nombre) . '.']);
-                }
-
-                // Verificar restricciones para 'car_nombres'
-                if ($carNombres && !empty($carNombres) && $carNombres !== "null" && $carNombres !== null) {
-                    $carNombreValido = false;
-
-                    // Recorrer cada valor en $carNombres y verificar si existe en $usuario->car_nombre
-                    foreach ($carNombres as $carNombre) {
-                        if (stripos($usuario->car_nombre, $carNombre) !== false) {
-                            $carNombreValido = true;
-                            break;
+    
+                    // Verificar restricciones para 'esp_nombres'
+                    if ($espNombres && !empty($espNombres) && $espNombres !== "null" && $espNombres !== null) {
+                        $espNombreValido = false;
+    
+                        // Recorrer cada valor en $espNombres y verificar si existe en $usuario->esp_nombre
+                        foreach ($espNombres as $espNombre) {
+                            if (stripos($usuario->esp_nombre, $espNombre) !== false) {
+                                $espNombreValido = true;
+                                break;
+                            }
+                        }
+    
+                        if (!$espNombreValido) {
+                            return back()->withErrors(['error' => 'La oferta formativa no esta dirigido para la especialidad ' . ltrim($usuario->esp_nombre) . '.']);
                         }
                     }
-
-                    if (!$carNombreValido) {
-                        return back()->withErrors(['error' => 'La oferta formativa no esta dirigido para la cargo de  ' . $usuario->car_nombre . '.']);
+    
+                    // Verificar restricciones para 'cat_ids'
+                    if ($catIds && !empty($catIds) && $catIds !== "null" && $catIds !== null && !in_array($usuario->cat_id, $catIds)) {
+                        return back()->withErrors(['error' => 'La oferta formativa no esta dirigido para la ' . $usuario->cat_nombre . ' categoría.']);
+                    }
+                    // Verificar restricciones para 'cat_ids'
+                    if ($carIds && !empty($carIds) && $carIds !== "null" && $carIds !== null && !in_array($usuario->car_id, $carIds)) {
+                        return back()->withErrors(['error' => 'La oferta formativa no esta dirigido para la cargo de  ' . ltrim($usuario->car_nombre) . '.']);
+                    }
+    
+                    // Verificar restricciones para 'car_nombres'
+                    if ($carNombres && !empty($carNombres) && $carNombres !== "null" && $carNombres !== null) {
+                        $carNombreValido = false;
+    
+                        // Recorrer cada valor en $carNombres y verificar si existe en $usuario->car_nombre
+                        foreach ($carNombres as $carNombre) {
+                            if (stripos($usuario->car_nombre, $carNombre) !== false) {
+                                $carNombreValido = true;
+                                break;
+                            }
+                        }
+    
+                        if (!$carNombreValido) {
+                            return back()->withErrors(['error' => 'La oferta formativa no esta dirigido para la cargo de  ' . $usuario->car_nombre . '.']);
+                        }
                     }
                 }
+    
+                // $restricion = ProgramaRestriccion::where();
+                session([
+                    'pro_id' => $pro_id,
+                    'per_ci' => $request->per_ci,
+                ]);
+                // Autenticar usando el modelo MapPersona
+                Auth::guard('map_persona')->login($usuario);
+                 session([
+                    'per_ci' => $usuario->per_ci,
+                    'per_complemento' => $usuario->per_complemento,
+                    'per_fecha_nacimiento' => $usuario->per_fecha_nacimiento,
+                    'per_nombre1' => $usuario->per_nombre1,
+                    'per_apellido1' => $usuario->per_apellido1,
+                    'per_apellido2' => $usuario->per_apellido2,
+                    'per_celular' => $usuario->per_celular,
+                    'per_correo' => $usuario->per_correo,
+                    'gen_id' => $usuario->gen_id,
+                ]);
+                // Redirigir al formulario de inscripción
+                return redirect()->route('programa.inscribirse');
             }
-
-            // $restricion = ProgramaRestriccion::where();
-            session([
-                'pro_id' => $pro_id,
-                'per_ci' => $request->per_ci,
-            ]);
-            // Autenticar usando el modelo MapPersona
-            Auth::guard('map_persona')->login($usuario);
-             session([
-                'per_ci' => $usuario->per_ci,
-                'per_complemento' => $usuario->per_complemento,
-                'per_fecha_nacimiento' => $usuario->per_fecha_nacimiento,
-                'per_nombre1' => $usuario->per_nombre1,
-                'per_apellido1' => $usuario->per_apellido1,
-                'per_apellido2' => $usuario->per_apellido2,
-                'per_celular' => $usuario->per_celular,
-                'per_correo' => $usuario->per_correo,
-                'gen_id' => $usuario->gen_id,
-            ]);
-            // Redirigir al formulario de inscripción
-            return redirect()->route('programa.inscribirse');
+           
         }
         else {
             // Redirigir al formulario si no se encuentra el usuario
@@ -347,21 +379,18 @@ class ProgramaController extends Controller
                     $fechaInscripcion = \Carbon\Carbon::parse($inscripcion->created_at);
                     $tiempoTranscurrido = $fechaInscripcion->diffInHours(now());
 
-                    if ($inscripcion->pie_id != 4) {
+                    if ($tiempoTranscurrido > 48) {
+                        return view('frontend.pages.programa.inscripcion_verificar', compact('departamentos','proRestriccion', 'generos', 'proSedeTur','nivel','subsistema', 'programa', 'user'));
+                    } else{
                         return redirect()->route('programa.comprobanteParticipante', [
                             'per_id' => encrypt($pro_per->per_id),
                             'pro_id' => encrypt($pro_id),
                         ])->with('danger', 'Usted ya se encuentra registrado');
-                    } elseif ($tiempoTranscurrido > 24) {
-                        return view('frontend.pages.programa.inscripcion_verificar', compact('departamentos','proRestriccion', 'generos', 'proSedeTur','nivel','subsistema', 'programa', 'user'));
                     }
                 }
                 else{
-
                     return view('frontend.pages.programa.inscripcion_verificar', compact('departamentos','proRestriccion', 'generos', 'proSedeTur','nivel','subsistema', 'programa', 'user'));
                 }
-            }else{
-                return view('frontend.pages.programa.inscripcion_verificar', compact('departamentos','proRestriccion', 'generos', 'proSedeTur','nivel','subsistema', 'programa', 'user'));
             }
         }
         // Retorna la vista de inscripcion_verificar con los datos requeridos
@@ -411,7 +440,6 @@ class ProgramaController extends Controller
                     'pro_tur_id' => $request['pro_tur_id'],
                     'sede_id' => $request['sede_id'],
                     'pro_id' => $pro_id,
-                    'created_at' => now(),
                     'pie_id' => 4,
                 ]
             );
@@ -611,6 +639,7 @@ class ProgramaController extends Controller
          $participante = DB::table('programa_inscripcion')
              ->select(
                  'programa_inscripcion.per_id',
+                 'programa_inscripcion.pie_id',
                  // 'evento_inscripcion.ei_rda',
                  'map_persona.per_ci',
                  'map_persona.per_complemento',
@@ -630,6 +659,7 @@ class ProgramaController extends Controller
                  'programa_inscripcion.created_at',
                  'programa_inscripcion.updated_at',
                  'programa_modalidad.pm_nombre',
+                 'programa_tipo.pro_tip_id',
                  'programa_tipo.pro_tip_nombre',
                  'programa_turno.pro_tur_nombre',
                  'programa_version.pv_nombre',
@@ -659,8 +689,11 @@ class ProgramaController extends Controller
          //
          // dd($participante);
          //
-         $fechaInscripcion = \Carbon\Carbon::parse($participante->created_at);
+        $fechaInscripcion = \Carbon\Carbon::parse($participante->created_at);
         $tiempoTranscurrido = $fechaInscripcion->diffInHours(now());
+        if ($participante->pie_id== 2) {
+            return redirect('/ofertas-academicas')->with('success', 'Usted ya se encuentra inscrito');
+        }
         if ($tiempoTranscurrido > 24) {
             return redirect('/ofertas-academicas')->with('error', 'Usted no se encuentra habilitado para la inscripción');
         }

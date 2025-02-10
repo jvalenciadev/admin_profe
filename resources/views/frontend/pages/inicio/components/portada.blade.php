@@ -109,11 +109,12 @@ data-id="531532d" data-element_type="section">
                                                                         data-animation="fadeInLeft"
                                                                         data-delay=".4s">Ofertas Académicas<i
                                                                             class="fal fa-long-arrow-right"></i></a>
-                                                                    {{-- <a href="contact/index.html"
-                                                                        class="btn ss-btn active"
-                                                                        data-animation="fadeInLeft"
-                                                                        data-delay=".4s">Contact Us <i
-                                                                            class="fal fa-long-arrow-right"></i></a> --}}
+                                                                            <a href="{{ asset('storage/profe/' . $profe->profe_convocatoria) }}" 
+                                                                                class="btn ss-btn active" 
+                                                                                data-animation="fadeInLeft" target="_blank" 
+                                                                                data-delay=".4s">Convocatoria
+                                                                                <i class="fal fa-long-arrow-right" ></i>
+                                                                             </a>
                                                 </div>
                                             </div>
                                         </div>
@@ -138,16 +139,17 @@ data-id="531532d" data-element_type="section">
                                                     </div>
                                                 </p>
                                                 <div class="slider-btn mt-30"> <a
-                                                                        href="{{ route('programa') }}l"
+                                                                        href="{{ route('programa') }}"
                                                                         class="btn ss-btn mr-15"
-                                                                        data-animation="fadeInLeft"
+                                                                        data-animation="fadeInLeft" target="_blank" 
                                                                         data-delay=".4s">Ofertas Académicas<i
                                                                             class="fal fa-long-arrow-right"></i></a>
-                                                                    {{-- <a href="contact/index.html"
-                                                                        class="btn ss-btn active"
-                                                                        data-animation="fadeInLeft"
-                                                                        data-delay=".4s">Contact Us <i
-                                                                            class="fal fa-long-arrow-right"></i></a> --}}
+                                                                            <a href="{{ asset('storage/profe/' . $profe->profe_convocatoria) }}" 
+                                                                                class="btn ss-btn active" 
+                                                                                data-animation="fadeInLeft" target="_blank" 
+                                                                                data-delay=".4s">Convocatoria
+                                                                                <i class="fal fa-long-arrow-right" ></i>
+                                                                             </a>
                                                 </div>
                                             </div>
                                         </div>

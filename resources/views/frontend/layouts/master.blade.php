@@ -10,6 +10,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" href="{{ asset('assets/profe/icono.png') }}" type="image/x-icon" />
 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     @include('frontend.layouts.partials.styles')
     @yield('styles')

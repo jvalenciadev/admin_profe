@@ -221,7 +221,8 @@
                     $usr->can('programa.view') ||
                     $usr->can('comunicado.view') ||
                     $usr->can('evento.view') ||
-                    $usr->can('blog.view')|| $usr->can('galeria.view'))
+                    $usr->can('blog.view') ||
+                    $usr->can('galeria.view'))
                 <li class="pcoded-hasmenu">
 
                     <a href="javascript:void(0)">
@@ -354,69 +355,74 @@
             @endif
 
 
-            @if ($usr->can('calificacion.view'))
-            <div class="pcoded-navigatio-lavel">CALIFICACION</div>
-            @foreach ($sedes as $sede)
-                @php
-                    // Encripta el sede_id
-                    $sedeencript = encrypt($sede->sede_id);
-        
-                    // Obtiene el sede_id actual y decifra si es necesario
-                    $currentSedeId = request()->route('sede_id');
-                    $decryptedCurrentSedeId = $currentSedeId ? decrypt($currentSedeId) : null;
-        
-                    // Verifica si el menú de sede debe estar activo
-                    $isSedeActive = $decryptedCurrentSedeId == $sede->sede_id;
-                @endphp
-                <li class="pcoded-hasmenu {{ $isSedeActive ? 'pcoded-trigger' : '' }}">
-                    <a href="javascript:void(0)">
-                        <span class="pcoded-micon"><i class="feather icon-sidebar"></i></span>
-                        <span class="pcoded-mtext">{{ $sede->sede_nombre_abre }}</span>
-                    </a>
-                    <ul class="pcoded-submenu">
-                        @foreach ($progrs as $programa)
-                            @php
-                                // Encripta el pro_id
-                                $proencript = encrypt($programa->pro_id);
-                    
-                                // Obtiene el pro_id actual y decifra si es necesario
-                                $currentProId = request()->route('pro_id');
-                                $decryptedCurrentProId = $currentProId ? decrypt($currentProId) : null;
-                    
-                                // Verifica si estamos en la ruta de calificación y si el programa coincide
-                                $isProgramaActive = request()->routeIs('admin.calificacion.index') && $decryptedCurrentProId == $programa->pro_id;
-                    
-                                // Verifica si estamos en la ruta de investigación y si el programa coincide
-                                $isInvestigacionActive = request()->routeIs('admin.calificacion.investigacion') && $decryptedCurrentProId == $programa->pro_id;
-                            @endphp
-                    
-                            @if ($programa->pro_id != 11)
-                                {{-- Menú principal --}}
-                                <li class="{{ $isProgramaActive ? 'active' : '' }}">
-                                    <a href="{{ route('admin.calificacion.index', ['sede_id' => $sedeencript, 'pro_id' => $proencript]) }}">
-                                        <span class="pcoded-micon"><i class="feather icon-menu"></i></span>
-                                        <span class="pcoded-mtext">{{ $programa->pro_nombre_abre }}</span>
-                                    </a>
-                                </li>
-                            
-                                {{-- Menú de Investigación Especializada --}}
-                                @if (!in_array($programa->pro_id, [8, 9]))
-                                    <li class="{{ $isInvestigacionActive ? 'active' : '' }}">
-                                        <a href="{{ route('admin.calificacion.investigacion', ['sede_id' => $sedeencript, 'pro_id' => $proencript]) }}">
+            {{-- @if ($usr->can('calificacion.view'))
+                <div class="pcoded-navigatio-lavel">CALIFICACION</div>
+                @foreach ($sedes as $sede)
+                    @php
+                        // Encripta el sede_id
+                        $sedeencript = encrypt($sede->sede_id);
+
+                        // Obtiene el sede_id actual y decifra si es necesario
+                        $currentSedeId = request()->route('sede_id');
+                        $decryptedCurrentSedeId = $currentSedeId ? decrypt($currentSedeId) : null;
+
+                        // Verifica si el menú de sede debe estar activo
+                        $isSedeActive = $decryptedCurrentSedeId == $sede->sede_id;
+                    @endphp
+                    <li class="pcoded-hasmenu {{ $isSedeActive ? 'pcoded-trigger' : '' }}">
+                        <a href="javascript:void(0)">
+                            <span class="pcoded-micon"><i class="feather icon-sidebar"></i></span>
+                            <span class="pcoded-mtext">{{ $sede->sede_nombre_abre }}</span>
+                        </a>
+                        <ul class="pcoded-submenu">
+                            @foreach ($progrs as $programa)
+                                @php
+                                    // Encripta el pro_id
+                                    $proencript = encrypt($programa->pro_id);
+
+                                    // Obtiene el pro_id actual y decifra si es necesario
+                                    $currentProId = request()->route('pro_id');
+                                    $decryptedCurrentProId = $currentProId ? decrypt($currentProId) : null;
+
+                                    // Verifica si estamos en la ruta de calificación y si el programa coincide
+                                    $isProgramaActive =
+                                        request()->routeIs('admin.calificacion.index') &&
+                                        $decryptedCurrentProId == $programa->pro_id;
+
+                                    // Verifica si estamos en la ruta de investigación y si el programa coincide
+                                    $isInvestigacionActive =
+                                        request()->routeIs('admin.calificacion.investigacion') &&
+                                        $decryptedCurrentProId == $programa->pro_id;
+                                @endphp
+
+                                @if ($programa->pro_id != 11)
+                                    <li class="{{ $isProgramaActive ? 'active' : '' }}">
+                                        <a
+                                            href="{{ route('admin.calificacion.index', ['sede_id' => $sedeencript, 'pro_id' => $proencript]) }}">
                                             <span class="pcoded-micon"><i class="feather icon-menu"></i></span>
-                                            <span class="pcoded-mtext">{{ $programa->pro_nombre_abre }} - Investigación Especializada</span>
+                                            <span class="pcoded-mtext">{{ $programa->pro_nombre_abre }}</span>
                                         </a>
                                     </li>
+
+                                    @if (!in_array($programa->pro_id, [8, 9]))
+                                        <li class="{{ $isInvestigacionActive ? 'active' : '' }}">
+                                            <a
+                                                href="{{ route('admin.calificacion.investigacion', ['sede_id' => $sedeencript, 'pro_id' => $proencript]) }}">
+                                                <span class="pcoded-micon"><i class="feather icon-menu"></i></span>
+                                                <span class="pcoded-mtext">{{ $programa->pro_nombre_abre }} -
+                                                    Investigación Especializada</span>
+                                            </a>
+                                        </li>
+                                    @endif
                                 @endif
-                            @endif
-                        @endforeach
-                    </ul>
-                    
-                    
-                </li>
-            @endforeach
-        @endif
-        
+                            @endforeach
+                        </ul>
+
+
+                    </li>
+                @endforeach
+            @endif --}}
+
             {{-- @if ($usr->can('ajedrez.view') && $hasProId8)
                 <div class="pcoded-navigatio-lavel">CAMPEONATO</div>
                 <li class="pcoded-hasmenu">

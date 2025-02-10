@@ -37,7 +37,6 @@
             /* Añade sombra */
         }
 
-
     </style>
     <section class="breadcrumb-area d-flex  p-relative align-items-center">
         <div class="container">
@@ -64,126 +63,8 @@
         <div class="container"> <!-- Lower Content -->
             <div class="lower-content">
                 <div class="row">
-                    <div class="text-column col-lg-9 col-md-9 col-sm-12">
-                        <div class="upper-box">
-                            <div class="single-item-carousel owl-carousel owl-theme">
-                                    <img
-                                        src="{{ asset('storage/programa_banners/' . $programa->pro_banner) }}"
-                                       />
-                            </div>
-                        </div>
-                        <div class="inner-column">
-
-                            <div>
-                                {!! $programa->pro_contenido !!}
-                            </div>
-
-                        </div>
-                         <!-- Tabla de Sedes y Turnos -->
-                        <div class="container">
-                            <div class="table-responsive">
-                                <table class="table table-bordered table-hover text-center">
-                                    <thead class="table-primary">
-                                        <tr>
-                                            <th class="text-center">📍 Sede y Contactos</th>
-                                            <th class="text-center">🕒 Turnos Habilitados</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach($programa_sede_turno as $pst)
-                                            <tr>
-                                                <!-- Sede y contactos en una celda -->
-                                                <td class="text-start align-middle">
-                                                    <h6 class="fw-bold text-dark mb-1">
-                                                        <i class="bi bi-geo-alt-fill"></i> {{ $pst->dep_nombre }} - {{ $pst->sede_nombre }}
-                                                    </h6>
-                                                    <div class="d-flex">
-                                                        @if($pst->sede_contacto_1)
-                                                            <a href="https://wa.me/591{{ $pst->sede_contacto_1 }}" target="_blank" class="text-success me-1">
-                                                                <i class="fab fa-whatsapp"></i> {{ $pst->sede_contacto_1 }}
-                                                            </a>
-                                                        @endif
-                                                        @if($pst->sede_contacto_2)
-                                                            <a href="https://wa.me/591{{ $pst->sede_contacto_2 }}" target="_blank" class="text-success">
-                                                                <i class="fab fa-whatsapp"></i> {{ $pst->sede_contacto_2 }}
-                                                            </a>
-                                                        @endif
-                                                    </div>
-                                                </td>
-
-                                                <!-- Turnos habilitados -->
-                                                <td class="align-middle">
-                                                    @php
-                                                        $turnos = DB::table('programa_turno')
-                                                            ->when(!is_null($pst->pro_tur_ids), function($query) use ($pst) {
-                                                                $turIds = json_decode($pst->pro_tur_ids);
-                                                                if (!empty($turIds)) {
-                                                                    $query->whereIn('programa_turno.pro_tur_id', $turIds);
-                                                                }
-                                                            })
-                                                            ->get();
-                                                    @endphp
-
-                                                    @if($turnos->isNotEmpty())
-                                                        <ul class="list-unstyled">
-                                                            @foreach($turnos as $turno)
-                                                                <li class="d-flex justify-content-between align-items-center p-1 bg-light rounded mb-1">
-                                                                    <i class="bi bi-clock-history text-primary"></i>
-                                                                    <span class="fw-bold">{{ $turno->pro_tur_nombre }}</span>
-                                                                    <span class="badge bg-info">{{ $turno->pro_tur_horario ?? '8:00' }}</span>
-                                                                </li>
-                                                            @endforeach
-                                                        </ul>
-                                                    @else
-                                                        <span class="text-danger fw-bold"><i class="bi bi-exclamation-circle"></i> Sin turnos</span>
-                                                    @endif
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                        <br><br>
-                        <div class="container">
-                            <div class="portfolio">
-                                <div class="row align-items-end mb-50">
-                                    <div class="col-lg-12">
-                                        <div class="my-masonry text-center">
-                                            <div class="button-group filter-button-group">
-                                                <button class="active" data-filter="*">Ver Todos</button>
-                                                @foreach($galeriasPorPrograma as $sede_id => $galerias)
-                                                    <button data-filter=".{{ $sede_id }}">{{ $galerias->first()->sede_nombre_abre }}</button>
-                                                @endforeach
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-
-                                <div class="grid col3">
-                                    @foreach($galeriasPorPrograma as $galerias)
-                                        @foreach($galerias as $galeria)
-                                            <div class="grid-item {{ $galeria->sede_id }}">
-                                                <a href="{{ asset('storage/galeria/' . $galeria->galeria_imagen) }}" class="image-popup">
-                                                    <figure class="gallery-image">
-                                                        <img src="{{ asset('storage/galeria/' . $galeria->galeria_imagen) }}" alt="{{ $galeria->pro_nombre_abre }}" />
-                                                        <figcaption>
-                                                            <h4>{{ $galeria->sede_nombre_abre }}</h4>
-                                                        </figcaption>
-                                                    </figure>
-                                                </a>
-                                            </div>
-                                        @endforeach
-                                    @endforeach
-                                </div>
-                                <p>{{$programa_sede_turno}}</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-3">
-                        <aside class="sidebar-widget info-column">
+                    <div class="col-lg-3 col-md-4 col-sm-12 order-first order-md-last">
+                        <aside class="sidebar-widget  info-column">
                             <div class="inner-column3">
                                 <h3> Detalle</h3>
                                 <ul class="project-info clearfix">
@@ -257,7 +138,132 @@
                                 </ul>
                             </div>
                         </aside>
+                        
                     </div>
+                    
+                    <div class="col-lg-9 col-md-8 col-sm-12">
+                        <div class="">
+                            <div class="">
+                                    <img
+                                        src="{{ asset('storage/programa_banners/' . $programa->pro_banner) }}"
+                                       />
+                            </div>
+                        </div>
+                        <div class="inner-column">
+
+                            <div>
+                                {!! $programa->pro_contenido !!}
+                            </div>
+                            <h3> <strong> Dirigido a: </strong></h3>
+                            <div>
+                                {!! $restriccion->res_descripcion !!}
+                            </div>
+
+                        </div>
+                         <!-- Tabla de Sedes y Turnos -->
+                         <div class="inner-column">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover text-center">
+                                    <thead class="table-primary">
+                                        <tr>
+                                            <th class="text-center">📍 Sede y Contactos</th>
+                                            <th class="text-center">🕒 Turnos Habilitados</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($programa_sede_turno as $pst)
+                                            <tr>
+                                                <!-- Sede y contactos en una celda -->
+                                                <td class="text-start align-middle">
+                                                    <h7 class="mb-1">
+                                                        <i class="bi bi-geo-alt-fill"></i> 
+                                                        <strong class="fw-bold">{{ $pst->dep_nombre }}</strong> - {{ $pst->sede_nombre }}
+                                                    </h7>
+                                                    <div class="d-flex">
+                                                        @if($pst->sede_contacto_1)
+                                                            <a href="https://wa.me/591{{ $pst->sede_contacto_1 }}" target="_blank" class="text-success me-1">
+                                                                <i class="fab fa-whatsapp"></i> {{ $pst->sede_contacto_1 }}
+                                                            </a>
+                                                        @endif
+                                                        @if($pst->sede_contacto_2)
+                                                            <a href="https://wa.me/591{{ $pst->sede_contacto_2 }}" target="_blank" class="text-success">
+                                                                <i class="fab fa-whatsapp"></i> {{ $pst->sede_contacto_2 }}
+                                                            </a>
+                                                        @endif
+                                                    </div>
+                                                </td>
+
+                                                <!-- Turnos habilitados -->
+                                                <td class="align-middle">
+                                                    @php
+                                                        $turnos = DB::table('programa_turno')
+                                                            ->when(!is_null($pst->pro_tur_ids), function($query) use ($pst) {
+                                                                $turIds = json_decode($pst->pro_tur_ids);
+                                                                if (!empty($turIds)) {
+                                                                    $query->whereIn('programa_turno.pro_tur_id', $turIds);
+                                                                }
+                                                            })
+                                                            ->get();
+                                                    @endphp
+
+                                                    @if($turnos->isNotEmpty())
+                                                        <ul class="list-unstyled">
+                                                            @foreach($turnos as $turno)
+                                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                <i class="bi bi-clock-history text-primary"></i>
+                                                                <strong class="me-2">
+                                                                    {{ strstr($turno->pro_tur_nombre, '-', true) }}
+                                                                </strong>
+                                                                <span class="badge bg-info">{{ $turno->pro_tur_descripcion ?? '' }}</span>
+                                                            </li>
+                                                            @endforeach
+                                                        </ul>
+                                                    @else
+                                                        <span class="text-danger fw-bold"><i class="bi bi-exclamation-circle"></i> Sin turnos</span>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="inner-column">
+                            <div class="portfolio">
+                                <div class="row align-items-end mb-50">
+                                    <div class="col-lg-12">
+                                        <div class="my-masonry text-center">
+                                            <div class="button-group filter-button-group">
+                                                <button class="active" data-filter="*">Ver Todos</button>
+                                                @foreach($galeriasPorPrograma as $sede_id => $galerias)
+                                                    <button data-filter=".{{ $sede_id }}">{{ $galerias->first()->sede_nombre_abre }}</button>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="grid col3">
+                                    @foreach($galeriasPorPrograma as $galerias)
+                                        @foreach($galerias as $galeria)
+                                            <div class="grid-item {{ $galeria->sede_id }}">
+                                                <a href="{{ asset('storage/galeria/' . $galeria->galeria_imagen) }}" class="image-popup">
+                                                    <figure class="gallery-image">
+                                                        <img src="{{ asset('storage/galeria/' . $galeria->galeria_imagen) }}" alt="{{ $galeria->pro_nombre_abre }}" />
+                                                        <figcaption>
+                                                            <h4>{{ $galeria->sede_nombre_abre }}</h4>
+                                                        </figcaption>
+                                                    </figure>
+                                                </a>
+                                            </div>
+                                        @endforeach
+                                    @endforeach
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
                 </div>
             </div>
         </div>

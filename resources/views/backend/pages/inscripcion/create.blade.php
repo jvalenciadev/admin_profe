@@ -93,6 +93,41 @@
                                             placeholder="Ingrese el Correo">
                                     </div>
                                 </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-6 col-sm-12">
+                                        <label for="pi_licenciatura">Licenciatura en:</label>
+                                        <input type="text" class="form-control" id="pi_licenciatura" name="pi_licenciatura" placeholder="Ingrese su Licenciatura del participante">
+                                    </div>
+                                    <div class="form-group col-md-6 col-sm-12">
+                                        <label for="pi_unidad_educativa">Institución: </label>
+                                        <input type="text" class="form-control" id="pi_unidad_educativa" name="pi_unidad_educativa" placeholder="Ingrese su lugar de trabajo">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group col-md-6 col-sm-12">
+                                        <label for="pi_materia">Cargo Actual:</label>
+                                        <input type="text" class="form-control" id="pi_materia" name="pi_materia" placeholder="Ingrese sus datos correctos">
+                                    </div>
+                                    <div class="form-group col-md-3 col-sm-12">
+                                        <label for="pi_nivel">Nivel:</label>
+                                        <select class="form-control" id="pi_nivel" name="pi_nivel">
+                                            <option value="">Seleccione un nivel</option>
+                                            @foreach($niveles as $nivel)
+                                                <option value="{{ $nivel->niv_nombre }}">{{ $nivel->niv_nombre }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group col-md-3 col-sm-12">
+                                        <label for="pi_subsistema">Subsistema:</label>
+                                        <select class="form-control" id="pi_subsistema" name="pi_subsistema">
+                                            <option value="">Seleccione un subsistema</option>
+                                            @foreach($subsistemas as $subsistema)
+                                                <option value="{{ $subsistema->sub_nombre }}">{{ $subsistema->sub_nombre }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
                                 <div class="row form-group">
                                     <label class="col-sm-1 col-form-label">Sede</label>
                                     <div class="col-sm-3">
@@ -105,7 +140,7 @@
                                         <select name="pro_id" id="programa" class="form-control" required>
                                             <option value="">Seleccione un programa</option>
                                             @foreach ($programa as $prog)
-                                                <option value="{{ $prog->pro_id }}">{{ $prog->pro_nombre }}</option>
+                                                <option value="{{ $prog->pro_id }}">{{ $prog->pv_nombre }} {{ $prog->pv_romano }}/{{ $prog->pv_gestion }} - {{ $prog->pro_tip_nombre }} en {{ $prog->pro_nombre }}</option>
                                             @endforeach
                                         </select>
                                     </div>

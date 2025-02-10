@@ -116,111 +116,172 @@
         @if ($participante->pro_tip_id == 2)
             <div class="content">
                 Yo, <strong>{{ strtoupper($participante->per_nombre1) }} {{ strtoupper($participante->per_nombre2) }}
-                    {{ strtoupper($participante->per_apellido1) }} {{ strtoupper($participante->per_apellido2) }}</strong>,
+                    {{ strtoupper($participante->per_apellido1) }}
+                    {{ strtoupper($participante->per_apellido2) }}</strong>,
                 con documento de identidad N.º
-                <strong>{{ strtoupper($participante->per_ci) }}{{ $participante->per_complemento ? '-' . strtoupper($participante->per_complemento) : '' }}</strong>
-                , en mi condición de
+                <strong>{{ strtoupper($participante->per_ci) }}{{ $participante->per_complemento ? '-' . strtoupper($participante->per_complemento) : '' }}</strong>, en mi condición de participante del
                 <strong>{{ mb_strtoupper($participante->pro_tip_nombre, 'UTF-8') }} EN
                     {{ mb_strtoupper($participante->pro_nombre, 'UTF-8') }}</strong>,
-                del Programa de Formación Especializada – PROFE, para fines académicos, administrativos y legales, declaro
+                del Programa de Formación Especializada – PROFE, para fines académicos, administrativos y legales,
+                declaro, suscribo y me comprometo a
                 lo siguiente:
             </div>
+            <ul style="list-style-type: none; margin-left: -40px;">
+                <li>- Todos los documentos presentados para la inscripción al ciclo formativo son auténticos.</li>
+                <li>- Cumplo las normas académicas y administrativas para el desarrollo de los ciclos formativos.</li>
+            </ul>
+            <div class="content"><strong>ME COMPROMETO A:</strong></div>
+            <ul>
+                <li>Ser responsable con la asistencia al ciclo formativo, teniendo en cuenta que el porcentaje de
+                    asistencia mínimo es de 75%
+                    a las sesiones virtuales y el 90% a las sesiones presenciales. Considerando que el sistema de
+                    calificaciones de cada curso
+                    se lo realiza sobre 100 puntos y para obtener la aprobación en los cursos
+                    regulares se requiere un mínimo de 70 puntos. El Programa de Formación Especializada - PROFE no se
+                    responsabiliza
+                    por la reprobación de los cursos del programa en caso de incumplimiento al reglamento académico.
+                </li>
+                <li>Respetar las normas nacionales e internacionales de protección de los derechos de autoría
+                    intelectual para trabajos académicos, comprometiéndome a no usar producciones, textos, libros o
+                    ideas
+                    sin la debida cita y/o referencia bibliográfica según normas APA. Para este efecto, el Programa de
+                    Formación Especializada –
+                    PROFE podrá recurrir a sistemas anti plagio y otros recursos para la verificación.</li>
+                <li>Tener las condiciones de conectividad a internet y equipamiento computacional necesarias para el
+                    proceso de
+                    enseñanza-aprendizaje.</li>
+                <li>Realizar los pagos de colegiatura total del ciclo formativo.</li>
+            </ul>
+            <div class="content" style="margin-bottom: 0;"><strong>NOTA:</strong></div>
+            <ul style="list-style-type: none; margin-left: -40px; margin-top: 0;">
+                <li>- En caso de abandono, no se realizará la devolución de los montos pagados por matrícula y/o colegiatura.<br>
+                    </li>
+            </ul>
         @elseif($participante->pro_tip_id == 3)
             <div class="content">
                 Yo, <strong>{{ strtoupper($participante->per_nombre1) }} {{ strtoupper($participante->per_nombre2) }}
-                    {{ strtoupper($participante->per_apellido1) }} {{ strtoupper($participante->per_apellido2) }}</strong>,
+                    {{ strtoupper($participante->per_apellido1) }}
+                    {{ strtoupper($participante->per_apellido2) }}</strong>,
                 con documento de identidad N.º
                 <strong>{{ strtoupper($participante->per_ci) }}{{ $participante->per_complemento ? '-' . strtoupper($participante->per_complemento) : '' }}</strong>
                 con Licenciatura en <strong>{{ mb_strtoupper($participante->pi_licenciatura, 'UTF-8') }}</strong>
-                que desempeña sus funciones como <strong>{{ mb_strtoupper($participante->pi_materia, 'UTF-8') }}</strong>  en la institución
-                <strong>{{ mb_strtoupper($participante->pi_unidad_educativa, 'UTF-8') }}</strong> del nivel <strong>{{ mb_strtoupper($participante->pi_nivel, 'UTF-8') }}</strong> del subsistema de Educación
-                <strong>{{ mb_strtoupper($participante->pi_subsistema, 'UTF-8') }}</strong>, en mi condición de participante del
+                que desempeña sus funciones como
+                <strong>{{ mb_strtoupper($participante->pi_materia, 'UTF-8') }}</strong> en la institución
+                <strong>{{ mb_strtoupper($participante->pi_unidad_educativa, 'UTF-8') }}</strong> del nivel
+                <strong>{{ mb_strtoupper($participante->pi_nivel, 'UTF-8') }}</strong> del subsistema de Educación
+                <strong>{{ mb_strtoupper($participante->pi_subsistema, 'UTF-8') }}</strong>, en mi condición de
+                participante del
                 <strong>{{ mb_strtoupper($participante->pro_tip_nombre, 'UTF-8') }} EN
                     {{ mb_strtoupper($participante->pro_nombre, 'UTF-8') }}</strong>,
-                del Programa de Formación Especializada – PROFE, para fines académicos, administrativos y legales, declaro, suscribo y me comprometo a
+                del Programa de Formación Especializada – PROFE, para fines académicos, administrativos y legales,
+                declaro, suscribo y me comprometo a
                 lo siguiente:
             </div>
             <ul style="list-style-type: none; margin-left: -40px;">
                 <li>- Todos los documentos presentados para la inscripción al postgrado son auténticos.</li>
-                <li>- Cumpló las normas académicas y administrativas para el desarrollo de los postgrados.</li>
+                <li>- Cumplo las normas académicas y administrativas para el desarrollo de los postgrados.</li>
             </ul>
-            <div class="content"><strong>ME COMPROMETO:</strong></div>
+            <div class="content"><strong>ME COMPROMETO A:</strong></div>
             <ul>
-                <li>A ser responsable con la asistencia al postgrado, teniendo en cuenta que el porcentaje de asistencia mínimo es de 75%
-                    a las sesiones virtuales y el 90% a las sesiones presenciales. Considerando que el sistema de calificaciones de cada curso o módulos
-                    se lo realiza sobre 100 puntos y para obtener la aprobación en los cursos o módulos
-                    regulares se requiere un mínimo de 70 puntos. El Programa de Formación Especializada - PROFE no se responsabiliza por la reprobación
-                    por la reprobación de cursos o módulos del programa en caso de incumplimiento al reglamento académico.
+                <li>Ser responsable con la asistencia al postgrado, teniendo en cuenta que el porcentaje de asistencia
+                    mínimo es de 75%
+                    a las sesiones virtuales y el 90% a las sesiones presenciales. Considerando que el sistema de
+                    calificaciones de cada curso o módulos
+                    se lo realiza sobre 100 puntos y para obtener la aprobación en los módulos
+                    regulares se requiere un mínimo de 70 puntos. El Programa de Formación Especializada - PROFE no se
+                    responsabiliza
+                    por la reprobación de los módulos del programa en caso de incumplimiento al reglamento académico.
                 </li>
-                <li>A Respetar las normas nacionales e internacionales de protección de los derechos de autoría
-                    intelectual para trabajos académicos, comprometiéndome a no usar producciones, textos, libros o ideas
-                    sin la debida cita y/o referencia bibliográfica según normas APA. Para este efecto, el Programa de Formación Especializada –
+                <li>Respetar las normas nacionales e internacionales de protección de los derechos de autoría
+                    intelectual para trabajos académicos, comprometiéndome a no usar producciones, textos, libros o
+                    ideas
+                    sin la debida cita y/o referencia bibliográfica según normas APA. Para este efecto, el Programa de
+                    Formación Especializada –
                     PROFE podrá recurrir a sistemas anti plagio y otros recursos para la verificación.</li>
-                <li>A Tener las condiciones de conectividad a internet y equipamiento computacional necesarias para el proceso de
+                <li>Tener las condiciones de conectividad a internet y equipamiento computacional necesarias para el
+                    proceso de
                     enseñanza-aprendizaje.</li>
-                <li>A realizar los pagos de colegiatura de manera puntual al inicio de cada módulo, evitando cualquier mora que
+                <li>Realizar los pagos de colegiatura de manera puntual al inicio de cada módulo, evitando cualquier
+                    mora que
                     pueda impedir mi habilitación para el desarrollo de los módulos. Los pagos se
-                    realizarán conforme al plan o cronograma proporcionado. El incumplimiento de este compromiso provocará
+                    realizarán conforme al plan o cronograma proporcionado. El incumplimiento de este compromiso
+                    provocará
                     mi inhabilitación académica, lo que resultará en la pérdida del derecho a participar en clases,
                     exámenes y prácticas.</li>
             </ul>
             <div class="content" style="margin-bottom: 0;"><strong>NOTA:</strong></div>
-            <ul style="list-style-type: none; margin-left: -40px; margin-top: 0;"><li>- Tengo conocimiento que los costos por trámites administrativos y titulación del Diplomado, incluyendo
-                la obtención de certificaciones de calificaciones, timbres, carpetas y títulos, son adicionales.<br>
-            - En caso de abandono, no se realizará la devolución de los montos pagados por mátricula y/o colegiatura.</li>
+            <ul style="list-style-type: none; margin-left: -40px; margin-top: 0;">
+                <li>- Tengo conocimiento que los costos por trámites administrativos y titulación del Diplomado,
+                    incluyendo
+                    la obtención de certificaciones de calificaciones, timbres, carpetas y títulos, son adicionales.<br>
+                    - En caso de abandono, no se realizará la devolución de los montos pagados por mátricula y/o
+                    colegiatura.</li>
             </ul>
         @elseif($participante->pro_tip_id == 4)
             <div class="content">
                 Yo, <strong>{{ strtoupper($participante->per_nombre1) }} {{ strtoupper($participante->per_nombre2) }}
-                    {{ strtoupper($participante->per_apellido1) }} {{ strtoupper($participante->per_apellido2) }}</strong>,
+                    {{ strtoupper($participante->per_apellido1) }}
+                    {{ strtoupper($participante->per_apellido2) }}</strong>,
                 con documento de identidad N.º
                 <strong>{{ strtoupper($participante->per_ci) }}{{ $participante->per_complemento ? '-' . strtoupper($participante->per_complemento) : '' }}</strong>
                 con Licenciatura en <strong>{{ mb_strtoupper($participante->pi_licenciatura, 'UTF-8') }}</strong>
-                que desempeña sus funciones como <strong>{{ mb_strtoupper($participante->pi_materia, 'UTF-8') }}</strong>  en la institución
-                <strong>{{ mb_strtoupper($participante->pi_unidad_educativa, 'UTF-8') }}</strong> del nivel <strong>{{ mb_strtoupper($participante->pi_nivel, 'UTF-8') }}</strong> del subsistema de Educación
-                <strong>{{ mb_strtoupper($participante->pi_subsistema, 'UTF-8') }}</strong>, en mi condición de participante del
+                que desempeña sus funciones como
+                <strong>{{ mb_strtoupper($participante->pi_materia, 'UTF-8') }}</strong> en la institución
+                <strong>{{ mb_strtoupper($participante->pi_unidad_educativa, 'UTF-8') }}</strong> del nivel
+                <strong>{{ mb_strtoupper($participante->pi_nivel, 'UTF-8') }}</strong> del subsistema de Educación
+                <strong>{{ mb_strtoupper($participante->pi_subsistema, 'UTF-8') }}</strong>, en mi condición de
+                participante del
                 <strong>{{ mb_strtoupper($participante->pro_tip_nombre, 'UTF-8') }} EN
                     {{ mb_strtoupper($participante->pro_nombre, 'UTF-8') }}</strong>,
-                del Programa de Formación Especializada – PROFE, para fines académicos, administrativos y legales, declaro, suscribo y me comprometo a
+                del Programa de Formación Especializada – PROFE, para fines académicos, administrativos y legales,
+                declaro, suscribo y me comprometo a
                 lo siguiente:
             </div>
             <ul style="list-style-type: none; margin-left: -40px;">
                 <li>- Todos los documentos presentados para la inscripción al postgrado son auténticos.</li>
-                <li>- Cumpló las normas académicas y administrativas para el desarrollo de los postgrados.</li>
+                <li>- Cumplo las normas académicas y administrativas para el desarrollo de los postgrados.</li>
             </ul>
-            <div class="content"><strong>ME COMPROMETO:</strong></div>
+            <div class="content"><strong>ME COMPROMETO A:</strong></div>
             <ul>
-                <li>A ser responsable con la asistencia al postgrado, teniendo en cuenta que el porcentaje de asistencia mínimo es de 75%
-                    a las sesiones virtuales y el 90% a las sesiones presenciales. Considerando que el sistema de calificaciones de cada curso o módulos
-                    se lo realiza sobre 100 puntos y para obtener la aprobación en los cursos o módulos
-                    regulares se requiere un mínimo de 70 puntos. El Programa de Formación Especializada - PROFE no se responsabiliza por la reprobación
-                    por la reprobación de cursos o módulos del programa en caso de incumplimiento al reglamento académico.
+                <li>Ser responsable con la asistencia al postgrado, teniendo en cuenta que el porcentaje de asistencia
+                    mínimo es de 75%
+                    a las sesiones virtuales y el 90% a las sesiones presenciales. Considerando que el sistema de
+                    calificaciones de cada módulo
+                    se lo realiza sobre 100 puntos y para obtener la aprobación en los módulos
+                    regulares se requiere un mínimo de 70 puntos. El Programa de Formación Especializada - PROFE no se
+                    responsabiliza por la reprobación
+                    de cursos o módulos del programa en caso de incumplimiento al reglamento académico.
                 </li>
-                <li>A Respetar las normas nacionales e internacionales de protección de los derechos de autoría
-                    intelectual para trabajos académicos, comprometiéndome a no usar producciones, textos, libros o ideas
-                    sin la debida cita y/o referencia bibliográfica según normas APA. Para este efecto, el Programa de Formación Especializada –
+                <li>Respetar las normas nacionales e internacionales de protección de los derechos de autoría
+                    intelectual para trabajos académicos, comprometiéndome a no usar producciones, textos, libros o
+                    ideas
+                    sin la debida cita y/o referencia bibliográfica según normas APA. Para este efecto, el Programa de
+                    Formación Especializada –
                     PROFE podrá recurrir a sistemas anti plagio y otros recursos para la verificación.</li>
-                <li>A Tener las condiciones de conectividad a internet y equipamiento computacional necesarias para el proceso de
+                <li>Tener las condiciones de conectividad a internet y equipamiento computacional necesarias para el
+                    proceso de
                     enseñanza-aprendizaje.</li>
-                <li>A realizar los pagos de colegiatura de manera puntual al inicio de cada módulo, evitando cualquier mora que
+                <li>Realizar los pagos de colegiatura de manera puntual al inicio de cada módulo, evitando cualquier
+                    mora que
                     pueda impedir mi habilitación para el desarrollo de los módulos. Los pagos se
-                    realizarán conforme al plan o cronograma proporcionado. El incumplimiento de este compromiso provocará
+                    realizarán conforme al plan o cronograma proporcionado. El incumplimiento de este compromiso
+                    provocará
                     mi inhabilitación académica, lo que resultará en la pérdida del derecho a participar en clases,
                     exámenes y prácticas.</li>
             </ul>
             <div class="content"><strong>ME COMPROMETO:</strong></div>
-
         @endif
 
 
         <div class="divider"></div>
-        <p class="content">Es cuanto declaro, comprometo y suscribo a los <strong
+        <p class="content">Es cuanto declaro, comprometo y suscribo a en fecha <strong
                 class="highlight">{{ now()->format('d') }}</strong> de <strong
                 class="highlight">{{ ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'][now()->format('n') - 1] }}</strong>
             de <strong class="highlight">{{ now()->format('Y') }}</strong>.</p>
 
         <div class="signature-section">
-            <p style="margin: 40px 0px 0px 0px;">....................................................................</p>
+            <p style="margin: 40px 0px 0px 0px;">....................................................................
+            </p>
 
             <p>{{ strtoupper($participante->per_nombre1) }}
                 {{ strtoupper($participante->per_nombre2) }} {{ strtoupper($participante->per_apellido1) }}

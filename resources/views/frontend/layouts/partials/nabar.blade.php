@@ -91,6 +91,7 @@
                                         class="menu-item menu-item-type-custom menu-item-object-custom menu-item-has-children menu-item-118">
                                         <a href="#">+ Nosotros</a>
                                         <ul class="sub-menu">
+                                           
                                             <li id="menu-item-123"
                                                 class="menu-item menu-item-type-post_type menu-item-object-page menu-item-123">
                                                 <a href="{{ route('galeria') }}">Galerías</a>

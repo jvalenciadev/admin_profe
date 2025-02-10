@@ -57,12 +57,12 @@ class EventoController extends Controller
         return view('frontend.pages.evento.detalle', compact('evento', 'blogs'));
     }
     public function inscripcion($eve_id){
-
+       
         $user = Auth::guard('map_persona')->user();
         $per_ci = session('per_ci');
         $eve_id_session = session('eve_id');
         $evento = Evento::where('eve_estado', 'activo')->where('eve_id', $eve_id)->first();
-
+        
         if ($evento) {
             if ($evento->eve_inscripcion == 1) {
                 // Si la inscripción está permitida (eve_inscripcion == 1)
@@ -77,12 +77,12 @@ class EventoController extends Controller
         }
     }
     public function asistencia($eve_id){
-
+       
         $user = Auth::guard('map_persona')->user();
         $per_ci = session('per_ci');
         $eve_id_session = session('eve_id');
         $evento = Evento::where('eve_estado', 'activo')->where('eve_id', $eve_id)->first();
-
+        
         if ($evento) {
             if ($evento->eve_asistencia == 1) {
                 return view('frontend.pages.evento.asistencia', compact('evento'));
@@ -107,23 +107,23 @@ class EventoController extends Controller
      */
     public function show()
     {
-
+       
     }
-
+    
     # PARTICIPANTES
     public function reloadCaptcha(){
-        return response()->json(['captcha'=> captcha_img('math')]);
+        return response()->json(['captcha'=> captcha_img('mini')]);
     }
-
-
+   
+   
     public function storeParticipante(Request $request)
     {
         $eve_id = decrypt($request['eve_id']);
-
+        
         $request->validate([
             'eve_per_ci' => [
                 'required',
-                'numeric',
+                'numeric', 
                 'regex:/^[0-9]{4,10}$/', // Solo números entre 4 y 10 dígitos
             ],
             'captcha' => 'required|captcha',
@@ -137,10 +137,10 @@ class EventoController extends Controller
 
         // Busca al usuario en la tabla MapPersona
         $usuario = MapPersona::where('per_ci', $request->eve_per_ci)->first();
-
+        
         // Busca si existe un registro en EventoPersonas
         $usuarioEvento = EventoPersonas::where('eve_per_ci', $request->eve_per_ci)->first();
-
+        
         // Almacenar información en la sesión
         session([
             'eve_id' => $eve_id,
@@ -164,15 +164,15 @@ class EventoController extends Controller
             ]);
             // Redirigir al formulario de inscripción
             return redirect()->route('evento.inscribirse');
-        }
+        } 
         elseif ($usuario) {
             // Autenticar usando el modelo MapPersona
             Auth::guard('map_persona')->login($usuario);
             // Redirigir al formulario de inscripción
             return redirect()->route('evento.inscribirse');
-        }
+        } 
         elseif($usuarioEvento) {
-
+            
              // Actualiza la sesión con los datos de EventoPersonas
              session([
                 'per_ci' => $usuarioEvento->eve_per_ci,
@@ -302,7 +302,7 @@ class EventoController extends Controller
     {
             // Desencriptar el ID del evento
         $eve_id = decrypt($request['eve_id']);
-
+        
         // Validar todos los campos del formulario
         $request->validate([
                 'eve_per_complemento' => 'nullable|max:5',
@@ -334,7 +334,7 @@ class EventoController extends Controller
                 'eve_per_correo.max' => 'El correo electrónico no puede tener más de 100 caracteres.',
                 'dep_id.required' => 'El departamento es obligatorio.',
             ]);
-
+        
         // Buscar el usuario por su carnet de identidad
         $usuario = MapPersona::where('per_ci', $request->eve_per_ci)
             ->where('per_fecha_nacimiento', $request->eve_per_fecha_nacimiento)
@@ -360,7 +360,7 @@ class EventoController extends Controller
             ['eve_per_id' => $usuario2->eve_per_id, 'eve_id' => $eve_id],
             ['dep_id' => decrypt($request->dep_id), 'pm_id' => decrypt($request->pm_id)]
         );
-
+        
         return redirect()->route('evento.comprobanteParticipante', [
             'eve_per_id' => encrypt($usuario2->eve_per_id),
             'eve_id' => encrypt($eve_id),
@@ -377,9 +377,9 @@ class EventoController extends Controller
         // Redirige al usuario a la página de inicio o donde desees
         return redirect('/evento')->with('success', 'Has cerrado sesión con éxito.');
     }
-
-
-
+   
+    
+    
     /////////////////////////////////////////////////////////////
     public function comprobanteParticipante($eve_per_id, $eve_id)
     {
@@ -434,7 +434,7 @@ class EventoController extends Controller
         $imagen1 = public_path() . "/assets/image/logoprofeminedu.png";
         $logo1 = base64_encode(file_get_contents($imagen1));
 
-
+        
         $imagen3 = public_path() . "/img/iconos/alerta.png";
         $logo3 = base64_encode(file_get_contents($imagen3));
 
@@ -445,7 +445,7 @@ class EventoController extends Controller
         $imagen4 = public_path() . "/img/qr/qrEncuesta.jpg";
         $qrEncuesta = base64_encode(file_get_contents($imagen4));
         //
-
+        
         $datosQr = route('evento.comprobanteParticipantePdf', [
             'eve_per_id' => encrypt($eve_per_id),
             'eve_id' => encrypt($eve_id),
