@@ -70,40 +70,45 @@ class InscripcionController extends Controller
             ->where('programa_inscripcion.pi_estado', "=",'activo')
             ->where('programa_version.pv_gestion', "=",'2025')
             ->select(
-                'programa_inscripcion.pi_id', 
-                'programa_inscripcion.pro_id', 
-                'programa_inscripcion.updated_at', 
-                'map_persona.per_id', 
-                'map_persona.gen_id', 
-                'map_persona.esp_id', 
-                'map_persona.cat_id', 
-                'map_persona.car_id', 
-                'map_persona.sub_id', 
-                'map_persona.niv_id',  
-                'map_persona.per_nombre1', 
-                'map_persona.per_nombre2', 
-                'map_persona.per_apellido1', 
-                'map_persona.per_apellido2', 
-                'map_persona.per_rda', 
-                'map_persona.per_ci', 
+                'programa_inscripcion.pi_id',
+                'programa_inscripcion.pi_licenciatura',
+                'programa_inscripcion.pi_materia',
+                'programa_inscripcion.pi_subsistema',
+                'programa_inscripcion.pi_unidad_educativa',
+                'programa_inscripcion.pi_nivel',
+                'programa_inscripcion.pro_id',
+                'programa_inscripcion.updated_at',
+                'map_persona.per_id',
+                'map_persona.gen_id',
+                'map_persona.esp_id',
+                'map_persona.cat_id',
+                'map_persona.car_id',
+                'map_persona.sub_id',
+                'map_persona.niv_id',
+                'map_persona.per_nombre1',
+                'map_persona.per_nombre2',
+                'map_persona.per_apellido1',
+                'map_persona.per_apellido2',
+                'map_persona.per_rda',
+                'map_persona.per_ci',
                 'map_persona.per_complemento',
-                'map_persona.per_fecha_nacimiento', 
-                'map_persona.per_celular', 
-                'map_persona.per_correo', 
-                'map_persona.per_en_funcion', 
-                'map_especialidad.esp_nombre', 
+                'map_persona.per_fecha_nacimiento',
+                'map_persona.per_celular',
+                'map_persona.per_correo',
+                'map_persona.per_en_funcion',
+                'map_especialidad.esp_nombre',
                 'map_cargo.car_nombre',
-                'programa.pro_nombre', 
-                'programa.pro_nombre_abre', 
-                'programa.pro_costo', 
-                'map_subsistema.sub_nombre', 
+                'programa.pro_nombre',
+                'programa.pro_nombre_abre',
+                'programa.pro_costo',
+                'map_subsistema.sub_nombre',
                 'map_nivel.niv_nombre',
-                'map_categoria.cat_nombre', 
+                'map_categoria.cat_nombre',
                 'genero.gen_nombre',
-                'programa_turno.pro_tur_nombre', 
+                'programa_turno.pro_tur_nombre',
                 'sede.sede_nombre',
-                'sede.sede_nombre_abre', 
-                'departamento.dep_nombre', 
+                'sede.sede_nombre_abre',
+                'departamento.dep_nombre',
                 'programa_inscripcion_estado.pie_nombre',
                 DB::raw('COALESCE(SUM(programa_baucher.pro_bau_monto), 0) AS total_pagado'),
                 DB::raw('(programa.pro_costo - COALESCE(SUM(programa_baucher.pro_bau_monto), 0)) AS restante'),
@@ -114,40 +119,45 @@ class InscripcionController extends Controller
                         END AS estado_pago')
             )
             ->groupBy(
-                'programa_inscripcion.pi_id', 
-                'programa_inscripcion.pro_id', 
-                'programa_inscripcion.updated_at', 
-                'map_persona.per_id', 
-                'map_persona.gen_id', 
-                'map_persona.esp_id', 
-                'map_persona.cat_id', 
-                'map_persona.car_id', 
-                'map_persona.sub_id', 
-                'map_persona.niv_id', 
-                'map_persona.per_nombre1', 
-                'map_persona.per_nombre2', 
-                'map_persona.per_apellido1', 
-                'map_persona.per_apellido2', 
-                'map_persona.per_rda', 
-                'map_persona.per_ci', 
-                'map_persona.per_complemento', 
-                'map_persona.per_fecha_nacimiento', 
-                'map_persona.per_celular', 
-                'map_persona.per_correo', 
-                'map_persona.per_en_funcion', 
-                'map_especialidad.esp_nombre', 
+                'programa_inscripcion.pi_id',
+                'programa_inscripcion.pi_licenciatura',
+                'programa_inscripcion.pi_materia',
+                'programa_inscripcion.pi_subsistema',
+                'programa_inscripcion.pi_unidad_educativa',
+                'programa_inscripcion.pi_nivel',
+                'programa_inscripcion.pro_id',
+                'programa_inscripcion.updated_at',
+                'map_persona.per_id',
+                'map_persona.gen_id',
+                'map_persona.esp_id',
+                'map_persona.cat_id',
+                'map_persona.car_id',
+                'map_persona.sub_id',
+                'map_persona.niv_id',
+                'map_persona.per_nombre1',
+                'map_persona.per_nombre2',
+                'map_persona.per_apellido1',
+                'map_persona.per_apellido2',
+                'map_persona.per_rda',
+                'map_persona.per_ci',
+                'map_persona.per_complemento',
+                'map_persona.per_fecha_nacimiento',
+                'map_persona.per_celular',
+                'map_persona.per_correo',
+                'map_persona.per_en_funcion',
+                'map_especialidad.esp_nombre',
                 'map_cargo.car_nombre',
-                'programa.pro_nombre', 
-                'programa.pro_nombre_abre', 
-                'programa.pro_costo', 
-                'map_subsistema.sub_nombre', 
+                'programa.pro_nombre',
+                'programa.pro_nombre_abre',
+                'programa.pro_costo',
+                'map_subsistema.sub_nombre',
                 'map_nivel.niv_nombre',
                 'map_categoria.cat_nombre',
                 'genero.gen_nombre',
-                'programa_turno.pro_tur_nombre', 
+                'programa_turno.pro_tur_nombre',
                 'sede.sede_nombre',
-                'sede.sede_nombre_abre', 
-                'departamento.dep_nombre', 
+                'sede.sede_nombre_abre',
+                'departamento.dep_nombre',
                 'programa_inscripcion_estado.pie_nombre'
             );
         // $inscripciones = DB::table('programa_inscripcion')
@@ -166,24 +176,24 @@ class InscripcionController extends Controller
             // ->join('programa_inscripcion_estado', 'programa_inscripcion.pie_id', '=', 'programa_inscripcion_estado.pie_id')
             // ->where('sede.sede_id', decrypt($sede_id))
             // ->select(
-            //         'programa_inscripcion.*', 
-            //         'map_persona.*', 
-            //         'map_especialidad.esp_nombre', 
+            //         'programa_inscripcion.*',
+            //         'map_persona.*',
+            //         'map_especialidad.esp_nombre',
             //         'map_cargo.car_nombre',
-            //         'programa.pro_nombre', 
-            //         'programa.pro_nombre_abre', 
-            //         'programa.pro_costo', 
-            //         'map_subsistema.sub_nombre', 
+            //         'programa.pro_nombre',
+            //         'programa.pro_nombre_abre',
+            //         'programa.pro_costo',
+            //         'map_subsistema.sub_nombre',
             //         'map_nivel.niv_nombre',
-            //         'map_categoria.cat_nombre', 
+            //         'map_categoria.cat_nombre',
             //         'genero.gen_nombre',
-            //         'programa_turno.pro_tur_nombre', 
+            //         'programa_turno.pro_tur_nombre',
             //         'sede.sede_nombre',
-            //         'sede.sede_nombre_abre', 
-            //         'departamento.dep_nombre', 
+            //         'sede.sede_nombre_abre',
+            //         'departamento.dep_nombre',
             //         'programa_inscripcion_estado.pie_nombre'
         // );
-        
+
         if (!is_null($this->user->pro_ids)) {
             $proIds = json_decode($this->user->pro_ids);
             if (!empty($proIds)) { // Verifica si $proIds no está vacío
@@ -534,7 +544,7 @@ class InscripcionController extends Controller
         //         $query->whereIn('sede_id', $sedeIds);
         //     }
         // })->get();
-       
+
 
         // // Obtener todos los programas filtrados por pro_ids del usuario
         // $programa = Programa::when($this->user->pro_ids, function ($query) {
@@ -559,8 +569,8 @@ class InscripcionController extends Controller
             ->join('programa_inscripcion_estado', 'programa_inscripcion.pie_id', '=', 'programa_inscripcion_estado.pie_id')
             ->where('programa_inscripcion.pi_id', $pi_id) // Filtrar por pi_id
             ->select('programa_inscripcion.*', 'map_persona.*', 'map_especialidad.esp_nombre', 'map_cargo.car_nombre',
-                'programa.pro_nombre','programa_inscripcion.pi_licenciatura', 'programa_inscripcion.pi_unidad_educativa', 
-                'programa_inscripcion.pi_nivel', 'programa_inscripcion.pi_subsistema', 'programa_inscripcion.pi_materia', 
+                'programa.pro_nombre','programa_inscripcion.pi_licenciatura', 'programa_inscripcion.pi_unidad_educativa',
+                'programa_inscripcion.pi_nivel', 'programa_inscripcion.pi_subsistema', 'programa_inscripcion.pi_materia',
                 'programa.pro_nombre',  'programa.pro_costo', 'map_subsistema.sub_nombre', 'map_nivel.niv_nombre',
                 'map_categoria.cat_nombre', 'genero.gen_nombre','programa.pro_tip_id',
                 'programa_turno.pro_tur_nombre', 'sede.sede_nombre', 'programa_inscripcion_estado.pie_nombre')
@@ -715,14 +725,14 @@ class InscripcionController extends Controller
             $documento = $request->file('pi_doc_digital');
             // Generar un nombre único basado en per_rda y la fecha actual
             $nombreDocumento = $persona->per_rda . '_' . now()->format('YmdHis') . '.' . $documento->getClientOriginalExtension();
-            
+
             // Almacenar el documento en la carpeta 'pdfDocumentos' dentro del directorio 'storage/app/public'
             Storage::disk('public')->putFileAs('pdfDocumentos', $documento, $nombreDocumento);
-            
+
             // Guardar el nombre del documento en la base de datos junto con la inscripción
             $inscripcion->pi_doc_digital = $nombreDocumento;
         }
-        
+
         $inscripcion->save();
 
         // Redireccionar a una ruta adecuada después de editar la inscripción
@@ -755,13 +765,13 @@ class InscripcionController extends Controller
         // Verifica si el número de depósito ya existe en la base de datos
         $nro_deposito = $request->input('pro_bau_nro_deposito');
         $pro_bau_tipo_pago = $request->input('pro_bau_tipo_pago');
-        
+
         $existingBaucher = ProgramaBaucher::where('pro_bau_nro_deposito', $nro_deposito)->first();
         if ($existingBaucher && $pro_bau_tipo_pago == "Baucher") {
             // Redirige con un mensaje de error si el número de depósito ya existe
             return redirect()->back()->withErrors(['pro_bau_nro_deposito' => 'El número de depósito ya está registrado en el sistema.'])->withInput();
         }
-        
+
         // Encuentra la inscripción
         $baucher = new ProgramaBaucher();
         $persona = DB::table('programa_inscripcion')
@@ -931,7 +941,7 @@ class InscripcionController extends Controller
 
         $imagen5 = public_path() . "/img/iconos/check.png";
         $icono2 = base64_encode(file_get_contents($imagen5));
-        
+
         $imagen5 = public_path() . "/img/iconos/logoprofeminedu.png";
         $logo5 = base64_encode(file_get_contents($imagen5));
 
@@ -1053,13 +1063,13 @@ class InscripcionController extends Controller
         $imagen4 = public_path() . "/img/iconos/alerta.png";
         $icono1 = base64_encode(file_get_contents($imagen4));
 
-        
+
         //$imagen5 = public_path() . "/img/logos/logominedu.jpg";
         $imagen5 = public_path() . "/assets/image/logoprofeiippminedu.png";
         $logo5 = base64_encode(file_get_contents($imagen5));
        // Formatear la fecha de hoy en español
         $fechaHoy = Carbon::now()->locale('es')->translatedFormat('d F Y');
-        
+
         $barcode = new DNS1D();
         // Asegurarte de que cada ID tenga 3 dígitos, añadiendo ceros a la izquierda si es necesario
         $pi_id_formatted = str_pad($pi_id, 10, '0', STR_PAD_LEFT);
@@ -1085,12 +1095,12 @@ class InscripcionController extends Controller
                 ->where('bar_tipo', 'PAGOS')
                 ->update(['updated_at' => now()]);
         }
-        $barcodeImage = $barcode->getBarcodePNG($dato, 'C128', 2.5, 60); 
+        $barcodeImage = $barcode->getBarcodePNG($dato, 'C128', 2.5, 60);
         $codigoBarra = $hash;
 
         $pdf = Pdf::loadView(
             'backend/pages/inscripcion/partials/reportepago-participantePdf',
-            compact('logo1', 'logo2', 'fondo', 'icono1', 'programaInscripcion', 
+            compact('logo1', 'logo2', 'fondo', 'icono1', 'programaInscripcion',
             'programaBauchers', 'responsable', 'logo5', 'barcodeImage', 'codigoBarra')
         );
         // VERTICAL
@@ -1103,7 +1113,7 @@ class InscripcionController extends Controller
     }
     public function reporteInscritoPdf($sede_id, $pro_id)
     {
-        
+
         // Desencriptar los IDs
         $sede_id = decrypt($sede_id);
         $pro_id = decrypt($pro_id);
@@ -1124,44 +1134,44 @@ class InscripcionController extends Controller
             ->join('departamento', 'sede.dep_id', '=', 'departamento.dep_id')
             ->join('programa_inscripcion_estado', 'programa_inscripcion.pie_id', '=', 'programa_inscripcion_estado.pie_id')
             ->where('sede.sede_id', $sede_id)
-            ->where('programa_inscripcion.pro_id', $pro_id)  
+            ->where('programa_inscripcion.pro_id', $pro_id)
             ->where('programa_inscripcion.pie_id', 2)
             ->where('programa_inscripcion.pi_estado', "activo")
             ->select(
-                'programa_inscripcion.pi_id', 
-                'programa_inscripcion.pro_id', 
-                'programa_inscripcion.updated_at', 
-                'map_persona.per_id', 
-                'map_persona.gen_id', 
-                'map_persona.esp_id', 
-                'map_persona.cat_id', 
-                'map_persona.car_id', 
-                'map_persona.sub_id', 
-                'map_persona.niv_id',  
-                'map_persona.per_nombre1', 
-                'map_persona.per_nombre2', 
-                'map_persona.per_apellido1', 
-                'map_persona.per_apellido2', 
-                'map_persona.per_rda', 
-                'map_persona.per_ci', 
-                'map_persona.per_complemento', 
-                'map_persona.per_fecha_nacimiento', 
-                'map_persona.per_celular', 
-                'map_persona.per_correo', 
-                'map_persona.per_en_funcion', 
-                'map_especialidad.esp_nombre', 
+                'programa_inscripcion.pi_id',
+                'programa_inscripcion.pro_id',
+                'programa_inscripcion.updated_at',
+                'map_persona.per_id',
+                'map_persona.gen_id',
+                'map_persona.esp_id',
+                'map_persona.cat_id',
+                'map_persona.car_id',
+                'map_persona.sub_id',
+                'map_persona.niv_id',
+                'map_persona.per_nombre1',
+                'map_persona.per_nombre2',
+                'map_persona.per_apellido1',
+                'map_persona.per_apellido2',
+                'map_persona.per_rda',
+                'map_persona.per_ci',
+                'map_persona.per_complemento',
+                'map_persona.per_fecha_nacimiento',
+                'map_persona.per_celular',
+                'map_persona.per_correo',
+                'map_persona.per_en_funcion',
+                'map_especialidad.esp_nombre',
                 'map_cargo.car_nombre',
-                'programa.pro_nombre', 
-                'programa.pro_nombre_abre', 
-                'programa.pro_costo', 
-                'map_subsistema.sub_nombre', 
+                'programa.pro_nombre',
+                'programa.pro_nombre_abre',
+                'programa.pro_costo',
+                'map_subsistema.sub_nombre',
                 'map_nivel.niv_nombre',
-                'map_categoria.cat_nombre', 
+                'map_categoria.cat_nombre',
                 'genero.gen_nombre',
-                'programa_turno.pro_tur_nombre', 
+                'programa_turno.pro_tur_nombre',
                 'sede.sede_nombre',
-                'sede.sede_nombre_abre', 
-                'departamento.dep_nombre', 
+                'sede.sede_nombre_abre',
+                'departamento.dep_nombre',
                 'programa_inscripcion_estado.pie_nombre',
                 DB::raw('COALESCE(SUM(programa_baucher.pro_bau_monto), 0) AS total_pagado'),
                 DB::raw('(programa.pro_costo - COALESCE(SUM(programa_baucher.pro_bau_monto), 0)) AS restante'),
@@ -1172,44 +1182,44 @@ class InscripcionController extends Controller
                         END AS estado_pago')
             )
             ->groupBy(
-                'programa_inscripcion.pi_id', 
-                'programa_inscripcion.pro_id', 
-                'programa_inscripcion.updated_at', 
-                'map_persona.per_id', 
-                'map_persona.gen_id', 
-                'map_persona.esp_id', 
-                'map_persona.cat_id', 
-                'map_persona.car_id', 
-                'map_persona.sub_id', 
-                'map_persona.niv_id', 
-                'map_persona.per_nombre1', 
-                'map_persona.per_nombre2', 
-                'map_persona.per_apellido1', 
-                'map_persona.per_apellido2', 
-                'map_persona.per_rda', 
-                'map_persona.per_ci', 
-                'map_persona.per_complemento', 
-                'map_persona.per_fecha_nacimiento', 
-                'map_persona.per_celular', 
-                'map_persona.per_correo', 
-                'map_persona.per_en_funcion', 
-                'map_especialidad.esp_nombre', 
+                'programa_inscripcion.pi_id',
+                'programa_inscripcion.pro_id',
+                'programa_inscripcion.updated_at',
+                'map_persona.per_id',
+                'map_persona.gen_id',
+                'map_persona.esp_id',
+                'map_persona.cat_id',
+                'map_persona.car_id',
+                'map_persona.sub_id',
+                'map_persona.niv_id',
+                'map_persona.per_nombre1',
+                'map_persona.per_nombre2',
+                'map_persona.per_apellido1',
+                'map_persona.per_apellido2',
+                'map_persona.per_rda',
+                'map_persona.per_ci',
+                'map_persona.per_complemento',
+                'map_persona.per_fecha_nacimiento',
+                'map_persona.per_celular',
+                'map_persona.per_correo',
+                'map_persona.per_en_funcion',
+                'map_especialidad.esp_nombre',
                 'map_cargo.car_nombre',
-                'programa.pro_nombre', 
-                'programa.pro_nombre_abre', 
-                'programa.pro_costo', 
-                'map_subsistema.sub_nombre', 
+                'programa.pro_nombre',
+                'programa.pro_nombre_abre',
+                'programa.pro_costo',
+                'map_subsistema.sub_nombre',
                 'map_nivel.niv_nombre',
                 'map_categoria.cat_nombre',
                 'genero.gen_nombre',
-                'programa_turno.pro_tur_nombre', 
+                'programa_turno.pro_tur_nombre',
                 'sede.sede_nombre',
-                'sede.sede_nombre_abre', 
-                'departamento.dep_nombre', 
+                'sede.sede_nombre_abre',
+                'departamento.dep_nombre',
                 'programa_inscripcion_estado.pie_nombre'
             )
-            ->where('programa_inscripcion.pi_estado', 'activo') 
-            ->orderBy('total_pagado', 'desc') 
+            ->where('programa_inscripcion.pi_estado', 'activo')
+            ->orderBy('total_pagado', 'desc')
             ->get();
         // Obtener responsable
         $sede_id = (string) $sede_id;
@@ -1265,7 +1275,7 @@ class InscripcionController extends Controller
             $facilitador_apellidos = 'No encontrado';
             $facilitador_cargo = 'No encontrado';
         }
-         
+
         //
         $imagen1 = public_path() . "/img/logos/logominedu.jpg";
         $logo1 = base64_encode(file_get_contents($imagen1));
@@ -1309,14 +1319,14 @@ class InscripcionController extends Controller
                 DB::raw('UPPER(cp.cp_estado) as cp_estado')
             )
             ->where('cp.pc_id', 9)
-            ->where('cp.pm_id', 38)  
+            ->where('cp.pm_id', 38)
             ->where('cp.cp_estado', 'APROBADO')
             ->orderBy(DB::raw('COALESCE(per.per_apellido1, "") = ""')) // Apellidos vacíos al final
             ->orderBy('per.per_apellido1')
             ->get();
         $imagen2 = public_path() . "/assets/image/chakana.jpg";
         $logo2 = base64_encode(file_get_contents($imagen2));
-                
+
         // Generar QR para cada participante
         foreach ($results as $result) {
             $datosQr = "Nombre Completo: " . $result->nombre . " " . $result->paterno . " " . $result->materno . "\nAprobó el Ciclo Formativo de Ajedrez";
