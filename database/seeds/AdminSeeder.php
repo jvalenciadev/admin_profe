@@ -17,13 +17,13 @@ class AdminSeeder extends Seeder
 
         if (is_null($admin)) {
             $admin           = new Admin();
-            $admin->per_id     = "8870941";
-            $admin->nombre     = "Juan Pablo";
-            $admin->apellidos     = "Valencia Catari";
-            $admin->correo    = "superadmin@gmail.com";
-            $admin->cargo    = "Técnico de Area / Sistemas informáticos";
-            $admin->username = "superadmin";
-            $admin->password = Hash::make('juanpa123');
+            $admin->per_id     = "";
+            $admin->nombre     = "";
+            $admin->apellidos     = "";
+            $admin->correo    = "";
+            $admin->cargo    = "";
+            $admin->username = "";
+            $admin->password = Hash::make('');
             $admin->save();
         }
     }
