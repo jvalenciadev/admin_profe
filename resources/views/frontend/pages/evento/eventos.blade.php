@@ -12,30 +12,29 @@
         .breadcrumb-area {
             background-color: rgba(32, 40, 46, 0);
             /* Fondo con un poco de transparencia */
-            background-image: url('{{ asset('frontend/images/bannerminedu1.jpg') }}');
+            background-image: url('{{ asset('frontend/images/eventos.jpg') }}');
             background-blend-mode: overlay;
             /* Mezcla el color de fondo y la imagen */
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
             /* Añade sombra */
         }
     </style>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
     <section class="breadcrumb-area d-flex  p-relative align-items-center">
         <div class="container">
             <div class="row align-items-center">
-                <div class="col-xl-12 col-lg-12">
+                {{-- <div class="col-xl-12 col-lg-12">
                     <div class="breadcrumb-wrap text-left">
                         <div class="breadcrumb-title">
                             <h2>Nuestros eventos</h2>
                         </div>
                     </div>
-                </div>
+                </div> --}}
                 <div class="breadcrumb-wrap2">
                     <nav aria-label="breadcrumb">
                         <ol class="breadcrumb">
                             <li class="breadcrumb-item"><a href="{{ route('home') }}">Inicio</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Evento</li>
+                            <li class="breadcrumb-item active" aria-current="page">Eventos</li>
                         </ol>
                     </nav>
                 </div>

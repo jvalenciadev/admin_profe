@@ -173,65 +173,65 @@
                             <label for="per_celular">Celular:</label>
                             <input type="tel" class="form-control" name="per_celular" id="per_celular"
                                 value="{{ isset($user->per_celular) && $user->per_celular != '0' && $user->per_celular != null ? $user->per_celular : '' }}"
-                                required pattern="^6[0-9]{7}|7[0-9]{7}$" />
+                                required pattern="^6[0-9]{7}|7[0-9]{7}$" placeholder="Ingrese su número de celular correcto" />
                         </div>
                         <div id="error-message-cel" class="error-message text-danger font-weight-bold"
-                            style="display: none;">
+                            style="display: none;"   >
                             El número de celular debe comenzar con 6 o 7 y tener 8 dígitos.
                         </div>
                         <div class="form-group">
                             <label for="correo">Correo electrónico:</label>
                             <input type="email" class="form-control" name="per_correo" id="per_correo"
                                 value="{{ isset($user->per_correo) && $user->per_correo != 'sincorreo' && $user->per_correo != null ? $user->per_correo : '' }}"
-                                required onkeyup="minusculas(this);" maxlength="100" />
+                                required onkeyup="minusculas(this);"  placeholder="Ingrese su correo"  maxlength="100" />
                         </div>
                         <div id="error-message-correo" class="error-message text-danger font-weight-bold"
                             style="display: none;">
                             El correo electrónico debe ser válido (ejemplo@dominio.com).
                         </div>
                         @if($programa->pro_tip_id != 2)
-                        <div class="form-group">
-                            <label for="pi_licenciatura">Licenciatura:</label>
-                            <input type="text" class="form-control" name="pi_licenciatura" id="pi_licenciatura"
-                                required onkeyup="mayusculas(this);" maxlength="255" title="Este campo es obligatorio" />
-                        </div>
-                        <!-- Título Separador -->
-                        <h5 class="mt-4">Lugar de Trabajo</h5>
-                        <hr>
-                        <div class="form-group">
-                            <label for="pi_unidad_educativa">Institución:</label>
-                            <input type="text" class="form-control" name="pi_unidad_educativa"
-                                id="pi_unidad_educativa" required onkeyup="mayusculas(this);" maxlength="255" />
-                        </div>
-                        <div class="form-group">
-                            <label for="pi_materia">Cargo Actual:</label>
-                            <input type="text" class="form-control" name="pi_materia" id="pi_materia" required
-                                onkeyup="mayusculas(this);" maxlength="255" />
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="pi_nivel">Nivel:</label>
-                                <select class="form-control" name="pi_nivel" id="pi_nivel" required>
-                                    <option value="">Seleccione una opción</option>
-                                    @foreach ($nivel as $niv)
-                                        <option value="{{ $niv->niv_nombre }}">
-                                            {{ $niv->niv_nombre }}
-                                        </option>
-                                    @endforeach
-                                </select>
+                            <div class="form-group">
+                                <label for="pi_licenciatura">Licenciatura en:</label>
+                                <input type="text" class="form-control" name="pi_licenciatura" id="pi_licenciatura"
+                                    required onkeyup="mayusculas(this);" maxlength="255" placeholder="Licenciatura en ..." title="Este campo es obligatorio" />
                             </div>
-                            <div class="form-group col-md-6">
-                                <label for="pi_subnivel">Subsistema:</label>
-                                <select class="form-control" name="pi_subsistema" id="pi_subsistema" required>
-                                    <option value="">Seleccione una opción</option>
-                                    @foreach ($subsistema as $sub)
-                                        <option value="{{ $sub->sub_nombre }}">
-                                            {{ $sub->sub_nombre }}
-                                        </option>
-                                    @endforeach
-                                </select>
+                            <!-- Título Separador -->
+                            <h5 class="mt-4">Lugar de Trabajo</h5>
+                            <hr>
+                            <div class="form-group">
+                                <label for="pi_unidad_educativa">Institución:</label>
+                                <input type="text" class="form-control" name="pi_unidad_educativa"
+                                    id="pi_unidad_educativa" required onkeyup="mayusculas(this);"  placeholder=" ..." maxlength="255" />
                             </div>
-                        </div>
+                            <div class="form-group">
+                                <label for="pi_materia">Cargo Actual:</label>
+                                <input type="text" class="form-control" name="pi_materia" id="pi_materia" required
+                                    onkeyup="mayusculas(this);" maxlength="255" />
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="pi_nivel">Nivel:</label>
+                                    <select class="form-control" name="pi_nivel" id="pi_nivel" required>
+                                        <option value="">Seleccione una opción</option>
+                                        @foreach ($nivel as $niv)
+                                            <option value="{{ $niv->niv_nombre }}">
+                                                {{ $niv->niv_nombre }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="pi_subnivel">Subsistema:</label>
+                                    <select class="form-control" name="pi_subsistema" id="pi_subsistema" required>
+                                        <option value="">Seleccione una opción</option>
+                                        @foreach ($subsistema as $sub)
+                                            <option value="{{ $sub->sub_nombre }}">
+                                                {{ $sub->sub_nombre }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
                         @endif
                         <!-- Título para otra sección -->
                         <h5 class="mt-4">Sede y Turno Solicitado</h5>
@@ -261,7 +261,7 @@
                                 <option value="">Elija una sede primero</option>
                             </select>
                         </div>
-                        <h5 class="mt-4">Deposito Bancario</h5>
+                        {{-- <h5 class="mt-4">Deposito Bancario</h5>
                         <hr>
                         <div class="form-group">
                             <label for="pro_bau_nro_deposito">Nro de Deposito:</label>
@@ -287,14 +287,13 @@
                             <label for="pro_bau_fecha">Fecha de Depósito:</label>
                             <input type="date" class="form-control" name="pro_bau_fecha" id="pro_bau_fecha"
                                 min="2025-01-01" max="2025-12-31" required />
-                        </div>
+                        </div> --}}
                         <div class="alert alert-danger mt-1" role="alert">
                             <strong>¡Atención!</strong> {!! $proRestriccion->res_descripcion ?? '' !!}
                         </div>
                         <input type="hidden" name="pro_id" id="pro_id" value="{{ encrypt($programa->pro_id) }}">
                         <button type="submit" id="confirmar-envio" class="submit-btn">Enviar</button>
                     </form>
-
                 </div>
             </div>
         </section>

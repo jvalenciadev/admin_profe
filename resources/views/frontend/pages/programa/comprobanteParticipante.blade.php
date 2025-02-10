@@ -64,6 +64,16 @@
             color: #28a745;
             margin-bottom: 30px;
         }
+        .error-message {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #ba352c;
+            margin-bottom: 30px;
+        }
+        .error-dos-message {
+            font-weight: bold;
+            color: #ba352c;
+        }
 
         .document-info {
             font-size: 1.1em;
@@ -179,54 +189,68 @@
                 <p class="welcome-message text-center">
                     ¡BIENVENIDO AL {{ mb_strtoupper($programa->pro_tip_nombre, 'UTF-8') }} EN {{ mb_strtoupper($programa->pro_nombre,'UTF-8') }}!
                 </p>
-
-                <p class="form-title">REQUISITOS PARA EL {{ mb_strtoupper($programa->pro_tip_nombre, 'UTF-8') }}</p>
-                @if($programa->pro_tip_id==2)
-                <div class="document-info">
-                    <ul>
-                        <li>Fotocopia simple de la Cédula de identidad vigente.</li>
-                        <li>Formulario del Registro Docente Administrativo (RDA) actualizado.</li>
-                        <li>Fotocopia simple de la Boleta de Pago que demuestre estar en función activa dentro del Sistema Educativo Plurinacional.</li>
-                        <li>Presentación de la boleta original o el comprobante de transferencia bancaria, acompañado de cuatro fotocopias simples (por el costo total).</li>
-                        <li>Ficha de inscripción al programa descargue <a href="{{ route('programa.comprobanteParticipantePdf', [
-                            'per_id' => encrypt($programa->per_id),
-                            'pro_id' => encrypt($programa->pro_id),
-                        ]) }}" target="_blank">aquí</a>.</li>
-                        <li>Carta de compromiso y cumplimiento de todas las actividades académicas descargue <a href="{{ route('programa.compromisoParticipantePdf', [
-                            'per_id' => encrypt($programa->per_id),
-                            'pro_id' => encrypt($programa->pro_id),
-                        ]) }}" target="_blank">aquí</a>.</li>
-                        <li>Certificado de trabajo (actualizado) emitido por la autoridad competente de su institución para otros actores educativos del SEP.</li>
-                        <li>Toda la documentación debe ser presentada en la subsede del Programa PROFE donde realizó su inscripción, en un folder debidamente <a href="{{ route('programa.rotuloParticipantePdf', [
-                            'per_id' => encrypt($programa->per_id),
-                            'pro_id' => encrypt($programa->pro_id),
-                        ]) }}" target="_blank">rotulado</a> con el nombre del diplomado al que se postula.</li>
-                    </ul>
-                </div>
-                @else
-                <div class="document-info">
-                    <ul>
-                        <li>Fotocopia simple de la Cédula de identidad vigente.</li>
-                        <li>Formulario del Registro Docente Administrativo (RDA) actualizado, donde conste el registro de título Profesional en el MESCP o universitario a nivel de licenciatura.</li>
-                        <li>Fotocopia simple de la Boleta de Pago que demuestre estar en función activa y de acuerdo con el diplomado al que postula dentro del Sistema Educativo Plurinacional.</li>
-                        <li>Presentación de la boleta original o el comprobante de transferencia bancaria, acompañado de cuatro fotocopias simples, correspondiente al pago de la primera cuota.</li>
-                        <li>Ficha de inscripción al programa descargue <a href="{{ route('programa.comprobanteParticipantePdf', [
-                            'per_id' => encrypt($programa->per_id),
-                            'pro_id' => encrypt($programa->pro_id),
-                        ]) }}" target="_blank">aquí</a>.</li>
-                        <li>Carta de compromiso y cumplimiento de todas las actividades académicas descargue <a href="{{ route('programa.compromisoParticipantePdf', [
-                            'per_id' => encrypt($programa->per_id),
-                            'pro_id' => encrypt($programa->pro_id),
-                        ]) }}" target="_blank">aquí</a>.</li>
-                        <li>Toda la documentación debe ser presentada en la subsede del Programa PROFE donde realizó su inscripción, en un folder debidamente <a href="{{ route('programa.rotuloParticipantePdf', [
-                            'per_id' => encrypt($programa->per_id),
-                            'pro_id' => encrypt($programa->pro_id),
-                        ]) }}" target="_blank">rotulado</a> con el nombre del diplomado al que se postula.</li>
-                    </ul>
-                </div>
+                @if($programa->pie_id == 4)
+                <p class="error-message text-center">
+                    Tiene un plazo máximo de <b>24 horas</b> para habilitar su inscripción en la sede registrada.
+                    Si no realiza la habilitación dentro de este tiempo, perderá su cupo y deberá volver a llenar el formulario.
+                </p>
                 @endif
-
+                @if($programa->pie_id == 2)
+                <p class="error-message text-center">
+                    USTED YA SE ENCUENTRA INSCRITO
+                </p>
+                @endif
+                @if($programa->pie_id == 4)
+                    <p class="form-title">REQUISITOS PARA EL {{ mb_strtoupper($programa->pro_tip_nombre, 'UTF-8') }}</p>
+                        @if($programa->pro_tip_id==2)
+                        <div class="document-info">
+                            <ul>
+                                <li>Fotocopia simple de la Cédula de identidad vigente.</li>
+                                <li>Formulario del Registro Docente Administrativo (RDA) actualizado.</li>
+                                <li>Fotocopia simple de la Boleta de Pago que demuestre estar en función activa dentro del Sistema Educativo Plurinacional.</li>
+                                <li>Presentación de la boleta original o el comprobante de transferencia bancaria, acompañado de cuatro fotocopias simples (por el costo total).</li>
+                                <li>Ficha de inscripción al programa.</li>
+                                <li>Carta de compromiso y cumplimiento de todas las actividades académicas descargue <a href="{{ route('programa.compromisoParticipantePdf', [
+                                    'per_id' => encrypt($programa->per_id),
+                                    'pro_id' => encrypt($programa->pro_id),
+                                ]) }}" target="_blank">aquí</a>.</li>
+                                <li>Certificado de trabajo (actualizado) emitido por la autoridad competente de su institución para otros actores educativos del SEP.</li>
+                                <li>Toda la documentación debe ser presentada en la subsede del Programa PROFE donde realizó su inscripción, en un folder debidamente <a href="{{ route('programa.rotuloParticipantePdf', [
+                                    'per_id' => encrypt($programa->per_id),
+                                    'pro_id' => encrypt($programa->pro_id),
+                                ]) }}" target="_blank">rotulado</a> con el nombre del diplomado al que se postula.</li>
+                            </ul>
+                        </div>
+                    @else
+                        <div class="document-info">
+                            <ul>
+                                <li>Fotocopia simple de la Cédula de identidad vigente.</li>
+                                <li>Formulario del Registro Docente Administrativo (RDA) actualizado, donde conste el registro de título Profesional en el MESCP o universitario a nivel de licenciatura.</li>
+                                <li>Fotocopia simple de la Boleta de Pago que demuestre estar en función activa y de acuerdo con el diplomado al que postula dentro del Sistema Educativo Plurinacional.</li>
+                                <li>Presentación de la boleta original o el comprobante de transferencia bancaria, acompañado de cuatro fotocopias simples, correspondiente al pago de la primera cuota.</li>
+                                <li>Ficha de inscripción al programa. <div class="error-dos-message"> (Recoger en la sede inscrita)</div></li>
+                                <li>Carta de compromiso y cumplimiento de todas las actividades académicas <a href="{{ route('programa.compromisoParticipantePdf', [
+                                    'per_id' => encrypt($programa->per_id),
+                                    'pro_id' => encrypt($programa->pro_id),
+                                ]) }}" target="_blank">aquí</a>.</li>
+                                <li>Toda la documentación debe ser presentada en la subsede del Programa PROFE donde realizó su inscripción, en un folder debidamente <a href="{{ route('programa.rotuloParticipantePdf', [
+                                    'per_id' => encrypt($programa->per_id),
+                                    'pro_id' => encrypt($programa->pro_id),
+                                ]) }}" target="_blank">rotulado</a> con el nombre del diplomado al que se postula.</li>
+                            </ul>
+                        </div>
+                    @endif
+                @endif
                 <div class="text-center mt-4">
+                    @if($programa->pie_id == 4)
+                    <a href="{{ route('programa.habilitacionParticipantePdf', [
+                        'per_id' => encrypt($programa->per_id),
+                        'pro_id' => encrypt($programa->pro_id),
+                    ]) }}" class="download-btn" target="_blank">
+                        Habilitación de Pagó PDF
+                    </a>
+                    @endif
+                    @if($programa->pie_id == 2)
                     <a href="{{ route('programa.compromisoParticipantePdf', [
                         'per_id' => encrypt($programa->per_id),
                         'pro_id' => encrypt($programa->pro_id),
@@ -245,6 +269,7 @@
                     ]) }}" class="download-btn" target="_blank">
                         Inscripción PDF
                     </a>
+                    @endif
                 </div>
 
                 <div class="logout-btn-container">

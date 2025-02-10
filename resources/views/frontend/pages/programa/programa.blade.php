@@ -79,6 +79,72 @@
                             </div>
 
                         </div>
+                         <!-- Tabla de Sedes y Turnos -->
+                        <div class="container">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover text-center">
+                                    <thead class="table-primary">
+                                        <tr>
+                                            <th class="text-center">📍 Sede y Contactos</th>
+                                            <th class="text-center">🕒 Turnos Habilitados</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($programa_sede_turno as $pst)
+                                            <tr>
+                                                <!-- Sede y contactos en una celda -->
+                                                <td class="text-start align-middle">
+                                                    <h6 class="fw-bold text-dark mb-1">
+                                                        <i class="bi bi-geo-alt-fill"></i> {{ $pst->dep_nombre }} - {{ $pst->sede_nombre }}
+                                                    </h6>
+                                                    <div class="d-flex">
+                                                        @if($pst->sede_contacto_1)
+                                                            <a href="https://wa.me/591{{ $pst->sede_contacto_1 }}" target="_blank" class="text-success me-1">
+                                                                <i class="fab fa-whatsapp"></i> {{ $pst->sede_contacto_1 }}
+                                                            </a>
+                                                        @endif
+                                                        @if($pst->sede_contacto_2)
+                                                            <a href="https://wa.me/591{{ $pst->sede_contacto_2 }}" target="_blank" class="text-success">
+                                                                <i class="fab fa-whatsapp"></i> {{ $pst->sede_contacto_2 }}
+                                                            </a>
+                                                        @endif
+                                                    </div>
+                                                </td>
+
+                                                <!-- Turnos habilitados -->
+                                                <td class="align-middle">
+                                                    @php
+                                                        $turnos = DB::table('programa_turno')
+                                                            ->when(!is_null($pst->pro_tur_ids), function($query) use ($pst) {
+                                                                $turIds = json_decode($pst->pro_tur_ids);
+                                                                if (!empty($turIds)) {
+                                                                    $query->whereIn('programa_turno.pro_tur_id', $turIds);
+                                                                }
+                                                            })
+                                                            ->get();
+                                                    @endphp
+
+                                                    @if($turnos->isNotEmpty())
+                                                        <ul class="list-unstyled">
+                                                            @foreach($turnos as $turno)
+                                                                <li class="d-flex justify-content-between align-items-center p-1 bg-light rounded mb-1">
+                                                                    <i class="bi bi-clock-history text-primary"></i>
+                                                                    <span class="fw-bold">{{ $turno->pro_tur_nombre }}</span>
+                                                                    <span class="badge bg-info">{{ $turno->pro_tur_horario ?? '8:00' }}</span>
+                                                                </li>
+                                                            @endforeach
+                                                        </ul>
+                                                    @else
+                                                        <span class="text-danger fw-bold"><i class="bi bi-exclamation-circle"></i> Sin turnos</span>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
                         <br><br>
                         <div class="container">
                             <div class="portfolio">
@@ -94,6 +160,7 @@
                                         </div>
                                     </div>
                                 </div>
+
 
                                 <div class="grid col3">
                                     @foreach($galeriasPorPrograma as $galerias)
@@ -111,6 +178,7 @@
                                         @endforeach
                                     @endforeach
                                 </div>
+                                <p>{{$programa_sede_turno}}</p>
                             </div>
                         </div>
                     </div>

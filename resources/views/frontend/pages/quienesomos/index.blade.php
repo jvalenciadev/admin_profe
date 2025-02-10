@@ -35,7 +35,7 @@
         /* Banner Section */
         .breadcrumb-area {
             background-color: rgba(32, 40, 46, 0);
-            background-image: url('{{ asset('storage/profe/' . $profe->profe_banner) }}');
+            background-image: url('{{ asset('frontend/images/nosotros.jpg') }}');
             background-size: cover;
             background-position: center;
             background-blend-mode: overlay;
@@ -155,25 +155,27 @@
         }
     </style>
 
-    <section class="breadcrumb-area d-flex align-items-center">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-xl-12">
-                    <div class="breadcrumb-wrap">
-                        <div class="breadcrumb-title">
-                            <h2>Quiénes Somos</h2>
-                        </div>
-                        <nav aria-label="breadcrumb">
-                            <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="{{ route('home') }}">Inicio</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Quiénes Somos</li>
-                            </ol>
-                        </nav>
+<section class="breadcrumb-area d-flex  p-relative align-items-center">
+    <div class="container">
+        <div class="row align-items-center">
+            {{-- <div class="col-xl-12 col-lg-12">
+                <div class="breadcrumb-wrap text-left">
+                    <div class="breadcrumb-title">
+                        <h2>Nuestros eventos</h2>
                     </div>
                 </div>
+            </div> --}}
+            <div class="breadcrumb-wrap2">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="{{ route('home') }}">Inicio</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Quiénes Somos</li>
+                    </ol>
+                </nav>
             </div>
         </div>
-    </section>
+    </div>
+</section> <!-- breadcrumb-area-end -->
 
     <section class="container py-5">
         <!-- Sobre Nosotros -->

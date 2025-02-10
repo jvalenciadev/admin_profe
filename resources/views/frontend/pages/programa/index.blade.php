@@ -6,7 +6,7 @@
     <style id="qeducato_data-dynamic-css" title="dynamic-css" class="redux-options-output">
         .breadcrumb-area {
             background-color: rgba(32, 40, 46, 0);
-            background-image: url('{{ asset('frontend/images/bannerminedu1.jpg') }}');
+            background-image: url('{{ asset('frontend/images/ofertasacademicas.jpg') }}');
             background-blend-mode: overlay;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
         }
@@ -77,26 +77,27 @@
         }
     </style>
 
-    <section class="breadcrumb-area d-flex align-items-center">
+    <section class="breadcrumb-area d-flex  p-relative align-items-center">
         <div class="container">
             <div class="row align-items-center">
-                <div class="col-xl-12">
-                    <div class="breadcrumb-wrap">
+                {{-- <div class="col-xl-12 col-lg-12">
+                    <div class="breadcrumb-wrap text-left">
                         <div class="breadcrumb-title">
-                            <h2>Ofertas Académicas</h2>
+                            <h2>Nuestras Novedades</h2>
                         </div>
-                        <nav aria-label="breadcrumb">
-                            <ol class="breadcrumb">
-                                <li class="breadcrumb-item"><a href="{{ route('home') }}">Inicio</a></li>
-                                <li class="breadcrumb-item active" aria-current="page">Ofertas Académicas</li>
-                            </ol>
-                        </nav>
                     </div>
+                </div> --}}
+                <div class="breadcrumb-wrap2">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="{{ route('home') }}">Inicio</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Ofertas académicas</li>
+                        </ol>
+                    </nav>
                 </div>
             </div>
         </div>
-    </section>
-
+    </section> <!-- breadcrumb-area-end -->
     <article id="post-78" class="post-78 page type-page status-publish hentry">
         <div class="pages-content">
             <div class="elementor elementor-78">

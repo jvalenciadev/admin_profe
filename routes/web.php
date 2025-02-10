@@ -48,6 +48,7 @@ Route::get('/logout-programa', 'Frontend\ProgramaController@logout')->name('prog
 Route::get('ofertas-academicas/comprobanteParticipante/{per_id}/{pro_id}','Frontend\ProgramaController@comprobanteParticipante')->name('programa.comprobanteParticipante');
 Route::get('ofertas-academicas/comprobanteParticipantePdf/{per_id}/{pro_id}', 'Frontend\ProgramaController@comprobanteParticipantePdf')->name('programa.comprobanteParticipantePdf');
 Route::get('ofertas-academicas/compromisoParticipantePdf/{per_id}/{pro_id}', 'Frontend\ProgramaController@compromisoParticipantePdf')->name('programa.compromisoParticipantePdf');
+Route::get('ofertas-academicas/habilitacionParticipantePdf/{per_id}/{pro_id}', 'Frontend\ProgramaController@habilitacionParticipantePdf')->name('programa.habilitacionParticipantePdf');
 Route::get('ofertas-academicas/rotuloParticipantePdf/{per_id}/{pro_id}', 'Frontend\ProgramaController@rotuloParticipantePdf')->name('programa.rotuloParticipantePdf');
 Route::get('evento/comprobanteParticipante/{eve_per_id}/{eve_id}','Frontend\EventoController@comprobanteParticipante')->name('evento.comprobanteParticipante');
 Route::get('evento/comprobanteParticipantePdf/{eve_per_id}/{eve_id}', 'Frontend\EventoController@comprobanteParticipantePdf')->name('evento.comprobanteParticipantePdf');

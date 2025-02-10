@@ -47,6 +47,12 @@ class ProgramaController extends Controller
     {
         $programa = Programa::where('pro_estado', 'activo')->where('pro_id', $pro_id)->first();
 
+        $programa_sede_turno = ProgramaSedeTurno::join('sede', 'programa_sede_turno.sede_id', '=', 'sede.sede_id')
+            ->join('departamento', 'sede.dep_id', '=', 'departamento.dep_id')
+            ->where('pro_id', $pro_id)
+            ->select('sede.sede_nombre','departamento.dep_nombre','sede.sede_contacto_1','programa_sede_turno.pro_tur_ids','sede.sede_contacto_2','sede.sede_id')
+            ->get();
+        // Obtener turnos disponibles en programa_turno
         $galeriasPorPrograma = Galeria::selectRaw(
                     'galeria.*,
                     programa.pro_nombre_abre,
@@ -59,7 +65,7 @@ class ProgramaController extends Controller
                 ->orderBy('galeria.updated_at', 'desc')
                 ->get()
                 ->groupBy('sede_id');
-        return view('frontend.pages.programa.programa', compact('programa','galeriasPorPrograma'));
+        return view('frontend.pages.programa.programa', compact('programa','galeriasPorPrograma', 'programa_sede_turno'));
     }
     public function solicitarSedeInscripcion($pro_id){
         $programa = Programa::where('pro_id', $pro_id)->first();
@@ -338,10 +344,17 @@ class ProgramaController extends Controller
                 ->first();
                 // Si ya está inscrito, redirige a la comprobación
                 if ($inscripcion) {
-                    return redirect()->route('programa.comprobanteParticipante', [
-                        'per_id' => encrypt($pro_per->per_id),
-                        'pro_id' => encrypt($pro_id),
-                    ])->with('danger', 'Usted ya se encuentra registrado');
+                    $fechaInscripcion = \Carbon\Carbon::parse($inscripcion->created_at);
+                    $tiempoTranscurrido = $fechaInscripcion->diffInHours(now());
+
+                    if ($inscripcion->pie_id != 4) {
+                        return redirect()->route('programa.comprobanteParticipante', [
+                            'per_id' => encrypt($pro_per->per_id),
+                            'pro_id' => encrypt($pro_id),
+                        ])->with('danger', 'Usted ya se encuentra registrado');
+                    } elseif ($tiempoTranscurrido > 24) {
+                        return view('frontend.pages.programa.inscripcion_verificar', compact('departamentos','proRestriccion', 'generos', 'proSedeTur','nivel','subsistema', 'programa', 'user'));
+                    }
                 }
                 else{
 
@@ -376,12 +389,12 @@ class ProgramaController extends Controller
                 'per_celular' => $request['per_celular'] ?? '',
                 'per_correo' => $request['per_correo'] ?? '',
             ]);
-            $baucher = ProgramaBaucher::where('pro_bau_nro_deposito', $request['pro_bau_nro_deposito'])->exists();
-            if ($baucher) {
-                return back()->withErrors([
-                    'per_ci' => 'El número de depósito ingresado ya ha sido utilizado. Para más detalles, le recomendamos acercarse a la sede correspondiente.',
-                ]);
-            }
+            // $baucher = ProgramaBaucher::where('pro_bau_nro_deposito', $request['pro_bau_nro_deposito'])->exists();
+            // if ($baucher) {
+            //     return back()->withErrors([
+            //         'per_ci' => 'El número de depósito ingresado ya ha sido utilizado. Para más detalles, le recomendamos acercarse a la sede correspondiente.',
+            //     ]);
+            // }
             // Actualizar o crear el registro en ProgramaInscripcion
             $inscripcion = ProgramaInscripcion::updateOrCreate(
                 [
@@ -398,18 +411,11 @@ class ProgramaController extends Controller
                     'pro_tur_id' => $request['pro_tur_id'],
                     'sede_id' => $request['sede_id'],
                     'pro_id' => $pro_id,
-                    'pie_id' => 2,
+                    'created_at' => now(),
+                    'pie_id' => 4,
                 ]
             );
 
-            $programa_baucher = ProgramaBaucher::create([
-                'pi_id' => $inscripcion->pi_id, // Asociar con la inscripción recién creada o actualizada
-                'pro_bau_imagen' => $request['pro_bau_imagen'],
-                'pro_bau_monto' => $request['pro_bau_monto'],
-                'pro_bau_nro_deposito' => $request['pro_bau_nro_deposito'],
-                'pro_bau_fecha' => $request['pro_bau_fecha'],
-                'pro_bau_tipo_pago' => 'Baucher',
-            ]);
             // Redirigir al comprobante
             return redirect()->route('programa.comprobanteParticipante', [
                 'per_id' => encrypt($usuario->per_id),
@@ -595,6 +601,98 @@ class ProgramaController extends Controller
         $pdf = PDF::loadView('frontend.pages.programa.compromisoPdf', compact('participante', 'logo1', 'logo3'));
         $pdf->setPaper('Letter', 'portrait');
         return $pdf->stream('compromisoPDF_' . $participante->per_ci . '.pdf');
+    }
+    public function habilitacionParticipantePdf($per_id, $pro_id)
+    {
+         //
+         $per_id = decrypt($per_id);
+         $pro_id = decrypt($pro_id);
+         //
+         $participante = DB::table('programa_inscripcion')
+             ->select(
+                 'programa_inscripcion.per_id',
+                 // 'evento_inscripcion.ei_rda',
+                 'map_persona.per_ci',
+                 'map_persona.per_complemento',
+                 'map_persona.per_nombre1',
+                 'map_persona.per_nombre2',
+                 'map_persona.per_apellido1',
+                 'map_persona.per_apellido2',
+                 'map_persona.per_celular',
+                 'map_persona.per_correo',
+                 'programa_inscripcion.pi_licenciatura',
+                 'programa_inscripcion.pi_unidad_educativa',
+                 'programa_inscripcion.pi_materia',
+                 'programa_inscripcion.pi_nivel',
+                 'programa_inscripcion.pi_subsistema',
+                 // 'evento_inscripcion.ei_autorizacion',
+                 'programa.pro_id',
+                 'programa_inscripcion.created_at',
+                 'programa_inscripcion.updated_at',
+                 'programa_modalidad.pm_nombre',
+                 'programa_tipo.pro_tip_nombre',
+                 'programa_turno.pro_tur_nombre',
+                 'programa_version.pv_nombre',
+                 'programa_version.pv_romano',
+                 'programa_version.pv_romano',
+                 'programa_version.pv_gestion',
+                 'programa.pro_nombre',
+                 'programa_restriccion.res_descripcion',
+                 'departamento.dep_nombre',
+                 'sede.sede_nombre',
+                 DB::raw('(SELECT pro_bau_monto FROM programa_baucher WHERE programa_baucher.pi_id = programa_inscripcion.pi_id ORDER BY programa_baucher.pro_bau_fecha ASC LIMIT 1) as pro_bau_monto'),
+                 DB::raw('(SELECT pro_bau_nro_deposito FROM programa_baucher WHERE programa_baucher.pi_id = programa_inscripcion.pi_id ORDER BY programa_baucher.pro_bau_fecha ASC LIMIT 1) as pro_bau_nro_deposito'),
+                 DB::raw('(SELECT pro_bau_fecha FROM programa_baucher WHERE programa_baucher.pi_id = programa_inscripcion.pi_id ORDER BY programa_baucher.pro_bau_fecha ASC LIMIT 1) as pro_bau_fecha')
+             )
+             ->join('map_persona', 'map_persona.per_id', '=', 'programa_inscripcion.per_id')
+             ->join('programa', 'programa.pro_id', '=', 'programa_inscripcion.pro_id')
+             ->join('programa_turno', 'programa_turno.pro_tur_id', '=', 'programa_inscripcion.pro_tur_id')
+             ->join('programa_version', 'programa_version.pv_id', '=', 'programa.pv_id')
+             ->join('programa_modalidad', 'programa_modalidad.pm_id', '=', 'programa.pm_id')
+             ->join('programa_restriccion', 'programa_restriccion.pro_id', '=', 'programa.pro_id')
+             ->join('programa_tipo', 'programa_tipo.pro_tip_id', '=', 'programa.pro_tip_id')
+             ->join('sede', 'sede.sede_id', '=', 'programa_inscripcion.sede_id')
+             ->join('departamento', 'departamento.dep_id', '=', 'sede.dep_id')
+             ->where('programa_inscripcion.per_id', '=', $per_id)
+             ->where('programa_inscripcion.pro_id', '=', $pro_id)
+             ->first();
+         //
+         // dd($participante);
+         //
+         $fechaInscripcion = \Carbon\Carbon::parse($participante->created_at);
+        $tiempoTranscurrido = $fechaInscripcion->diffInHours(now());
+        if ($tiempoTranscurrido > 24) {
+            return redirect('/ofertas-academicas')->with('error', 'Usted no se encuentra habilitado para la inscripción');
+        }
+         $imagen1 = public_path() . "/assets/image/logoprofeiippminedu.png";
+         $logo1 = base64_encode(file_get_contents($imagen1));
+
+
+         $imagen3 = public_path() . "/img/iconos/alerta.png";
+         $logo3 = base64_encode(file_get_contents($imagen3));
+
+         $imagen3 = public_path() . "/img/logos/fondo.jpg";
+         $fondo = base64_encode(file_get_contents($imagen3));
+
+         // QR de encuesta
+         $imagen4 = public_path() . "/img/qr/qrEncuesta.jpg";
+         $qrEncuesta = base64_encode(file_get_contents($imagen4));
+         //
+
+         $datosQr = route('programa.habilitacionParticipantePdf', [
+             'per_id' => encrypt($per_id),
+             'pro_id' => encrypt($pro_id),
+         ]);
+         //
+         $qr = base64_encode(QrCode::format('svg')->size(150)->errorCorrection('H')->generate($datosQr));
+         $pdf = PDF::loadView('frontend.pages.programa.habilitacionpagoPdf', compact('participante', 'logo1', 'logo3', 'fondo', 'qr'));
+         // VERTICAL
+         $pdf->setPaper('Letter', 'portrait');
+         // HORIZONTAL
+         // $pdf->setPaper('Letter', 'landscape');
+         //
+         return $pdf->stream('FormularioHabilitacion' . $participante->per_ci . '.pdf');
+
     }
     public function rotuloParticipantePdf($per_id, $pro_id)
     {
