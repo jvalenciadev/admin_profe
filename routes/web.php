@@ -176,6 +176,7 @@ Route::group(['prefix' => 'admin'], function () {
 
     Route::resource('blog', 'Backend\BlogController', ['names' => 'admin.blog']);
     Route::resource('galeria', 'Backend\GaleriaController', ['names' => 'admin.galeria']);
+    Route::resource('solicitudes', 'Backend\SolicitudesController', ['names' => 'admin.solicitudes']);
     Route::resource('comunicado', 'Backend\ComunicadoController', ['names' => 'admin.comunicado']);
 
     // Estados
@@ -184,6 +185,7 @@ Route::group(['prefix' => 'admin'], function () {
     Route::get('evento/estado/{eve_id}', 'Backend\EventoController@estado')->name('admin.evento.estado');
     Route::get('blog/estado/{blog_id}', 'Backend\BlogController@estado')->name('admin.blog.estado');
     Route::get('galeria/estado/{galeria_id}', 'Backend\GaleriaController@estado')->name('admin.galeria.estado');
+    Route::post('solicitudes/estado/{id}', 'Backend\SolicitudesController@estado')->name('admin.solicitudes.estado');
 
     Route::get('comunicado/estado/{comun_id}', 'Backend\ComunicadoController@estado')->name('admin.comunicado.estado');
 

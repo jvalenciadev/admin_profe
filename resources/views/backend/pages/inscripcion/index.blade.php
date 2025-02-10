@@ -90,9 +90,9 @@
                                             @endforeach
                                         @else
                                                 <h6>
-                                                    <strong>{{ $inscripciones->first()->pro_nombre_abre ?? '' }}</strong> 
+                                                    <strong>{{ $inscripciones->first()->pro_nombre_abre ?? '' }}</strong>
                                                 </h6>
-    
+
                                         @endif
                                     </ul>
                                     <br>
@@ -112,7 +112,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="dt-responsive table-responsive">
-                                                    
+
                                                     <table id="dataTable{{ $loop->index }}"
                                                         class="table table-striped table-bordered nowrap">
                                                         <thead>
@@ -254,14 +254,14 @@
         document.addEventListener('DOMContentLoaded', function () {
             var tabLinks = document.querySelectorAll('#inscripcionTabs .nav-link');
             var activeTabIndex = localStorage.getItem('activeTabIndex');
-            
+
             if (activeTabIndex !== null && activeTabIndex < tabLinks.length) {
                 // Desactiva todas las pestañas y contenidos primero
                 tabLinks.forEach(link => {
                     link.classList.remove('active');
                     document.querySelector(link.getAttribute('href')).classList.remove('active', 'show');
                 });
-                
+
                 // Activa la pestaña almacenada en localStorage
                 tabLinks[activeTabIndex].classList.add('active');
                 document.querySelector(tabLinks[activeTabIndex].getAttribute('href')).classList.add('active', 'show');
@@ -314,11 +314,11 @@
                     language: {
                                 url: '//cdn.datatables.net/plug-ins/1.11.3/i18n/es_es.json'
                             }
-                    
+
                 });
                 tables.push(table{{ $loop->index }});
             @endforeach
-    
+
             // Configurar el buscador general
             $('#searchInput').on('keyup', function() {
                 var searchValue = $(this).val().toLowerCase();
@@ -331,6 +331,6 @@
             });
         });
     </script>
-    
-    
+
+
 @endsection

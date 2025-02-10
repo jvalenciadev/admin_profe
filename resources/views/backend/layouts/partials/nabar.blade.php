@@ -216,6 +216,15 @@
                     </a>
                 </li>
             @endif
+            @if ($usr->can('inscripcion.view'))
+                <li class="{{ Route::is('admin.inscripcion.index') ? 'active' : '' }}">
+                    <a href="{{ route('admin.solicitudes.index') }}">
+                        <span class="pcoded-micon"><i class="icofont icofont-map-pins"></i></span>
+                        <span class="pcoded-mtext">Solicitudes</span>
+                        <span class="pcoded-badge label label-warning">NEW</span>
+                    </a>
+                </li>
+            @endif
             @if (
                 $usr->can('admin.view') ||
                     $usr->can('programa.view') ||
@@ -228,7 +237,7 @@
                     <a href="javascript:void(0)">
                         <span class="pcoded-micon"><i class="feather icon-sidebar"></i></span>
                         <span class="pcoded-mtext">Contenido</span>
-                        {{-- <span class="pcoded-badge label label-warning">NEW</span> --}}
+
                     </a>
 
                     <ul class="pcoded-submenu">
