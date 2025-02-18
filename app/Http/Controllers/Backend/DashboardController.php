@@ -114,10 +114,9 @@ class DashboardController extends Controller
             ->where('pi.pi_estado','activo')
             ->where('pi.pie_id',2)
             ->whereBetween('pi.pro_id', [12, 22])
-            ->groupBy('pro.pro_nombre_abre', 'pro.pro_id')
+            ->groupBy('pro.pro_id','pro.pro_nombre_abre')
             ->orderBy('pro.pro_id', 'ASC')
             ->get();
-
         return view('backend.pages.dashboard.index', compact(
             'total_admins', 'total_roles', 'total_permissions',
             'inscritosDep','inscritosSede','total_inscritos',

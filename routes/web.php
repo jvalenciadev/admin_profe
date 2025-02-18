@@ -178,6 +178,7 @@ Route::group(['prefix' => 'admin'], function () {
     Route::resource('galeria', 'Backend\GaleriaController', ['names' => 'admin.galeria']);
     Route::resource('solicitudes', 'Backend\SolicitudesController', ['names' => 'admin.solicitudes']);
     Route::resource('comunicado', 'Backend\ComunicadoController', ['names' => 'admin.comunicado']);
+    Route::resource('perfil', 'Backend\PerfilController', ['names' => 'admin.perfil']);
 
     // Estados
     Route::get('responsable/estado/{resp_profe_id}', 'Backend\ResponsableController@estado')->name('admin.responsable.estado');

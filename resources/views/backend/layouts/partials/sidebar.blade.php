@@ -1,6 +1,12 @@
  <!-- sidebar menu area start -->
  @php
+ use App\Models\Comunicado;
+ use Carbon\Carbon;
      $usr = Auth::guard('admin')->user();
+     $comunicados = Comunicado::orderBy('updated_at', 'desc')->take(5)->get();
+     $comunicadosMesActual = Comunicado::whereMonth('updated_at', Carbon::now()->month)
+    ->whereYear('updated_at', Carbon::now()->year)
+    ->count();
  @endphp
  <nav class="navbar header-navbar pcoded-header">
      <div class="navbar-wrapper">
@@ -34,68 +40,39 @@
                  </li>
              </ul>
              <ul class="nav-right">
-                 {{-- <li class="header-notification">
+                 <li class="header-notification">
                      <div class="dropdown-primary dropdown">
                          <div class="dropdown-toggle" data-toggle="dropdown">
                              <i class="feather icon-bell"></i>
-                             <span class="badge bg-c-pink">5</span>
+                             <span class="badge bg-c-pink">{{ $comunicadosMesActual }}</span>
                          </div>
                          <ul class="show-notification notification-view dropdown-menu" data-dropdown-in="fadeIn"
                              data-dropdown-out="fadeOut">
                              <li>
-                                 <h6>Notifications</h6>
-                                 <label class="label label-danger">New</label>
+                                 <h6>Comunicados / Instructivos</h6>
+                                 <label class="label label-danger">Nuevo</label>
                              </li>
-                             <li>
-                                 <div class="media">
-                                     <img class="d-flex align-self-center img-radius"
-                                         src="files/assets/images/avatar-4.jpg" alt="Generic placeholder image" />
-                                     <div class="media-body">
-                                         <h5 class="notification-user">John Doe</h5>
-                                         <p class="notification-msg">
-                                             Lorem ipsum dolor sit amet, consectetuer elit.
-                                         </p>
-                                         <span class="notification-time">30 minutes ago</span>
-                                     </div>
-                                 </div>
-                             </li>
-                             <li>
-                                 <div class="media">
-                                     <img class="d-flex align-self-center img-radius"
-                                         src="files/assets/images/avatar-3.jpg" alt="Generic placeholder image" />
-                                     <div class="media-body">
-                                         <h5 class="notification-user">Joseph William</h5>
-                                         <p class="notification-msg">
-                                             Lorem ipsum dolor sit amet, consectetuer elit.
-                                         </p>
-                                         <span class="notification-time">30 minutes ago</span>
-                                     </div>
-                                 </div>
-                             </li>
-                             <li>
-                                 <div class="media">
-                                     <img class="d-flex align-self-center img-radius"
-                                         src="files/assets/images/avatar-4.jpg" alt="Generic placeholder image" />
-                                     <div class="media-body">
-                                         <h5 class="notification-user">Sara Soudein</h5>
-                                         <p class="notification-msg">
-                                             Lorem ipsum dolor sit amet, consectetuer elit.
-                                         </p>
-                                         <span class="notification-time">30 minutes ago</span>
-                                     </div>
-                                 </div>
-                             </li>
+                             @foreach ($comunicados as $comunicado)
+                             <a href="{{ route('admin.perfil.index') }}" class="text-decoration-none text-dark">
+                                <li class="list-group-item">
+                                    <div class="media">
+                                        <img class="d-flex align-self-center img-radius"
+                                            src="{{ asset('storage/comunicado/' . $comunicado->comun_imagen) }}" alt="" />
+                                        <div class="media-body">
+                                            <h5 class="notification-user">{{$comunicado->comun_nombre }}</h5>
+                                            <p class="notification-msg">
+                                                {!! Str::words(strip_tags($comunicado->comun_descripcion), 40, '...') !!}
+                                            </p>
+                                            <span class="notification-time">{{ $comunicado->updated_at->diffForHumans() }}</span>
+                                        </div>
+                                    </div>
+                                </li>
+                            </a>
+                             @endforeach
+
                          </ul>
                      </div>
                  </li>
-                 <li class="header-notification">
-                     <div class="dropdown-primary dropdown">
-                         <div class="displayChatbox dropdown-toggle" data-toggle="dropdown">
-                             <i class="feather icon-message-square"></i>
-                             <span class="badge bg-c-green">3</span>
-                         </div>
-                     </div>
-                 </li> --}}
                  <li class="user-profile header-notification">
                      <div class="dropdown-primary dropdown">
                          @include('backend.layouts.partials.logout')
@@ -106,7 +83,7 @@
      </div>
  </nav>
 
- 
+
  {{-- <div id="sidebar" class="users p-chat-user showChat">
      <div class="had-container">
          <div class="card card_main p-fixed users-main">

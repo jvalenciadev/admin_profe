@@ -50,8 +50,8 @@
         </div>
     </article>
 
-   <!-- MODAL DE NOTIFICACIÓN -->
-   <div class="modal fade" id="convocatoriaModal" tabindex="-1" aria-labelledby="convocatoriaLabel" aria-hidden="true">
+  <!-- MODAL DE NOTIFICACIÓN -->
+  <div class="modal fade" id="convocatoriaModal" tabindex="-1" aria-labelledby="convocatoriaLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered"> <!-- Se agregó 'modal-lg' para mayor tamaño -->
         <div class="modal-content">
             <div class="modal-header">
@@ -63,9 +63,7 @@
 
                 <!-- Iframe para mostrar el PDF -->
                 <div class="pdf-container">
-                    <iframe src="https://docs.google.com/gview?embedded=true&url={{ asset('storage/profe/convocatoria.pdf') }}" 
-                            style="width:100%; height:500px;" frameborder="0">
-                    </iframe>
+                    <iframe src="https://drive.google.com/file/d/1ZcFqK_ctix85HwqHKdu7BndSfWOLlBrl/preview" width="100%" height="500px"></iframe>
                 </div>
                 <p class="mt-3">
                     <a href="{{ asset('storage/profe/convocatoria.pdf') }}" class="btn btn-secundary" target="_blank">
@@ -76,14 +74,14 @@
         </div>
     </div>
 </div>
-
 @endsection
 
 @section('scripts')
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            var convocatoriaModal = new bootstrap.Modal(document.getElementById('convocatoriaModal'));
-            convocatoriaModal.show();
-        });
-    </script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var convocatoriaModal = new bootstrap.Modal(document.getElementById('convocatoriaModal'));
+        convocatoriaModal.show();
+    });
+</script>
 @endsection

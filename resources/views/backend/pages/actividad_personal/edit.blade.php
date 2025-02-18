@@ -1,7 +1,7 @@
 @extends('backend.layouts.master')
 
 @section('title')
-    Crear Comunicado - PROFE
+    Editar Comunicado - PROFE
 @endsection
 
 @section('styles')
@@ -36,7 +36,7 @@
                                 </li>
                                 <li class="breadcrumb-item" style="float: left;"><a href="#!">Lista de Comunicados</a>
                                 </li>
-                                <li class="breadcrumb-item" style="float: left;"><a href="#!">Crear Comunicado</a>
+                                <li class="breadcrumb-item" style="float: left;"><a href="#!">Editar Comunicado</a>
                                 </li>
                             </ul>
                         </div>
@@ -46,19 +46,21 @@
                 <div class="col-12 mt-5">
                     <div class="card">
                         <div class="card-body">
-                            <h4 class="header-title">Agregar Comunicado</h4>
+                            <h4 class="header-title">Actualizar Comunicado</h4>
                             @include('backend.layouts.partials.messages')
 
-                            <form action="{{ route('admin.comunicado.store') }}" method="POST"
+                            <form action="{{ route('admin.comunicado.update', $comunicado->comun_id) }}" method="POST"
                                 enctype="multipart/form-data" id="myForm">
                                 @csrf
+                                @method('PUT')
                                 <div class="row form-group">
                                     <div class="col-sm-2 col-form-label">
                                         <label for="comun_nombre">Nombre del comunicado</label>
                                     </div>
                                     <div class="col-sm-10">
                                         <input type="text" class="form-control " id="comun_nombre" name="comun_nombre"
-                                            placeholder="Ingrese el titulo del evento">
+                                            placeholder="Ingrese el titulo del evento"
+                                            value="{{ $comunicado->comun_nombre }}">
                                     </div>
                                 </div>
                                 <div class="row form-group">
@@ -66,7 +68,7 @@
                                         <label for="comun_descripcion ">Descripción</label>
                                     </div>
                                     <div class="col-sm-10">
-                                        <textarea class="form-control " id="comun_descripcion" name="comun_descripcion"></textarea>
+                                        <textarea class="form-control " id="comun_descripcion" name="comun_descripcion">{!! $comunicado->comun_descripcion !!}</textarea>
                                     </div>
                                 </div>
                                 <div class="row form-group">
@@ -77,16 +79,16 @@
                                     <label class="col-sm-2 col-form-label">Importancia</label>
                                     <div class="col-sm-4">
                                         <select class="form-control" name="comun_importancia" id="comun_importancia">
-                                            <option value="">Seleccione importancia</option>
-                                            <option value="Importante">Importante</option>
-                                            <option value="Normal">Normal</option>
-                                            <option value="Información">Información</option>
+                                            <option value="{{ $comunicado->comun_importancia }}">
+                                                {{ $comunicado->comun_importancia }}</option>
+                                            <option value="importante">Importante</option>
+                                            <option value="normal">Normal</option>
                                         </select>
                                     </div>
                                 </div>
 
 
-                                <button type="submit" class="btn btn-primary mt-4 pr-4 pl-4" id="submitBtn">Guardar
+                                <button type="submit" class="btn btn-primary mt-4 pr-4 pl-4" id="submitBtn">Actualizar
                                     Blog</button>
                             </form>
                         </div>
