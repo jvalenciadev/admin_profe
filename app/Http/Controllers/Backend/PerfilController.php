@@ -89,15 +89,14 @@ class PerfilController extends Controller
         //     $comunicado->comun_imagen = basename($comunicadoImagePath);
         // }
 
-        $admin->genero = $request->genero??null;
+       	$admin->genero = $request->genero??null;
         $admin->licenciatura = $request->licenciatura??null;
         $admin->fecha_nacimiento = $request->fecha_nacimiento??null;
         $admin->estado_civil = $request->estado_civil??null;
         $admin->celular = $request->celular??null;
         $admin->direccion = $request->direccion??null;
         $admin->facebook = $request->facebook??null;
-        $admin->tiktok = $request->tiktok??null;
-        // Subir imagen
+        $admin->tiktok = $request->tiktok??null;        // Subir imagen
         if ($request->hasFile('imagen')) {
             // Eliminar la imagen anterior si existe
             if ($admin->imagen && file_exists(storage_path('app/public/perfil/' . $admin->imagen))) {

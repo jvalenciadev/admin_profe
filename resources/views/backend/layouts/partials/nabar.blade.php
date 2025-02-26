@@ -169,6 +169,7 @@
                     </ul>
                 </li>
             @endif
+            
             @if ($usr->can('configuracion_programa.view'))
                 <li
                     class="pcoded-hasmenu {{ Route::is('configuracion.programa.index') ||
@@ -216,15 +217,6 @@
                     </a>
                 </li>
             @endif
-            @if ($usr->can('inscripcion.view'))
-                <li class="{{ Route::is('admin.inscripcion.index') ? 'active' : '' }}">
-                    <a href="{{ route('admin.solicitudes.index') }}">
-                        <span class="pcoded-micon"><i class="icofont icofont-map-pins"></i></span>
-                        <span class="pcoded-mtext">Solicitudes</span>
-                        <span class="pcoded-badge label label-warning">NEW</span>
-                    </a>
-                </li>
-            @endif
             @if (
                 $usr->can('admin.view') ||
                     $usr->can('programa.view') ||
@@ -237,7 +229,7 @@
                     <a href="javascript:void(0)">
                         <span class="pcoded-micon"><i class="feather icon-sidebar"></i></span>
                         <span class="pcoded-mtext">Contenido</span>
-
+                        {{-- <span class="pcoded-badge label label-warning">NEW</span> --}}
                     </a>
 
                     <ul class="pcoded-submenu">
@@ -324,6 +316,15 @@
                     <a href="{{ route('admin.sede.index') }}">
                         <span class="pcoded-micon"><i class="feather icon-menu"></i></span>
                         <span class="pcoded-mtext">Sedes</span>
+                    </a>
+                </li>
+            @endif
+            @if ($usr->can('inscripcion.view'))
+                <li class="{{ Route::is('admin.inscripcion.index') ? 'active' : '' }}">
+                    <a href="{{ route('admin.solicitudes.index') }}">
+                        <span class="pcoded-micon"><i class="icofont icofont-map-pins"></i></span>
+                        <span class="pcoded-mtext">Solicitudes</span>
+                        <span class="pcoded-badge label label-warning">NEW</span>
                     </a>
                 </li>
             @endif

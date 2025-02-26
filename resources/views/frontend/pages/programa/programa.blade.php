@@ -160,6 +160,8 @@
                             </div>
 
                         </div>
+                        <br> 
+                        <h3> <strong> Sedes habilitadas: </strong></h3>
                          <!-- Tabla de Sedes y Turnos -->
                          <div class="inner-column">
                             <div class="table-responsive">
@@ -214,7 +216,7 @@
                                                                 <strong class="me-2">
                                                                     {{ strstr($turno->pro_tur_nombre, '-', true) }}
                                                                 </strong>
-                                                                <span class="badge bg-info">{{ $turno->pro_tur_descripcion ?? '' }}</span>
+                                                                <span class="badge bg-success">{{ $turno->pro_tur_descripcion ?? '' }}</span>
                                                             </li>
                                                             @endforeach
                                                         </ul>

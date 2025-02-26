@@ -72,6 +72,8 @@
 <link rel='stylesheet' id='recent-posts-widget-with-thumbnails-public-style-css'
     href='{{ asset('frontend/wp-content/plugins/recent-posts-widget-with-thumbnails/public.css') }}' type='text/css'
     media='all' />
+<link rel="stylesheet" type="text/css" href="{{ asset('backend/files/assets/icon/icofont/css/icofont.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
 <script defer type="text/javascript" src="{{ asset('frontend/wp-includes/js/jquery/jquery.min.js') }}"
     id="jquery-core-js"></script>
 

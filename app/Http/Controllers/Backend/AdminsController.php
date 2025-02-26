@@ -176,8 +176,8 @@ class AdminsController extends Controller
 
         $admin = Admin::find($id);
         $roles  = Role::all();
-        $sedes  = Sede::all();
-        $programas  = Programa::all();
+        $sedes = Sede::join('departamento', 'departamento.dep_id', '=', 'sede.dep_id')->get();
+        $programas = Programa::join('programa_version', 'programa_version.pv_id', '=', 'programa.pv_id')->get();
         return view('backend.pages.admins.edit', compact('admin', 'roles','sedes','programas'));
     }
 

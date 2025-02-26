@@ -274,7 +274,7 @@
 
 
         <div class="divider"></div>
-        <p class="content">Es cuanto declaro, comprometo y suscribo a en fecha <strong
+        <p class="content">Es cuanto declaro, comprometo y suscribo en fecha <strong
                 class="highlight">{{ now()->format('d') }}</strong> de <strong
                 class="highlight">{{ ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre'][now()->format('n') - 1] }}</strong>
             de <strong class="highlight">{{ now()->format('Y') }}</strong>.</p>

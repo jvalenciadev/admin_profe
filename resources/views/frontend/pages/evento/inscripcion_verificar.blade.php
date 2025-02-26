@@ -73,7 +73,35 @@
             border-radius: 5px;
             margin-top: 5px;
         }
+        .button-container {
+            display: flex;
+            justify-content: space-between; /* Alinea los botones a los extremos */
+            align-items: center; /* Alinea verticalmente los botones */
+            gap: 10px; /* Espacio entre los botones */
+        }
 
+        .logout-btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .submit-btn {
+            padding: 10px 20px;
+            background-color: #2980b9;
+            color: white;
+        }
+
+        .logout-btn-container a {
+            padding: 10px 20px;
+            background-color: #dc3545;
+            color: #fff;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
         .afiche-image {
             max-width: 100%;
             height: auto;
@@ -91,11 +119,7 @@
                     <img src="{{ asset('storage/evento_afiches/' . $evento->eve_afiche) }}" alt="Afiche del evento"
                         class="afiche-image img-fluid mb-3">
                     <h2 class="form-title">Inscripciones</h2>
-                    <div class="text-right mt-4">
-                        <button class="logout-btn" onclick="window.location.href='{{ route('evento.logout') }}'">
-                            <i class="fas fa-sign-out-alt"></i> Salir
-                        </button>
-                    </div>
+
                     @if ($errors->has('eve_per_ci'))
                         <span class="text-danger">{{ $errors->first('eve_per_ci') }}</span>
                     @endif
@@ -104,7 +128,7 @@
                         @csrf
 
                         <div class="form-row">
-                            <div class="form-group col-md-9">
+                            <div class="form-group col-md-5">
                                 <label for="eve_per_ci" class="col-form-label">Carnet de identidad</label>
                                 <input type="text" class="form-control" name="eve_per_ci" id="eve_per_ci"
                                     value="{{ isset($user->per_ci) ? $user->per_ci : session('per_ci') }}" autofocus
@@ -113,8 +137,8 @@
                                     {{ session('per_ci') || isset($user->per_ci) ? 'readonly' : '' }} />
                             </div>
 
-                            <div class="form-group col-md-3">
-                                <label for="eve_per_complemento" class="col-form-label">Complemento</label>
+                            <div class="form-group col-md-7">
+                                <label for="eve_per_complemento" class="col-form-label">Complemento (Sólo CI's duplicados)</label>
                                 <input type="text" class="form-control" name="eve_per_complemento"
                                     id="eve_per_complemento"
                                     value="{{ isset($user->per_complemento) ? $user->per_complemento : session('per_complemento') }}"
@@ -205,9 +229,14 @@
                             </div>
                         </div>
                         <input type="hidden" name="eve_id" id="eve_id" value="{{ encrypt($evento->eve_id) }}">
-                        <button type="submit" class="submit-btn">Enviar</button>
-                    </form>
+                        <div class="button-container">
+                            <button type="submit" class="submit-btn">Enviar</button>
+                            <div class="logout-btn-container">
+                                <a href="{{ route('evento.logout') }}" class="logout-btn">SALIR</a>
+                            </div>
+                        </div>
 
+                    </form>
                 </div>
             </div>
         </section>

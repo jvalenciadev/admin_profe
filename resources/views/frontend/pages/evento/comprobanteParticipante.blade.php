@@ -84,21 +84,14 @@
                 </h6>
 
                 <div class="text-center mt-4">
-                    <button class="logout-btn" onclick="window.location.href='{{ route('evento.logout') }}'">
-                        <i class="fas fa-sign-out-alt"></i> Salir
-                    </button>
-                </div>
-
-                <div class="text-center mt-4">
                     <a href="{{ route('evento.comprobanteParticipantePdf', [
                         'eve_per_id' => encrypt($evento[0]->eve_per_id),
                         'eve_id' => encrypt($evento[0]->eve_id),
                     ]) }}" class="btn btn-info btn-lg">
                         Descargar
                     </a>
-                    <a href="{{ route('eventoDetalle', $evento[0]->eve_id) }}" class="btn btn-dark btn-lg ml-2">
-                        Volver
-                    </a>
+
+                        <a href="{{ route('evento.logout') }}" class="btn btn-danger btn-lg ml-2">SALIR</a>
                 </div>
             </div>
         </section>

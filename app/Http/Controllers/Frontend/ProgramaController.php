@@ -208,6 +208,7 @@ class ProgramaController extends Controller
                     ->join('programa_tipo', 'programa_tipo.pro_tip_id', '=', 'programa.pro_tip_id')
                     ->where('map_persona.per_ci', $request->per_ci)
                     ->whereIn('programa_tipo.pro_tip_id', [3,4])
+                    ->whereIn('programa_inscripcion.pie_id', [1,2,4])
                     ->where('programa_version.pv_gestion', (int)now()->year)
                     ->where('programa_inscripcion.pro_id', '!=' , $programa->pro_id)
                     ->first();
@@ -220,7 +221,7 @@ class ProgramaController extends Controller
                     return back()->withErrors(['error'=> 'Usted es personal del programa PROFE, no puede realizar su inscripción.']);
                 }
                 // Verificar si la inscripción ya existe
-                if ($inscripcion && (int)$inscripcion->pv_gestion !== (int)now()->year) {
+                if ($inscripcion && (int)$inscripcion->pv_gestion !== (int)now()->year && $inscripcion->pie_id == 2) {
                     return back()->withErrors(['error' => 'Usted ya se inscribió anteriormente a la oferta formativa. No puede inscribirse nuevamente.']);
                 }
     
@@ -376,17 +377,17 @@ class ProgramaController extends Controller
                 ->first();
                 // Si ya está inscrito, redirige a la comprobación
                 if ($inscripcion) {
-                    $fechaInscripcion = \Carbon\Carbon::parse($inscripcion->created_at);
-                    $tiempoTranscurrido = $fechaInscripcion->diffInHours(now());
+                    // $fechaInscripcion = \Carbon\Carbon::parse($inscripcion->created_at);
+                    // $tiempoTranscurrido = $fechaInscripcion->diffInHours(now());
 
-                    if ($tiempoTranscurrido > 48) {
-                        return view('frontend.pages.programa.inscripcion_verificar', compact('departamentos','proRestriccion', 'generos', 'proSedeTur','nivel','subsistema', 'programa', 'user'));
-                    } else{
+                    // if ($tiempoTranscurrido > 48 && $inscripcion->pie_id==4) {
+                    //     return view('frontend.pages.programa.inscripcion_verificar', compact('departamentos','proRestriccion', 'generos', 'proSedeTur','nivel','subsistema', 'programa', 'user'));
+                    // } else{
                         return redirect()->route('programa.comprobanteParticipante', [
                             'per_id' => encrypt($pro_per->per_id),
                             'pro_id' => encrypt($pro_id),
                         ])->with('danger', 'Usted ya se encuentra registrado');
-                    }
+                    // }
                 }
                 else{
                     return view('frontend.pages.programa.inscripcion_verificar', compact('departamentos','proRestriccion', 'generos', 'proSedeTur','nivel','subsistema', 'programa', 'user'));
@@ -694,9 +695,9 @@ class ProgramaController extends Controller
         if ($participante->pie_id== 2) {
             return redirect('/ofertas-academicas')->with('success', 'Usted ya se encuentra inscrito');
         }
-        if ($tiempoTranscurrido > 24) {
-            return redirect('/ofertas-academicas')->with('error', 'Usted no se encuentra habilitado para la inscripción');
-        }
+        // if ($tiempoTranscurrido > 24) {
+        //     return redirect('/ofertas-academicas')->with('error', 'Usted no se encuentra habilitado para la inscripción');
+        // }
          $imagen1 = public_path() . "/assets/image/logoprofeiippminedu.png";
          $logo1 = base64_encode(file_get_contents($imagen1));
 

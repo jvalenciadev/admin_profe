@@ -95,12 +95,12 @@
                                     <div class="form-group col-md-3 col-sm-12">
                                         <label for="per_correo">Correo Completo</label>
                                         <input type="text" class="form-control" id="per_correo" name="per_correo"
-                                            placeholder="Correo Completo" value="{{ $inscripcion->per_correo }}" readonly>
+                                            placeholder="Correo Completo" value="{{ $inscripcion->per_correo }}" readonly required>
                                     </div>
                                     <div class="form-group col-md-3 col-sm-12">
                                         <label for="per_celular">Celular</label>
                                         <input type="number" class="form-control" id="per_celular" name="per_celular"
-                                            value="{{ $inscripcion->per_celular }}" placeholder="Ingrese el Correo">
+                                            value="{{ $inscripcion->per_celular }}" placeholder="Ingrese su número de celular" required>
                                     </div>
                                 </div>
                                 <div class="form-row">
@@ -136,7 +136,6 @@
                                             @endforeach
                                         </select>
                                     </div>
-
                                     <div class="form-group col-md-3 col-sm-12">
                                         <label for="pi_subsistema">Subsistema:</label>
                                         <select class="form-control" id="pi_subsistema" name="pi_subsistema">

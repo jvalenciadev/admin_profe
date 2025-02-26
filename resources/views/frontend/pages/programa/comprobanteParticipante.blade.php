@@ -191,9 +191,9 @@
                 </p>
                 @if($programa->pie_id == 4)
                     <p class="alert alert-danger text-justify">
-                        <strong>Importante:</strong> Tiene un plazo de <b>48 horas</b> para realizar el depósito y presentar su documentación en la sede en la que se inscribió.
-                        <br>
-                        <span class="fw-bold">Nota:</span> En caso de haber vencido el plazo, deberá volver a llenar el formulario de inscripción.
+                        {{-- <strong>Importante:</strong> Tiene un plazo de <b>48 horas</b> para realizar el depósito y presentar su documentación en la sede en la que se inscribió. --}}
+                        {{-- <br> --}}
+                        <span class="fw-bold">Nota:</span> Debe dejar sus documentos en la sede que se inscribió.
                     </p>
                 @endif
                 @if($programa->pie_id == 2)

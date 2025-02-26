@@ -124,7 +124,7 @@
                         id="inscripcionForm">
                         @csrf
                         <div class="form-group">
-                            <label for="eve_per_ci">Carnet de identidad</label>
+                            <label for="eve_per_ci">CARNET DE IDENTIDAD</label>
                             <input type="text" class="form-control" name="eve_per_ci" id="eve_per_ci" autofocus
                                 placeholder="Ingrese el número de carnet de identidad" required pattern="[0-9]{4,10}"
                                 title="Debe tener entre 4 y 10 dígitos." />
@@ -132,7 +132,6 @@
                                 <div class="error-message">{{ $message }}</div>
                             @enderror
                         </div>
-
                         <input type="hidden" name="eve_id" id="eve_id" value="{{ encrypt($evento->eve_id) }}">
 
                         <div class="captcha-container">
@@ -165,6 +164,21 @@
 @section('scripts')
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+        document.getElementById('eve_per_fecha_nacimiento').addEventListener('input', function() {
+            const input = this;
+            const minDate = new Date(input.min);
+            const maxDate = new Date(input.max);
+            const selectedDate = new Date(input.value);
+
+            const errorMessage = document.getElementById('error-message');
+
+            // Verificar si la fecha seleccionada está dentro del rango válido
+            if (selectedDate < minDate || selectedDate > maxDate || isNaN(selectedDate.getTime())) {
+                errorMessage.style.display = 'block';
+            } else {
+                errorMessage.style.display = 'none';
+            }
+        });
         $('#reload').click(function() {
             $.ajax({
                 type: 'GET',

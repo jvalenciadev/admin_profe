@@ -1,6 +1,10 @@
 <!-- footer area start-->
 @php
     use Carbon\Carbon;
+    use App\Models\Blog;
+    use App\Models\Profe;
+    $blogs = Blog::where('blog_estado', 'activo')->orderBy('blog_id', 'DESC')->limit(6)->get();
+    $profe = Profe::first();
 @endphp
 <footer class="footer-bg footer-p pt-90">
     <div class="footer-top pb-70 p-relative">
@@ -27,11 +31,20 @@
                                         la calidad educativa.
                                     </p>
                                 </div>
-                                {{-- <div class="footer-social mt-10">
-                                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                                    <a href="#"><i class="fab fa-instagram"></i></a>
-                                    <a href="#"><i class="fab fa-twitter"></i></a>
-                                </div> --}}
+                                <div class="footer-social mt-10">
+                                    <a href="{{ $profe->profe_facebook }}" target="_blank">
+                                        <i class="fab fa-facebook-f"></i>
+                                    </a>
+                                    <a href="{{ $profe->profe_youtube }}" target="_blank">
+                                        <i class="fab fa-youtube"></i>
+                                    </a>
+                                    <a href="{{ $profe->profe_tiktok }}" target="_blank">
+                                        <i class="fab fa-tiktok"></i>
+                                    </a>
+                                    <a href="mailto:{{ $profe->profe_correo }}" target="_blank">
+                                        <i class="fas fa-envelope"></i>
+                                    </a>
+                                </div>
                             </div>
                         </li>
                     </ul>
@@ -46,9 +59,9 @@
                                         class="menu-item menu-item-type-post_type menu-item-object-page menu-item-home current-menu-item page_item page-item-9 current_page_item menu-item-2837">
                                         <a href="{{ route('home') }}" aria-current="page">Inicio</a>
                                     </li>
-                                    {{-- <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2839">
-                                        <a href="about-us/index.html">Sobre nosotros</a>
-                                    </li> --}}
+                                    <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2839">
+                                        <a href="{{ route('quienesSomos') }}">Sobre nosotros</a>
+                                    </li>
                                     <li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-2841">
                                         <a href="{{ route('programa') }}">Ofertas Académicas</a>
                                     </li>
@@ -73,7 +86,7 @@
                             <div class="textwidget custom-html-widget">
                                 <div class="recent-blog-footer">
                                     <ul>
-                                        {{-- @if (count($blogs) > 0)
+                                        @if (count($blogs) > 0)
                                             @php
                                                 $i = 0;
                                             @endphp
@@ -88,7 +101,7 @@
                                                         </div>
                                                         <div class="text">
                                                             <a href="{{ route('blog.show', $blog->blog_id) }}">{{ $blog->blog_titulo }}</a>
-                                                            <span>{{ Carbon::parse($blog->update_at)->translatedFormat('F d, Y') }}</span>
+                                                            <span class="text-secondary">{{ Carbon::parse($blog->update_at)->translatedFormat('F d, Y') }}</span>
                                                         </div>
                                                     </li>
                                                 @endif
@@ -100,7 +113,7 @@
                                             <div class="text">
                                                 Aun no hay publicaciones
                                             </div>
-                                        @endif --}}
+                                        @endif
                                     </ul>
                                 </div>
                             </div>
@@ -111,30 +124,30 @@
                     <ul class="footer-widget weight footer-link mb-30">
                         <li id="custom_html-2" class="widget_text widget widget_custom_html">
                             <h2 class="widgettitle">Contáctenos</h2>
-                            {{-- <div class="textwidget custom-html-widget">
+                            <div class="textwidget custom-html-widget">
                                 <div class="f-contact">
                                     <ul>
                                         <li>
-                                            <i class="icon fal fa-phone"></i>
-                                            <span><a href="tel:+14440008888">+1 (444) 000-8888</a><br /><a
-                                                    href="tel:+917052101786">+91 7052 101 786</a></span>
+                                            <i class="icon fab fa-whatsapp"></i>
+                                            <span>
+                                                <a href="https://wa.me/591{{ $profe->profe_celular }}?text=Quisiera%20más%20información%20sobre%20las%20ofertas%20formativas" target="_blank">
+                                                    +591 {{ $profe->profe_celular }}
+                                                </a>
+                                            </span>
                                         </li>
                                         <li>
                                             <i class="icon fal fa-envelope"></i>
                                             <span>
-                                                <a href="mailto:info@example.com">info@example.com</a>
-                                                <br />
-                                                <a href="mailto:help@example.com">help@example.com</a>
+                                                <a href="{{ $profe->profe_correo }}" target="_blank" >{{ $profe->profe_correo }}</a>
                                             </span>
                                         </li>
                                         <li>
                                             <i class="icon fal fa-map-marker-check"></i>
-                                            <span>1247/Plot No. 39, 15th Phase,<br />
-                                                LHB Colony, Kanpur</span>
+                                            <span>Avenida Arce Nro. 2147<br> La Paz, Bolivia</span>
                                         </li>
                                     </ul>
                                 </div>
-                            </div> --}}
+                            </div>
                         </li>
                     </ul>
                 </div>
@@ -145,10 +158,10 @@
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-4">
-                    {{-- <div class="copy-text">
-                        <a href="index.html">
+                    <div class="copy-text">
+                        <a href="#">
                             <img src="{{ asset('assets/profe/logoprofe.png') }}" alt="Qeducato" title="" /></a>
-                    </div> --}}
+                    </div>
                 </div>
                 <div class="col-lg-4 text-center"></div>
                 <div class="col-lg-4 text-right text-xl-right">

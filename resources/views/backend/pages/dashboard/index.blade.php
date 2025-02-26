@@ -61,9 +61,9 @@
                         <div class="card-block">
                             <div class="row align-items-end">
                                 <div class="col-8">
-                                    <h4 class="text-white">{{ $total_permissions }}</h4>
+                                    <h4 class="text-white">{{ $total_preinscritos }}</h4>
                                     <h3 class="text-white m-b-0">
-                                        Permisos
+                                        Preinscritos
                                     </h3>
                                 </div>
                                 <div class="col-4 text-right">
@@ -100,6 +100,9 @@
                 </div>
 
                 <div class="col-xl-12 col-md-12">
+                    <div class="card-header py-1 bg-white text-black">
+                        <h2 class="text-center mb-1">Reporte de Inscritos Gestión 2025</h2>
+                    </div>
                     <div class="card">
                         <div class="card-block bg-c-lite-green">
                             <div id="proj-sede" style="height: 350px"></div>
@@ -126,40 +129,8 @@
                         </div> --}}
                     </div>
                 </div>
-                {{-- <div class="col-xl-6 col-md-12">
-                    <div class="card table-card">
-                        <div class="card-header">
-                            <h5>Campeonato Ajedrez</h5>
-                        </div>
-                        <div class="card-block">
-                            <div class="table-responsive">
-                                <table class="table table-hover table-borderless">
-                                    <thead>
-                                        <tr>
-                                            <th>Status</th>
-                                            <th>Nombre</th>
-                                            <th>Departamento</th>
-                                            <th>Fecha</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach ($participantes as $participante)
-                                            <tr>
-                                                <td><label class="label label-primary">MEJORES</label>
-                                                </td>
-                                                <td>{{ $participante->nombre_completo }}</td>
-                                                <td>{{ $participante->dep_nombre }}</td>
-                                                <td>{{ \Carbon\Carbon::parse($participante->updated_at)->translatedFormat('d \d\e M H:i') }}
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div> --}}
                 <div class="col-xl-12 col-md-12">
+                    
                     <div class="card">
                         <div class="card-block bg-c-green">
                             <div id="proj-departamento" style="height: 350px"></div>
@@ -186,10 +157,29 @@
                         </div> --}}
                     </div>
                 </div>
+                <div class="col-xl-12 col-md-12">
+                    <div class="card-header py-1  bg-white text-black">
+                        <h2 class="text-center mb-1">Reporte de Preinscritos Gestión 2025</h2>
+                    </div>
+                    <div class="card">
+                        <div class="card-block bg-c-lite-green">
+                            <div id="proj-sede-pre" style="height: 350px"></div>
+                        </div>
+                    </div>
+                </div>
+            
+               
+                <div class="col-xl-12 col-md-12">
+                    <div class="card">
+                        <div class="card-block bg-c-green">
+                            <div id="proj-departamento-pre" style="height: 350px"></div>
+                        </div>
+                    </div>
+                </div>
                 <div class="col-xl-12 col-md-12 ">
-                    <div class="card o-hidden shadow-lg mb-4">
-                        <div class="card-header py-3 bg-primary text-white">
-                            <h2 class="text-center mb-0">Reporte de Inscripciones por Departamento</h2>
+                    <div class="card o-hidden shadow-lg mb-1">
+                        <div class="card-header py-1 bg-primary text-white">
+                            <h2 class="text-center mb-1">Reporte de Preinscritos por Departamento Gestión 2025</h2>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -231,7 +221,129 @@
                         </div>
                     </div>
                 </div>
-                
+                <div class="col-xl-12 col-md-12 ">
+                    <div class="card o-hidden shadow-lg mb-1">
+                        <div class="card-header py-1 bg-primary text-white">
+                            <h2 class="text-center mb-1">Reporte de Inscritos por Departamento Gestión 2025 </h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped table-hover">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th>Programa</th>
+                                            <th>Chuquisaca</th>
+                                            <th>La Paz</th>
+                                            <th>Cochabamba</th>
+                                            <th>Oruro</th>
+                                            <th>Potosí</th>
+                                            <th>Tarija</th>
+                                            <th>Santa Cruz</th>
+                                            <th>Beni</th>
+                                            <th>Pando</th>
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($programasInscrito as $programa)
+                                            <tr>
+                                                <td>{{ $programa->pro_nombre_abre }}</td>
+                                                <td>{{ $programa->CHUQUISACA }}</td>
+                                                <td>{{ $programa->LA_PAZ }}</td>
+                                                <td>{{ $programa->COCHABAMBA }}</td>
+                                                <td>{{ $programa->ORURO }}</td>
+                                                <td>{{ $programa->POTOSI }}</td>
+                                                <td>{{ $programa->TARIJA }}</td>
+                                                <td>{{ $programa->SANTA_CRUZ }}</td>
+                                                <td>{{ $programa->BENI }}</td>
+                                                <td>{{ $programa->PANDO }}</td>
+                                                <td><strong>{{ $programa->TOTAL }}</strong></td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-xl-12 col-md-12 ">
+                    <div class="card o-hidden shadow-lg mb-1">
+                        <div class="card-header py-1 bg-primary text-white">
+                            <h2 class="text-center mb-1">Reporte de Inscritos por Departamento Gestión 2024 </h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped table-hover">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th>Programa</th>
+                                            <th>Chuquisaca</th>
+                                            <th>La Paz</th>
+                                            <th>Cochabamba</th>
+                                            <th>Oruro</th>
+                                            <th>Potosí</th>
+                                            <th>Tarija</th>
+                                            <th>Santa Cruz</th>
+                                            <th>Beni</th>
+                                            <th>Pando</th>
+                                            <th>Total</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($programasInscrito2024 as $programa)
+                                            <tr>
+                                                <td>{{ $programa->pro_nombre_abre }}</td>
+                                                <td>{{ $programa->CHUQUISACA }}</td>
+                                                <td>{{ $programa->LA_PAZ }}</td>
+                                                <td>{{ $programa->COCHABAMBA }}</td>
+                                                <td>{{ $programa->ORURO }}</td>
+                                                <td>{{ $programa->POTOSI }}</td>
+                                                <td>{{ $programa->TARIJA }}</td>
+                                                <td>{{ $programa->SANTA_CRUZ }}</td>
+                                                <td>{{ $programa->BENI }}</td>
+                                                <td>{{ $programa->PANDO }}</td>
+                                                <td><strong>{{ $programa->TOTAL }}</strong></td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{-- <div class="col-xl-6 col-md-12">
+                    <div class="card table-card">
+                        <div class="card-header">
+                            <h5>Campeonato Ajedrez</h5>
+                        </div>
+                        <div class="card-block">
+                            <div class="table-responsive">
+                                <table class="table table-hover table-borderless">
+                                    <thead>
+                                        <tr>
+                                            <th>Status</th>
+                                            <th>Nombre</th>
+                                            <th>Departamento</th>
+                                            <th>Fecha</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($participantes as $participante)
+                                            <tr>
+                                                <td><label class="label label-primary">MEJORES</label>
+                                                </td>
+                                                <td>{{ $participante->nombre_completo }}</td>
+                                                <td>{{ $participante->dep_nombre }}</td>
+                                                <td>{{ \Carbon\Carbon::parse($participante->updated_at)->translatedFormat('d \d\e M H:i') }}
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div> --}}
                 {{-- <div class="col-xl-4 col-md-6">
                     <div class="card o-hidden">
                         <div class="card-block bg-c-green text-white">
@@ -282,6 +394,138 @@
     <div id="styleSelector"></div>
 @endsection
 @section('scripts')
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    $(document).ready(function() {
+        // Mostrar la alerta con un diseño mejorado y mensaje claro
+        Swal.fire({
+            title: "Información Importante",
+            text: "Los responsables deben revisar la lista de solicitudes, llegar a un acuerdo y confirmar o eliminar las solicitudes que no estén aprobadas, de acuerdo a su departamento.",
+            icon: "info",
+            background: '#ffffff', // Fondo blanco para más elegancia
+            color: '#4e4e4e', // Color de texto elegante
+            showCancelButton: true, // Habilita el botón de cancelar
+            confirmButtonText: "Entendido",
+            cancelButtonText: "Revisar solicitudes",
+            confirmButtonColor: '#00b5e2', // Color suave para el botón "Entendido"
+            cancelButtonColor: '#e74c3c', // Color suave para el botón "Revisar solicitudes"
+            buttonsStyling: false, // Deshabilitar el estilo predeterminado de los botones
+            customClass: {
+                confirmButton: 'btn btn-primary', // Estilo elegante para el botón "Entendido"
+                cancelButton: 'btn btn-outline-danger' // Estilo elegante para el botón "Revisar solicitudes"
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Si el usuario hace clic en "Entendido", se cierra la alerta
+                console.log('Usuario entendió la alerta');
+            } else if (result.dismiss === Swal.DismissReason.cancel) {
+                // Si el usuario hace clic en "Revisar solicitudes", redirige a la ruta
+                window.location.href = "{{ route('admin.solicitudes.index') }}";
+            }
+        });
+    });
+</script>
+
+<!-- Estilos personalizados -->
+<style>
+    /* Personalización de los botones en la alerta */
+    .btn {
+        padding: 12px 24px;
+        font-size: 14px;
+        border-radius: 25px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Botón "Entendido" con color elegante */
+    .btn-primary {
+        background-color: #00b5e2;
+        border: none;
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background-color: #008ba3;
+    }
+
+    /* Botón "Revisar solicitudes" con borde elegante */
+    .btn-outline-danger {
+        border: 2px solid #e74c3c;
+        color: #e74c3c;
+        background-color: transparent;
+    }
+
+    .btn-outline-danger:hover {
+        background-color: #e74c3c;
+        color: white;
+    }
+
+    /* Personalización de la ventana de la alerta */
+    .swal2-popup {
+        border-radius: 15px;
+        font-family: 'Arial', sans-serif;
+        padding: 20px 30px;
+    }
+
+    .swal2-title {
+        font-size: 22px;
+        font-weight: 600;
+        color: #2c3e50;
+    }
+
+    .swal2-text {
+        font-size: 16px;
+        color: #7f8c8d;
+    }
+
+    /* Sombra elegante para la alerta */
+    .swal2-popup {
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Estilo del contenedor de la alerta */
+    .swal2-container {
+        z-index: 9999;
+    }
+</style>
+
+<!-- Agregar estilos personalizados si es necesario -->
+<style>
+    /* Personalización de los botones en la alerta */
+    .btn {
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 5px;
+        font-weight: bold;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .swal2-popup {
+        border-radius: 10px;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .swal2-title {
+        font-size: 20px;
+        color: #333;
+    }
+
+    .swal2-text {
+        font-size: 16px;
+        color: #555;
+    }
+</style>
     <script>
         $(document).ready(function() {
             // Gráfico de Inscritos por Departamento
@@ -292,10 +536,24 @@
                         'visits' => (int) $item->total_inscripciones,
                     ];
                 })));
+            createChart("proj-departamento-pre", @json(
+                $preinscritosDep->map(function ($item) {
+                    return [
+                        'type' => $item->dep_abreviacion,
+                        'visits' => (int) $item->total_inscripciones,
+                    ];
+                })));
 
             // Gráfico de Inscritos por Sede
             createChart("proj-sede", @json(
                 $inscritosSede->map(function ($item) {
+                    return [
+                        'type' => $item->sede_nombre_abre,
+                        'visits' => (int) $item->total_inscripciones,
+                    ];
+                })));
+            createChart("proj-sede-pre", @json(
+                $preinscritoSede->map(function ($item) {
                     return [
                         'type' => $item->sede_nombre_abre,
                         'visits' => (int) $item->total_inscripciones,
@@ -319,7 +577,7 @@
                     gridAboveGraphs: !0,
                     startDuration: 1,
                     graphs: [{
-                        balloonText: "Cantidad Inscrito: <b>[[value]]</b>",
+                        balloonText: "Cantidad: <b>[[value]]</b>",
                         fillAlphas: 1,
                         lineAlpha: 1,
                         lineColor: "#fff",

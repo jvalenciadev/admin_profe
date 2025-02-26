@@ -76,6 +76,7 @@
             @include('backend.layouts.partials.footer')
         </div>
     </div>
+    
     <!-- page container area end -->
 
     @include('backend.layouts.partials.offsets')

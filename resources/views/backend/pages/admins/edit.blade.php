@@ -10,7 +10,8 @@
     <link rel="stylesheet" href="{{ asset('backend/files/bower_components/select2/dist/css/select2.min.css') }}" />
     <link rel="stylesheet" type="text/css"
         href="{{ asset('backend/files/bower_components/multiselect/css/multi-select.css') }}" />
-    <link rel="stylesheet" type="text/css" href="{{ asset('backendfiles/bower_components/multiselect/css/multi-select.css') }}" />
+    <link rel="stylesheet" type="text/css"
+        href="{{ asset('backendfiles/bower_components/multiselect/css/multi-select.css') }}" />
 @endsection
 
 @section('admin-content')
@@ -127,35 +128,41 @@
                                     <div class="form-row">
                                         <div class="col-md-6 col-sm-6">
                                             <label for="password">Asignar Programas</label>
-                                            <select class="js-example-tags col-sm-12" name="programas[]" id="programas" multiple="multiple">
+                                            <select class="js-example-tags col-sm-12" name="programas[]" id="programas"
+                                                multiple="multiple">
                                                 @foreach ($programas as $programa)
                                                     @php
                                                         $selected = false;
                                                         $pro_ids = json_decode($admin->pro_ids ?? '[]', true);
-                                                        if (is_array($pro_ids) && in_array($programa->pro_id, $pro_ids)) {
+                                                        if (
+                                                            is_array($pro_ids) &&
+                                                            in_array($programa->pro_id, $pro_ids)
+                                                        ) {
                                                             $selected = true;
                                                         }
                                                     @endphp
-                                                    <option value="{{ $programa->pro_id }}" {{ $selected ? 'selected' : '' }}>
-                                                        {{ $programa->pro_nombre }}
-                                                    </option>
+                                                        <option value="{{ $programa->pro_id }}" {{ $selected ? 'selected' : '' }}>
+                                                            {{ $programa->pv_nombre }} {{ $programa->pv_romano }} -
+                                                            {{ $programa->pro_nombre_abre }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
                                         <div class="col-md-6 col-sm-6">
                                             <label for="password">Asignar Sede</label>
-                                            <select class="js-example-tags col-sm-12" name="sedes[]" id="sedes" multiple="multiple">
+                                            <select class="js-example-tags col-sm-12" name="sedes[]" id="sedes"
+                                                multiple="multiple">
                                                 @foreach ($sedes as $sede)
                                                     @php
                                                         $selected = false;
                                                         $sede_ids = json_decode($admin->sede_ids ?? '[]', true);
-                                                        if (is_array($sede_ids) && in_array($sede->sede_id, $sede_ids)) {
+                                                        if (
+                                                            is_array($sede_ids) &&
+                                                            in_array($sede->sede_id, $sede_ids)
+                                                        ) {
                                                             $selected = true;
                                                         }
                                                     @endphp
-                                                    <option value="{{ $sede->sede_id }}" {{ $selected ? 'selected' : '' }}>
-                                                        {{ $sede->sede_nombre }}
-                                                    </option>
+                                                    <option value="{{ $sede->sede_id }}"  {{ $selected ? 'selected' : '' }}>{{ $sede->dep_abreviacion }} - {{ $sede->sede_nombre }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -195,10 +202,10 @@
 @section('scripts')
     <script type="text/javascript"
         src="{{ asset('backend/files/bower_components/bootstrap-multiselect/dist/js/bootstrap-multiselect.js') }}">
-        </script>
-        <script type="text/javascript" src="{{ asset('backend/files/bower_components/multiselect/js/jquery.multi-select.js') }}"></script>
-        <script type = "text/javascript"
-        src = "{{ asset('backend/files/bower_components/select2/dist/js/select2.full.min.js') }}" >
+    </script>
+    <script type="text/javascript"
+        src="{{ asset('backend/files/bower_components/multiselect/js/jquery.multi-select.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('backend/files/bower_components/select2/dist/js/select2.full.min.js') }}">
     </script>
     <script type="text/javascript" src="{{ asset('backend/files/assets/pages/advance-elements/select2-custom.js') }}">
     </script>

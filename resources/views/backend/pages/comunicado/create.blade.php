@@ -78,9 +78,8 @@
                                     <div class="col-sm-4">
                                         <select class="form-control" name="comun_importancia" id="comun_importancia">
                                             <option value="">Seleccione importancia</option>
-                                            <option value="Importante">Importante</option>
-                                            <option value="Normal">Normal</option>
-                                            <option value="Información">Información</option>
+                                            <option value="importante">Importante</option>
+                                            <option value="normal">Normal</option>
                                         </select>
                                     </div>
                                 </div>

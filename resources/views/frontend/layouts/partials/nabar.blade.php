@@ -1,3 +1,7 @@
+@php
+    use App\Models\Profe;
+    $profe = Profe::first();
+@endphp
 <header class="header-area header-three">
     <!-- header -->
     <div class="header-top second-header d-none d-md-block">
@@ -7,31 +11,43 @@
 
                     <div class="header-social">
 
-                        {{-- <span>
-                            Síganos:-
-                            <a href="#" title="Facebook"><i class="fab fa-facebook-f"></i></a>
-                            <a href="#" title="LinkedIn"><i class="fab fa-instagram"></i></a>
-                            <a href="#" title="Twitter"><i class="fab fa-twitter"></i></a>
-                            <a href="#" title="Twitter"><i class="fab fa-youtube"></i></a>
-                        </span> --}}
+                        <span>
+                            Síganos:
+                            <a href="{{ $profe->profe_facebook }}" title="Facebook" target="_blank">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
 
+                            <a href="{{ $profe->profe_youtube }}" title="YouTube" target="_blank">
+                                <i class="fab fa-youtube"></i>
+                            </a>
+                            <a href="{{ $profe->profe_tiktok }}" title="TikTok" target="_blank">
+                                <i class="fab fa-tiktok"></i>
+                            </a>
+                            <a href="mailto:{{ $profe->profe_correo }}" title="Correo Electrónico">
+                                <i class="fas fa-envelope"></i>
+                            </a>
+                        </span>
                     </div>
                 </div>
                 <div class="col-lg-8 col-md-8 d-none d-lg-block text-right">
                     <div class="header-cta">
                         <ul>
-                            {{-- <li>
+                            <li>
                                 <div class="call-box">
                                     <div class="icon">
-                                        <img src="{{ asset('frontend/wp-content/themes/qeducato/inc/assets/images/phone-call.png') }}"
-                                            alt="https://wpdemo.zcubethemes.com/qeducato/wp-content/themes/qeducato/inc/assets/images/phone-call.png" />
+                                        <img src="{{ asset('/assets/image/phone-call.png') }}"
+                                            alt="{{ asset('/assets/image/phone-call.png') }}"" />
                                     </div>
                                     <div class="text">
-                                        <span>Call Now !</span>
-                                        <strong><a href="tel:+917052101786">+91 7052 101 786</a></strong>
+                                        <span>WhatsApp</span>
+                                        <strong>
+                                            <a href="https://wa.me/591{{ $profe->profe_celular }}?text=Quisiera%20más%20información%20sobre%20las%20ofertas%20formativas" target="_blank">
+                                                +591 {{ $profe->profe_celular }}
+                                            </a>
+                                        </strong>
                                     </div>
                                 </div>
-                            </li> --}}
+                            </li>
                             <li>
                                 <div class="call-box">
                                     <div class="icon">
@@ -40,8 +56,8 @@
                                     </div>
                                     <div class="text">
                                         <span>Correo</span>
-                                        <strong><a href="mailto:info@example.com">
-                                                profe@iipp.edu.bo
+                                        <strong><a href="mailto:{{ $profe->profe_correo }}">
+                                            {{ $profe->profe_correo }}
                                             </a></strong>
                                     </div>
                                 </div>

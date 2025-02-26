@@ -266,6 +266,17 @@
                                         </div>
                                     </li>
                                 @endif
+                                @if ($evento->eve_asistencia == 1)
+                                    <li>
+                                        <div class="slider-btn">
+                                            <a href="{{ route('eventoAsistencia', $evento->eve_id) }}"
+                                                class="btn ss-btn smoth-scroll">
+                                                Asistencia
+                                                <i class="fal fa-long-arrow-right"></i>
+                                            </a>
+                                        </div>
+                                    </li>
+                                @endif
 
                             </ul>
                         </div>
