@@ -122,29 +122,29 @@
         <div class="section-header">DATOS DE INSCRIPCIÓN</div>
             <table>
                 <tr>
-                    <td>MODALIDAD</td>
-                    <td>{{ strtoupper($participante->pm_nombre) }}</td>
+                    <td style="width: 35%">MODALIDAD</td>
+                    <td style="width: 65%">{{ strtoupper($participante->pm_nombre) }}</td>
                 </tr>
                 <tr>
-                    <td>TURNO</td>
-                    <td>{{ mb_strtoupper($participante->pro_tur_nombre, 'UTF-8') }}</td>
+                    <td style="width: 35%">TURNO</td>
+                    <td style="width: 65%">{{ mb_strtoupper($participante->pro_tur_nombre, 'UTF-8') }}</td>
                 </tr>
                 <tr>
-                    <td>VERSIÓN</td>
-                    <td>{{ mb_strtoupper($participante->pv_nombre, 'UTF-8') }} {{ $participante->pv_romano }} -
+                    <td style="width: 35%">VERSIÓN</td>
+                    <td style="width: 65%">{{ mb_strtoupper($participante->pv_nombre, 'UTF-8') }} {{ $participante->pv_romano }} -
                         {{ strtoupper($participante->pv_gestion) }}</td>
                 </tr>
                 <tr>
-                    <td>DEPARTAMENTO</td>
-                    <td>{{ strtoupper($participante->dep_nombre) }}</td>
+                    <td style="width: 35%">DEPARTAMENTO</td>
+                    <td style="width: 65%">{{ strtoupper($participante->dep_nombre) }}</td>
                 </tr>
                 <tr>
-                    <td>SEDE</td>
-                    <td>{{ strtoupper($participante->sede_nombre) }}</td>
+                    <td style="width: 35%">SEDE</td>
+                    <td style="width: 65%">{{ strtoupper($participante->sede_nombre) }}</td>
                 </tr>
                 <tr>
-                    <td>FECHA DE REGISTRO</td>
-                    <td>{{ \Carbon\Carbon::parse($participante->created_at)->translatedFormat('j \\d\\e M Y, h:i A') }}
+                    <td style="width: 35%">FECHA DE REGISTRO</td>
+                    <td style="width: 65%">{{ \Carbon\Carbon::parse($participante->created_at)->translatedFormat('j \\d\\e M Y, h:i A') }}
                     </td>
                 </tr>
             </table>
@@ -156,51 +156,51 @@
                 </td>
             </tr>
             <tr>
-                <td>NOMBRE(S)</td>
-                <td>{{ mb_strtoupper($participante->per_nombre1,'UTF-8') }} {{ mb_strtoupper($participante->per_nombre2,'UTF-8') }}</td>
+                <td style="width: 35%">NOMBRE(S)</td>
+                <td style="width: 65%">{{ mb_strtoupper($participante->per_nombre1,'UTF-8') }} {{ mb_strtoupper($participante->per_nombre2,'UTF-8') }}</td>
             </tr>
             <tr>
-                <td>APELLIDO(S)</td>
-                <td>{{ mb_strtoupper($participante->per_apellido1,'UTF-8') }} {{ mb_strtoupper($participante->per_apellido2,'UTF-8') }}</td>
+                <td style="width: 35%">APELLIDO(S)</td>
+                <td style="width: 65%">{{ mb_strtoupper($participante->per_apellido1,'UTF-8') }} {{ mb_strtoupper($participante->per_apellido2,'UTF-8') }}</td>
             </tr>
             <tr>
-                <td>CELULAR</td>
-                <td>{{ strtoupper($participante->per_celular) }}</td>
+                <td style="width: 35%">CELULAR</td>
+                <td style="width: 65%">{{ strtoupper($participante->per_celular) }}</td>
             </tr>
             <tr>
-                <td>CORREO ELECTRÓNICO</td>
-                <td>{{ $participante->per_correo }}</td>
+                <td style="width: 35%">CORREO ELECTRÓNICO</td>
+                <td style="width: 65%">{{ $participante->per_correo }}</td>
             </tr>
             <tr>
-                <td>LICENCIATURA</td>
-                <td>{{ strtoupper($participante->pi_licenciatura) }}</td>
+                <td style="width: 35%">LICENCIATURA</td>
+                <td style="width: 65%">{{ strtoupper($participante->pi_licenciatura) }}</td>
             </tr>
         </table>
 
         <div class="section-header">INFORMACIÓN INSTITUCIONAL</div>
         <table>
             <tr>
-                <td>INSTITUCIÓN</td>
-                <td>{{ strtoupper($participante->pi_unidad_educativa) }}</td>
+                <td style="width: 35%">INSTITUCIÓN</td>
+                <td style="width: 65%">{{ strtoupper($participante->pi_unidad_educativa) }}</td>
             </tr>
             <tr>
-                <td>CARGO ACTUAL</td>
-                <td>{{ strtoupper($participante->pi_materia) }}</td>
+                <td style="width: 35%">CARGO ACTUAL</td>
+                <td style="width: 65%">{{ strtoupper($participante->pi_materia) }}</td>
             </tr>
         </table>
         <div class="section-header">DATOS DE DEPÓSITO BANCARIO</div>
         <table>
             <tr>
-                <td>MONTO DEL DEPÓSITO</td>
-                <td> Bs{{ number_format($participante->pro_bau_monto, 0, ',', '.') }}</td>
+                <td style="width: 35%">MONTO DEL DEPÓSITO</td>
+                <td style="width: 65%"> Bs{{ number_format($participante->pro_bau_monto, 0, ',', '.') }}</td>
             </tr>
             <tr>
-                <td>NÚMERO DE DEPÓSITO</td>
-                <td>{{ strtoupper($participante->pro_bau_nro_deposito) }}</td>
+                <td style="width: 35%">NÚMERO DE DEPÓSITO</td>
+                <td style="width: 65%">{{ strtoupper($participante->pro_bau_nro_deposito) }}</td>
             </tr>
             <tr>
-                <td>FECHA DEL DEPÓSITO</td>
-                <td>{{ \Carbon\Carbon::parse($participante->pro_bau_fecha)->translatedFormat('j \\d\\e M Y') }}</td>
+                <td style="width: 35%">FECHA DEL DEPÓSITO</td>
+                <td style="width: 65%">{{ \Carbon\Carbon::parse($participante->pro_bau_fecha)->translatedFormat('j \\d\\e M Y') }}</td>
             </tr>
         </table>
         <table width="100%">

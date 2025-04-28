@@ -166,10 +166,10 @@
                 <strong>{{ strtoupper($participante->per_ci) }}{{ $participante->per_complemento ? '-' . strtoupper($participante->per_complemento) : '' }}</strong>
                 con Licenciatura en <strong>{{ mb_strtoupper($participante->pi_licenciatura, 'UTF-8') }}</strong>
                 que desempeña sus funciones como
-                <strong>{{ mb_strtoupper($participante->pi_materia, 'UTF-8') }}</strong> en la institución
-                <strong>{{ mb_strtoupper($participante->pi_unidad_educativa, 'UTF-8') }}</strong> del nivel
-                <strong>{{ mb_strtoupper($participante->pi_nivel, 'UTF-8') }}</strong> del subsistema de Educación
-                <strong>{{ mb_strtoupper($participante->pi_subsistema, 'UTF-8') }}</strong>, en mi condición de
+                <strong>{{ $participante->pi_materia ? mb_strtoupper($participante->pi_materia, 'UTF-8') : '....................................................................................................................' }}</strong> en la institución
+                <strong>{{ $participante->pi_unidad_educativa ? mb_strtoupper($participante->pi_unidad_educativa, 'UTF-8') : '......................................................................' }}</strong> del nivel
+                <strong>{{ $participante->pi_nivel ? mb_strtoupper($participante->pi_nivel, 'UTF-8') : '...................................' }}</strong> del subsistema de Educación
+                <strong>{{ $participante->pi_subsistema ? mb_strtoupper($participante->pi_subsistema, 'UTF-8') : '..............................' }}</strong>, en mi condición de
                 participante del
                 <strong>{{ mb_strtoupper($participante->pro_tip_nombre, 'UTF-8') }} EN
                     {{ mb_strtoupper($participante->pro_nombre, 'UTF-8') }}</strong>,
@@ -226,10 +226,10 @@
                 <strong>{{ strtoupper($participante->per_ci) }}{{ $participante->per_complemento ? '-' . strtoupper($participante->per_complemento) : '' }}</strong>
                 con Licenciatura en <strong>{{ mb_strtoupper($participante->pi_licenciatura, 'UTF-8') }}</strong>
                 que desempeña sus funciones como
-                <strong>{{ mb_strtoupper($participante->pi_materia, 'UTF-8') }}</strong> en la institución
-                <strong>{{ mb_strtoupper($participante->pi_unidad_educativa, 'UTF-8') }}</strong> del nivel
-                <strong>{{ mb_strtoupper($participante->pi_nivel, 'UTF-8') }}</strong> del subsistema de Educación
-                <strong>{{ mb_strtoupper($participante->pi_subsistema, 'UTF-8') }}</strong>, en mi condición de
+                <strong>{{ $participante->pi_materia ? mb_strtoupper($participante->pi_materia, 'UTF-8') : '...................................................................................................' }}</strong> en la institución
+                <strong>{{ $participante->pi_unidad_educativa ? mb_strtoupper($participante->pi_unidad_educativa, 'UTF-8') : '.................................................................' }}</strong> del nivel
+                <strong>{{ $participante->pi_nivel ? mb_strtoupper($participante->pi_nivel, 'UTF-8') : '......................................' }}</strong> del subsistema de Educación
+                <strong>{{ $participante->pi_subsistema ? mb_strtoupper($participante->pi_subsistema, 'UTF-8') : '.................................' }}</strong>, en mi condición de
                 participante del
                 <strong>{{ mb_strtoupper($participante->pro_tip_nombre, 'UTF-8') }} EN
                     {{ mb_strtoupper($participante->pro_nombre, 'UTF-8') }}</strong>,

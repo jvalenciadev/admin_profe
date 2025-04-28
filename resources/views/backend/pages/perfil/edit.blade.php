@@ -169,7 +169,7 @@
                                                                         </tr>
                                                                         <tr>
                                                                             <th scope="row">
-                                                                                Ubicación
+                                                                                Dirección de domicilio
                                                                             </th>
                                                                             <td>{{ $perfil->direccion }}</td>
                                                                         </tr>
@@ -359,7 +359,7 @@
                                                                                             class="icofont icofont-location-pin"></i></span>
                                                                                     <input type="text"
                                                                                         class="form-control"
-                                                                                        placeholder="Dirección"
+                                                                                        placeholder="Dirección de domicilio"
                                                                                         id="direccion" name="direccion"
                                                                                         value="{{ $perfil->direccion }}" />
                                                                                 </div>

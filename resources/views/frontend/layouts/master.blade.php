@@ -28,7 +28,6 @@
 
     <!-- main content area end -->
     @include('frontend.layouts.partials.footer')
-
     @include('frontend.layouts.partials.offsets')
     @include('frontend.layouts.partials.scripts')
     @yield('scripts')

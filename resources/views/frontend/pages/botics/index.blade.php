@@ -131,8 +131,8 @@
                                                                     primaria de la misma unidad educativa y un
                                                                     tutor. Esta categoría no participa en la etapa nacional.
                                                                 </p>
-                                                                <a href="{{ asset('frontend/robots/constructores_insectos.pdf') }}"
-                                                                    class="btn btn-primary text-light">DESCARGAR</a>
+                                                                {{-- <a href="{{ asset('frontend/robots/constructores_insectos.pdf') }}"
+                                                                    class="btn btn-primary text-light">DESCARGAR</a> --}}
                                                                 {{-- <a href="../courses/biochemistry/index.html"
                                                                     class="readmore">Read More <i
                                                                         class="fal fa-long-arrow-right"></i></a> --}}
@@ -160,8 +160,8 @@
                                                                     equipo ganador en la etapa departamental participará en
                                                                     la etapa nacional.
                                                                 </p>
-                                                                <a href="{{ asset('frontend/robots/robot_soccer.pdf') }}"
-                                                                    class="btn btn-primary text-light">DESCARGAR</a>
+                                                                {{-- <a href="{{ asset('frontend/robots/robot_soccer.pdf') }}"
+                                                                    class="btn btn-primary text-light">DESCARGAR</a> --}}
                                                                 {{-- <a href="../courses/biochemistry/index.html"
                                                                     class="readmore">Read More <i
                                                                         class="fal fa-long-arrow-right"></i></a> --}}
@@ -188,8 +188,8 @@
                                                                     3ro de secundaria de la misma unidad educativa y un
                                                                     tutor. Esta categoría no participa en la etapa nacional.
                                                                 </p>
-                                                                <a href="{{ asset('frontend/robots/minisumo_rc.pdf') }}"
-                                                                    class="btn btn-primary text-light">DESCARGAR</a>
+                                                                {{-- <a href="{{ asset('frontend/robots/minisumo_rc.pdf') }}"
+                                                                    class="btn btn-primary text-light">DESCARGAR</a> --}}
                                                                 {{-- <a href="../courses/biochemistry/index.html"
                                                                     class="readmore">Read More <i
                                                                         class="fal fa-long-arrow-right"></i></a> --}}
@@ -217,8 +217,8 @@
                                                                     tutor. El equipo ganador en la etapa departamental
                                                                     participará en la etapa nacional.
                                                                 </p>
-                                                                <a href="{{ asset('frontend/robots/minisumo_automatico.pdf') }}"
-                                                                    class="btn btn-primary text-light">DESCARGAR</a>
+                                                                {{-- <a href="{{ asset('frontend/robots/minisumo_automatico.pdf') }}"
+                                                                    class="btn btn-primary text-light">DESCARGAR</a> --}}
                                                                 {{-- <a href="../courses/biochemistry/index.html"
                                                                     class="readmore">Read More <i
                                                                         class="fal fa-long-arrow-right"></i></a> --}}
@@ -246,8 +246,8 @@
                                                                     equipo ganador en la etapa departamental participará en
                                                                     la etapa nacional.
                                                                 </p>
-                                                                <a href="{{ asset('frontend/robots/seguidor_linea.pdf') }}"
-                                                                    class="btn btn-primary text-light">DESCARGAR</a>
+                                                                {{-- <a href="{{ asset('frontend/robots/seguidor_linea.pdf') }}"
+                                                                    class="btn btn-primary text-light">DESCARGAR</a> --}}
                                                             </div>
 
                                                         </div>
@@ -298,8 +298,7 @@
                                                                     PRIMARIA</div>
                                                                 <h3><a
                                                                         href="{{ asset('frontend/robots/proyectos_primaria.pdf') }}">Constructores
-                                                                        Robo Mecanics (Animales endémicos en peligro de
-                                                                        extinción) 3ro y 4to de primaria</a>
+                                                                        Robo Mecanics 3ro y 4to de primaria</a>
                                                                 </h3>
                                                                 <p>Utilizando materiales reciclados, los participantes deben
                                                                     construir proyectos que involucren mecánica, mecanismos
@@ -308,8 +307,8 @@
                                                                     importancia de proteger la biodiversidad del país, el
                                                                     robot no debe utilizar microcontroladores.
                                                                 </p>
-                                                                <a href="{{ asset('frontend/robots/proyectos_primaria.pdf') }}"
-                                                                    class="btn btn-primary text-light">DESCARGAR</a>
+                                                                {{-- <a href="{{ asset('frontend/robots/proyectos_primaria.pdf') }}"
+                                                                    class="btn btn-primary text-light">DESCARGAR</a> --}}
                                                             </div>
 
                                                         </div>
@@ -327,8 +326,7 @@
                                                                     SECUNDARIA</div>
                                                                 <h3><a
                                                                         href="{{ asset('frontend/robots/proyectos_secundaria.pdf') }}">Hardware
-                                                                        Libre Proyectos (Procesos de transformación de
-                                                                        alimentos endémicos) 6to de secundaria</a>
+                                                                        Libre Proyectos 6to de secundaria</a>
                                                                 </h3>
                                                                 <p>Los participantes deben diseñar mecanismos que optimicen
                                                                     la producción y procesamiento de estos alimentos,
@@ -338,8 +336,8 @@
                                                                     tecnológicas que potencien la economía local y fomenten
                                                                     el uso sostenible de los recursos endémicos.
                                                                 </p>
-                                                                <a href="{{ asset('frontend/robots/proyectos_secundaria.pdf') }}"
-                                                                    class="btn btn-primary text-light">DESCARGAR</a>
+                                                                {{-- <a href="{{ asset('frontend/robots/proyectos_secundaria.pdf') }}"
+                                                                    class="btn btn-primary text-light">DESCARGAR</a> --}}
                                                             </div>
 
                                                         </div>

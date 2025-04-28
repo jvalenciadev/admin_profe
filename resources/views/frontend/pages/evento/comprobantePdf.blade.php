@@ -110,8 +110,7 @@
     }
 </style>
 
-<body
-    style=" ">
+<body style=" ">
     <header>
 
     </header>
@@ -122,7 +121,7 @@
         <h3 style="margin-top:-15px; text-align:center;" style="text-transform: uppercase;">
             {{ strtoupper($participante[0]->eve_nombre) }}
         </h3>
-            <!-- Aquí se agrega la imagen del código de barras -->
+        <!-- Aquí se agrega la imagen del código de barras -->
 
         <h2><b>DATOS PERSONALES</b></h2>
 
@@ -161,7 +160,7 @@
             <tr>
                 <td>MODALIDAD DE ASISTENCIA</td>
                 <td>
-                        {{ $participante[0]->pm_nombre }}
+                    {{ $participante[0]->pm_nombre }}
                 </td>
             </tr>
 
@@ -185,7 +184,10 @@
                     @if ($participante[0]->pm_id == 1)
                         <div style="border-color: #aaa; background-color: #bbb; padding: 12px; font-size: 17px; ">
                             <img src="data:image/jpeg;base64,{{ $logo3 }}" alt="" width="100px"> <br>
-                            El registro de la <b>asistencia presencial</b> se realizará desde horas {{ \Carbon\Carbon::parse($participante[0]->eve_ins_hora_asis_habilitado)->format('H:i') }} hasta las {{ \Carbon\Carbon::parse($participante[0]->eve_ins_hora_asis_deshabilitado)->format('H:i') }}.
+                            El registro de la <b>asistencia presencial</b> se realizará desde horas
+                            {{ \Carbon\Carbon::parse($participante[0]->eve_ins_hora_asis_habilitado)->format('H:i') }}
+                            hasta las
+                            {{ \Carbon\Carbon::parse($participante[0]->eve_ins_hora_asis_deshabilitado)->format('H:i') }}.
                             Después de este horario, no se
                             aceptarán reclamos.
                         </div>
@@ -210,9 +212,8 @@
                             En la modalidad presencial: Para confirmar su asistencia al evento, deberá presentar este
                             comprobante de manera impresa.
                         </li>
-                        <li>En la modalidad virtual: para acceder a la certificación digital debe responder los
-                            formularios que se irán
-                            publicando durante la transmisión.</li>
+                        <li>En la modalidad virtual: para acceder a la certificación digital deberá registrar el código
+                            de asistencia que se publicará durante la transmisión.</li>
                         <li>Si usted respondió a los formularios podrá descargar su certificado del
                             siguiente enlace <b><u>https://certificados.minedu.gob.bo/</u></b> 10 días posterior a
                             la conclusión del evento.</li>
@@ -237,4 +238,5 @@
 
 
 </body>
+
 </html>

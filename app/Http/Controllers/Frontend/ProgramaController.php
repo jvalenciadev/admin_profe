@@ -114,7 +114,7 @@ class ProgramaController extends Controller
             // Verificar si la fecha actual está dentro del rango de inscripción
             if (now()->between(
                 Carbon::parse($programa->pro_fecha_inicio_inscripcion),
-                Carbon::parse($programa->pro_fecha_fin_inscripcion)
+                Carbon::parse($programa->pro_fecha_fin_inscripcion)->addDay(1)
             )) {
                 // Si la inscripción está permitida, mostrar la vista de inscripción
                 return view('frontend.pages.programa.inscripcion', compact('programa','proRestriccion'));
@@ -208,7 +208,7 @@ class ProgramaController extends Controller
                     ->join('programa_tipo', 'programa_tipo.pro_tip_id', '=', 'programa.pro_tip_id')
                     ->where('map_persona.per_ci', $request->per_ci)
                     ->whereIn('programa_tipo.pro_tip_id', [3,4])
-                    ->whereIn('programa_inscripcion.pie_id', [1,2,4])
+                    ->whereIn('programa_inscripcion.pie_id', [2,4])
                     ->where('programa_version.pv_gestion', (int)now()->year)
                     ->where('programa_inscripcion.pro_id', '!=' , $programa->pro_id)
                     ->first();
@@ -374,6 +374,7 @@ class ProgramaController extends Controller
                 // Verifica si ya está inscrito al programa
                 $inscripcion = ProgramaInscripcion::where('per_id', $pro_per->per_id)
                 ->where('pro_id', $pro_id)
+                ->whereIn('pie_id', [2, 4, 7])
                 ->first();
                 // Si ya está inscrito, redirige a la comprobación
                 if ($inscripcion) {
@@ -477,9 +478,8 @@ class ProgramaController extends Controller
             ->join('programa_tipo', 'programa_tipo.pro_tip_id', '=', 'programa.pro_tip_id')
             ->where('map_persona.per_id', '=', decrypt($per_id))
             ->where('programa.pro_id', '=', decrypt($pro_id))
+            ->whereIn('programa_inscripcion.pie_id', [2,4,7])
             ->first();
-
-
         return view('frontend.pages.programa.comprobanteParticipante', $data);
     }
 
@@ -534,6 +534,7 @@ class ProgramaController extends Controller
             ->join('departamento', 'departamento.dep_id', '=', 'sede.dep_id')
             ->where('programa_inscripcion.per_id', '=', $per_id)
             ->where('programa_inscripcion.pro_id', '=', $pro_id)
+            ->whereIn('programa_inscripcion.pie_id', [2,4,7])
             ->first();
         //
         // dd($participante);
@@ -617,6 +618,7 @@ class ProgramaController extends Controller
             ->join('departamento', 'departamento.dep_id', '=', 'sede.dep_id')
             ->where('programa_inscripcion.per_id', '=', $per_id)
             ->where('programa_inscripcion.pro_id', '=', $pro_id)
+            ->whereIn('programa_inscripcion.pie_id', [2,4,7])
             ->first();
         //
         // dd($participante);
@@ -686,6 +688,7 @@ class ProgramaController extends Controller
              ->join('departamento', 'departamento.dep_id', '=', 'sede.dep_id')
              ->where('programa_inscripcion.per_id', '=', $per_id)
              ->where('programa_inscripcion.pro_id', '=', $pro_id)
+             ->whereIn('programa_inscripcion.pie_id', [2,4,7])
              ->first();
          //
          // dd($participante);
@@ -775,6 +778,7 @@ class ProgramaController extends Controller
             ->join('departamento', 'departamento.dep_id', '=', 'sede.dep_id')
             ->where('programa_inscripcion.per_id', '=', $per_id)
             ->where('programa_inscripcion.pro_id', '=', $pro_id)
+            ->whereIn('programa_inscripcion.pie_id', [2,4,7])
             ->first();
         //
         // dd($participante);

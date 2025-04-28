@@ -86,7 +86,7 @@ class DashboardController extends Controller
             ->select('dep.dep_abreviacion', DB::raw('COUNT(pi.pi_id) as total_inscripciones'))
             ->groupBy('dep.dep_abreviacion')
             ->where('pi.pi_estado','activo')
-            ->where('pi.pie_id',2)
+            ->whereIn('pi.pie_id',[2,7])
             ->whereBetween('pi.pro_id', [12, 22]) 
             ->get();
         $inscritosSede = DB::table('programa_inscripcion as pi')
@@ -95,7 +95,7 @@ class DashboardController extends Controller
             ->select('dep.dep_abreviacion', 'sed.sede_nombre_abre', DB::raw('COUNT(pi.pi_id) as total_inscripciones'))
             ->groupBy('dep.dep_abreviacion', 'sed.sede_nombre_abre')
             ->where('pi.pi_estado','activo')
-            ->where('pi.pie_id',2)
+            ->whereIn('pi.pie_id',[2,7])
             ->whereBetween('pi.pro_id', [12, 22]) 
             ->get();
         $preinscritoSede = DB::table('programa_inscripcion as pi')
@@ -110,7 +110,7 @@ class DashboardController extends Controller
         $total_inscritos = count(ProgramaInscripcion::select('pi_id')
         ->where('pi_estado','=',"activo")
         ->whereBetween('pro_id', [12, 22]) 
-        ->where('pie_id','=',"2")->get());
+        ->whereIn('pie_id',[2,7])->get());
         $total_preinscritos = count(ProgramaInscripcion::select('pi_id')
         ->where('pi_estado','=',"activo")
         ->whereBetween('pro_id', [12, 22]) 
@@ -160,7 +160,7 @@ class DashboardController extends Controller
                 DB::raw('SUM(IF(dep.dep_id IN (1,2,3,4,5,6,7,8,9), 1, 0)) AS TOTAL')
             )
             ->where('pi.pi_estado','activo')
-            ->where('pi.pie_id',2)
+            ->whereIn('pi.pie_id',[2,7])
             ->whereBetween('pi.pro_id', [12, 22]) 
             ->groupBy('pro.pro_nombre_abre')
             ->orderBy('pro.pro_id', 'ASC')

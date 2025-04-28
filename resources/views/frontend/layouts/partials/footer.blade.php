@@ -38,9 +38,9 @@
                                     <a href="{{ $profe->profe_youtube }}" target="_blank">
                                         <i class="fab fa-youtube"></i>
                                     </a>
-                                    <a href="{{ $profe->profe_tiktok }}" target="_blank">
+                                    {{-- <a href="{{ $profe->profe_tiktok }}" target="_blank">
                                         <i class="fab fa-tiktok"></i>
-                                    </a>
+                                    </a> --}}
                                     <a href="mailto:{{ $profe->profe_correo }}" target="_blank">
                                         <i class="fas fa-envelope"></i>
                                     </a>
@@ -86,7 +86,7 @@
                             <div class="textwidget custom-html-widget">
                                 <div class="recent-blog-footer">
                                     <ul>
-                                        @if (count($blogs) > 0)
+                                        {{-- @if (count($blogs) > 0)
                                             @php
                                                 $i = 0;
                                             @endphp
@@ -113,7 +113,7 @@
                                             <div class="text">
                                                 Aun no hay publicaciones
                                             </div>
-                                        @endif
+                                        @endif --}}
                                     </ul>
                                 </div>
                             </div>
@@ -157,14 +157,14 @@
     <div class="copyright-wrap">
         <div class="container">
             <div class="row align-items-center">
-                <div class="col-lg-4">
+                {{-- <div class="col-lg-4">
                     <div class="copy-text">
                         <a href="#">
                             <img src="{{ asset('assets/profe/logoprofe.png') }}" alt="Qeducato" title="" /></a>
                     </div>
-                </div>
-                <div class="col-lg-4 text-center"></div>
-                <div class="col-lg-4 text-right text-xl-right">
+                </div> --}}
+               
+                <div class="col-lg-6 text-center text-xl-right">
                     Copyright © PROFE {{ now()->format('Y') }}. Todos los derechos reservados.
                 </div>
             </div>

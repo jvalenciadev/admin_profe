@@ -32,10 +32,10 @@
 
 @section('og-meta-tags')
     <meta property="og:locale" content="es_ES" />
-    <meta property="og:title" content="Lanzamiento de la oferta académica" />
+    <meta property="og:title" content="Se comunica que se amplía la fecha de inscripción de los diplomados y ciclos formativos." />
     <meta name="og:description"
         content="Participa en los diplomados, ciclos formativos y especialidades del Programa PROFE y descubre nuevas herramientas y estrategias para enriquecer tu enseñanza. ¡Inscríbete ahora!" />
-    <meta property="og:image" content="{{ asset('storage/profe/8S2NFI3igKxpAufKni2xwJ8Z12leCdM9C1p5CRgU.jpg') }}" />
+    <meta property="og:image" content="{{ asset('storage/profe/comunicado0011.jpg') }}" />
     <meta property="og:image:width" content="545" />
     <meta property="og:image:height" content="493" />
     <meta property="og:image:type" content="image/jpeg" />
@@ -51,23 +51,23 @@
                 @include('frontend.pages.inicio.components.acerca')
                 @include('frontend.pages.inicio.components.blogs')
             </div>
-        </div>
+        </div> 
     </article>
 
     <!-- MODAL DE NOTIFICACIÓN -->
-    <div class="modal fade" id="convocatoriaModal" tabindex="-1" aria-labelledby="convocatoriaLabel" aria-hidden="true">
+    {{-- <div class="modal fade" id="convocatoriaModal" tabindex="-1" aria-labelledby="convocatoriaLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg modal-dialog-centered"> <!-- Se agregó 'modal-lg' para mayor tamaño -->
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="convocatoriaLabel">📢 Convocatoria Pública N° 001/2025</h5>
+                    <h5 class="modal-title" id="convocatoriaLabel">📢 COMUNICADO No. 0011/2025</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body text-center">
                     <p></p>
 
                     <!-- Iframe para mostrar el PDF -->
-                    <div class="pdf-container">
-                        <iframe src="https://drive.google.com/file/d/1ZcFqK_ctix85HwqHKdu7BndSfWOLlBrl/preview" width="100%" height="500px"></iframe>
+                    <div class="image-container">
+                        <img src="{{ asset('storage/profe/comunicado0011.jpg') }}" alt="Comunicado de Ampliación" class="img-fluid">
                     </div>
                     <p class="mt-3">
                         <a href="{{ asset('storage/profe/convocatoria.pdf') }}" class="btn btn-secundary" target="_blank">
@@ -77,7 +77,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 @endsection
 
 @section('scripts')

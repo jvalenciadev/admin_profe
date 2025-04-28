@@ -20,9 +20,9 @@
                             <a href="{{ $profe->profe_youtube }}" title="YouTube" target="_blank">
                                 <i class="fab fa-youtube"></i>
                             </a>
-                            <a href="{{ $profe->profe_tiktok }}" title="TikTok" target="_blank">
+                            {{-- <a href="{{ $profe->profe_tiktok }}" title="TikTok" target="_blank">
                                 <i class="fab fa-tiktok"></i>
-                            </a>
+                            </a> --}}
                             <a href="mailto:{{ $profe->profe_correo }}" title="Correo Electrónico">
                                 <i class="fas fa-envelope"></i>
                             </a>
@@ -33,7 +33,7 @@
                     <div class="header-cta">
                         <ul>
                             <li>
-                                <div class="call-box">
+                                {{-- <div class="call-box">
                                     <div class="icon">
                                         <img src="{{ asset('/assets/image/phone-call.png') }}"
                                             alt="{{ asset('/assets/image/phone-call.png') }}"" />
@@ -41,12 +41,12 @@
                                     <div class="text">
                                         <span>WhatsApp</span>
                                         <strong>
-                                            <a href="https://wa.me/591{{ $profe->profe_celular }}?text=Quisiera%20más%20información%20sobre%20las%20ofertas%20formativas" target="_blank">
+                                            <a href="https://wa.me/591{{ $profe->profe_celular }}" target="_blank">
                                                 +591 {{ $profe->profe_celular }}
                                             </a>
                                         </strong>
                                     </div>
-                                </div>
+                                </div> --}}
                             </li>
                             <li>
                                 <div class="call-box">

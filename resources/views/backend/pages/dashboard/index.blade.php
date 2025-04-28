@@ -130,7 +130,7 @@
                     </div>
                 </div>
                 <div class="col-xl-12 col-md-12">
-                    
+
                     <div class="card">
                         <div class="card-block bg-c-green">
                             <div id="proj-departamento" style="height: 350px"></div>
@@ -167,8 +167,8 @@
                         </div>
                     </div>
                 </div>
-            
-               
+
+
                 <div class="col-xl-12 col-md-12">
                     <div class="card">
                         <div class="card-block bg-c-green">
@@ -200,7 +200,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($programas as $programa)
+                                        @foreach ($programas as $programa)
                                             <tr>
                                                 <td>{{ $programa->pro_nombre_abre }}</td>
                                                 <td>{{ $programa->CHUQUISACA }}</td>
@@ -245,7 +245,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($programasInscrito as $programa)
+                                        @foreach ($programasInscrito as $programa)
                                             <tr>
                                                 <td>{{ $programa->pro_nombre_abre }}</td>
                                                 <td>{{ $programa->CHUQUISACA }}</td>
@@ -290,7 +290,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach($programasInscrito2024 as $programa)
+                                        @foreach ($programasInscrito2024 as $programa)
                                             <tr>
                                                 <td>{{ $programa->pro_nombre_abre }}</td>
                                                 <td>{{ $programa->CHUQUISACA }}</td>
@@ -394,138 +394,144 @@
     <div id="styleSelector"></div>
 @endsection
 @section('scripts')
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-    $(document).ready(function() {
-        // Mostrar la alerta con un diseño mejorado y mensaje claro
-        Swal.fire({
-            title: "Información Importante",
-            text: "Los responsables deben revisar la lista de solicitudes, llegar a un acuerdo y confirmar o eliminar las solicitudes que no estén aprobadas, de acuerdo a su departamento.",
-            icon: "info",
-            background: '#ffffff', // Fondo blanco para más elegancia
-            color: '#4e4e4e', // Color de texto elegante
-            showCancelButton: true, // Habilita el botón de cancelar
-            confirmButtonText: "Entendido",
-            cancelButtonText: "Revisar solicitudes",
-            confirmButtonColor: '#00b5e2', // Color suave para el botón "Entendido"
-            cancelButtonColor: '#e74c3c', // Color suave para el botón "Revisar solicitudes"
-            buttonsStyling: false, // Deshabilitar el estilo predeterminado de los botones
-            customClass: {
-                confirmButton: 'btn btn-primary', // Estilo elegante para el botón "Entendido"
-                cancelButton: 'btn btn-outline-danger' // Estilo elegante para el botón "Revisar solicitudes"
-            }
-        }).then((result) => {
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        $(document).ready(function() {
+            Swal.fire({
+                title: "ACTUALIZACIÓN DE DATOS",
+                html: "<p style='font-size: 18px; color: #4e4e4e;'>Por favor, actualice sus datos personales en el sistema. Es importante que complete el siguiente formulario para verificar su acceso.</p>",
+                background: '#ffffff',
+                color: '#4e4e4e',
+                showCancelButton: true,
+                confirmButtonColor: '#00b5e2',
+                confirmButtonText: "Actualizar Datos",
+                cancelButtonText: "Llenar Formulario",
+                buttonsStyling: true,
+                customClass: {
+                    popup: 'swal-wide',
+                    confirmButton: 'btn btn-primary',
+                    cancelButton: 'btn btn-success'
+                },
+                imageUrl: "{{ asset('backend/assets/images/notificacion/notificacion2.jpg') }}",
+                imageWidth: 600, // Aumentado el ancho
+                imageHeight: 280, // Aumentado la altura
+                imageAlt: "Imagen informativa"
+            }).then((result) => {
             if (result.isConfirmed) {
-                // Si el usuario hace clic en "Entendido", se cierra la alerta
-                console.log('Usuario entendió la alerta');
-            } else if (result.dismiss === Swal.DismissReason.cancel) {
-                // Si el usuario hace clic en "Revisar solicitudes", redirige a la ruta
-                window.location.href = "{{ route('admin.solicitudes.index') }}";
-            }
+                    window.location.href = "{{ route('admin.perfil.index') }}"; 
+                } else if (result.dismiss === Swal.DismissReason.cancel) {
+                    window.open("https://docs.google.com/spreadsheets/d/14mimvBX_h2-W2BBKbJg0YPabGDqjVW0Qa8HUZyaJHOE/edit?usp=sharing", "_blank");// Reemplaza con la URL del formulario
+                }
+            });
         });
-    });
-</script>
+    </script>
 
-<!-- Estilos personalizados -->
-<style>
-    /* Personalización de los botones en la alerta */
-    .btn {
-        padding: 12px 24px;
-        font-size: 14px;
-        border-radius: 25px;
-        font-weight: bold;
-        transition: all 0.3s ease;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
+    <style>
+        .swal-wide {
+            width: 600px !important;
+            /* Aumentado el tamaño de la alerta */
+        }
+    </style>
+    <!-- Estilos personalizados -->
+    <style>
+        /* Personalización de los botones en la alerta */
+        .btn {
+            padding: 12px 24px;
+            font-size: 14px;
+            border-radius: 25px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
 
-    /* Botón "Entendido" con color elegante */
-    .btn-primary {
-        background-color: #00b5e2;
-        border: none;
-        color: white;
-    }
+        /* Botón "Entendido" con color elegante */
+        .btn-primary {
+            background-color: #00b5e2;
+            border: none;
+            color: white;
+        }
 
-    .btn-primary:hover {
-        background-color: #008ba3;
-    }
+        .btn-primary:hover {
+            background-color: #008ba3;
+        }
 
-    /* Botón "Revisar solicitudes" con borde elegante */
-    .btn-outline-danger {
-        border: 2px solid #e74c3c;
-        color: #e74c3c;
-        background-color: transparent;
-    }
+        /* Botón "Revisar solicitudes" con borde elegante */
+        .btn-outline-danger {
+            border: 2px solid #e74c3c;
+            color: #e74c3c;
+            background-color: transparent;
+        }
 
-    .btn-outline-danger:hover {
-        background-color: #e74c3c;
-        color: white;
-    }
+        .btn-outline-danger:hover {
+            background-color: #e74c3c;
+            color: white;
+        }
 
-    /* Personalización de la ventana de la alerta */
-    .swal2-popup {
-        border-radius: 15px;
-        font-family: 'Arial', sans-serif;
-        padding: 20px 30px;
-    }
+        /* Personalización de la ventana de la alerta */
+        .swal2-popup {
+            border-radius: 15px;
+            font-family: 'Arial', sans-serif;
+            padding: 20px 30px;
+        }
 
-    .swal2-title {
-        font-size: 22px;
-        font-weight: 600;
-        color: #2c3e50;
-    }
+        .swal2-title {
+            font-size: 22px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
 
-    .swal2-text {
-        font-size: 16px;
-        color: #7f8c8d;
-    }
+        .swal2-text {
+            font-size: 16px;
+            color: #7f8c8d;
+        }
 
-    /* Sombra elegante para la alerta */
-    .swal2-popup {
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-    }
+        /* Sombra elegante para la alerta */
+        .swal2-popup {
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
 
-    /* Estilo del contenedor de la alerta */
-    .swal2-container {
-        z-index: 9999;
-    }
-</style>
+        /* Estilo del contenedor de la alerta */
+        .swal2-container {
+            z-index: 9999;
+        }
+    </style>
 
-<!-- Agregar estilos personalizados si es necesario -->
-<style>
-    /* Personalización de los botones en la alerta */
-    .btn {
-        padding: 10px 20px;
-        font-size: 16px;
-        border-radius: 5px;
-        font-weight: bold;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    }
+    <!-- Agregar estilos personalizados si es necesario -->
+    <style>
+        /* Personalización de los botones en la alerta */
+        .btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
 
-    .btn-success {
-        background-color: #28a745;
-        color: white;
-    }
+        .btn-success {
+            background-color: #28a745;
+            color: white;
+        }
 
-    .btn-danger {
-        background-color: #dc3545;
-        color: white;
-    }
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+        }
 
-    .swal2-popup {
-        border-radius: 10px;
-        font-family: 'Arial', sans-serif;
-    }
+        .swal2-popup {
+            border-radius: 10px;
+            font-family: 'Arial', sans-serif;
+        }
 
-    .swal2-title {
-        font-size: 20px;
-        color: #333;
-    }
+        .swal2-title {
+            font-size: 20px;
+            color: #333;
+        }
 
-    .swal2-text {
-        font-size: 16px;
-        color: #555;
-    }
-</style>
+        .swal2-text {
+            font-size: 16px;
+            color: #555;
+        }
+    </style>
     <script>
         $(document).ready(function() {
             // Gráfico de Inscritos por Departamento
@@ -606,7 +612,7 @@
                 });
             }
 
-            
+
         });
     </script>
     <script src="{{ asset('backend/files/assets/pages/widget/amchart/amcharts.js') }}"></script>

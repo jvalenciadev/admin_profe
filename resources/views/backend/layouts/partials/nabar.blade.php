@@ -11,7 +11,7 @@
     }
     $sedes = $sedes->get();
     $programas = DB::table('programa_sede_turno');
-    $progrs = DB::table('programa');
+    $progrs = DB::table('programa')->whereIn("pro_id", [12, 13, 14, 15,16,17,18,19,20,21,22]);
     // Verifica si el usuario tiene pro_ids
     if (!is_null($usr->pro_ids)) {
         $proIds = json_decode($usr->pro_ids);
@@ -365,7 +365,7 @@
             @endif
 
 
-            {{-- @if ($usr->can('calificacion.view'))
+            @if ($usr->can('calificacion.view'))
                 <div class="pcoded-navigatio-lavel">CALIFICACION</div>
                 @foreach ($sedes as $sede)
                     @php
@@ -400,9 +400,9 @@
                                         $decryptedCurrentProId == $programa->pro_id;
 
                                     // Verifica si estamos en la ruta de investigación y si el programa coincide
-                                    $isInvestigacionActive =
-                                        request()->routeIs('admin.calificacion.investigacion') &&
-                                        $decryptedCurrentProId == $programa->pro_id;
+                                    // $isInvestigacionActive =
+                                    //     request()->routeIs('admin.calificacion.investigacion') &&
+                                    //     $decryptedCurrentProId == $programa->pro_id;
                                 @endphp
 
                                 @if ($programa->pro_id != 11)
@@ -414,7 +414,7 @@
                                         </a>
                                     </li>
 
-                                    @if (!in_array($programa->pro_id, [8, 9]))
+                                    {{-- @if (!in_array($programa->pro_id, [8, 9]))
                                         <li class="{{ $isInvestigacionActive ? 'active' : '' }}">
                                             <a
                                                 href="{{ route('admin.calificacion.investigacion', ['sede_id' => $sedeencript, 'pro_id' => $proencript]) }}">
@@ -423,7 +423,7 @@
                                                     Investigación Especializada</span>
                                             </a>
                                         </li>
-                                    @endif
+                                    @endif --}}
                                 @endif
                             @endforeach
                         </ul>
@@ -431,7 +431,7 @@
 
                     </li>
                 @endforeach
-            @endif --}}
+            @endif
 
             {{-- @if ($usr->can('ajedrez.view') && $hasProId8)
                 <div class="pcoded-navigatio-lavel">CAMPEONATO</div>

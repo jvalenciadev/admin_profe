@@ -119,7 +119,7 @@
                     <img src="{{ asset('storage/evento_afiches/' . $evento->eve_afiche) }}" alt="Afiche del evento"
                         class="afiche-image img-fluid mb-3">
                     <h2 class="form-title">Inscripciones</h2>
-
+                    {{-- <h3 class=""> {{ $evento->eve_nombre }} </h3>  --}}
                     <form action="{{ route('evento.storeParticipante') }}" method="POST" enctype="multipart/form-data"
                         id="inscripcionForm">
                         @csrf
@@ -141,7 +141,7 @@
                             </div>
                             <div class="form-group mb-2">
                                 <input type="text" class="form-control" name="captcha" id="captcha" required
-                                    placeholder="Ingrese el código de verificación">
+                                    placeholder="Ingrese el código de captcha">
                                 @error('captcha')
                                     <div class="error-message">{{ $message }}</div>
                                 @enderror

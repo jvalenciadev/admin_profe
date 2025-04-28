@@ -65,9 +65,7 @@
 <script defer type="text/javascript"
     src="{{ asset('frontend/wp-content/plugins/elementor/assets/js/webpack.runtime.min.js') }}"
     id="elementor-webpack-runtime-js"></script>
-<script defer type="text/javascript"
-    src="{{ asset('frontend/wp-content/plugins/elementor/assets/js/frontend-modules.min.js') }}"
-    id="elementor-frontend-modules-js"></script>
+
 <script defer type="text/javascript"
     src="{{ asset('frontend/wp-content/plugins/elementor/assets/lib/waypoints/waypoints.min.js') }}"
     id="elementor-waypoints-js"></script>

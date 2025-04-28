@@ -2,6 +2,7 @@
 
 return [
 
+    'api_key' => env('API_KEY', '10k2DUuRJdJzwnPQGUcFqPy7YeflcrmWEQ8SO5PQ'),
     /*
     |--------------------------------------------------------------------------
     | Application Name

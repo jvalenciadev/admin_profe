@@ -176,6 +176,54 @@
             </div>
             <div class="lower-content2">
                 <div class="row">
+                    <div class="info-column col-lg-3 col-md-12 col-sm-12">
+                        <div class="inner-column3">
+                            <h3> Detalles</h3>
+                            <ul class="project-info clearfix">
+                                @if ($evento->eve_ins_hora_asis_habilitado != '00:00:00')
+                                    <li>
+                                        <span class="icon fal fa-clock"></span>
+                                        <strong>
+                                            {{ Carbon::createFromFormat('H:i:s', $evento->eve_ins_hora_asis_habilitado)->format('H:i A') }}
+                                            -
+                                            {{ Carbon::createFromFormat('H:i:s', $evento->eve_ins_hora_asis_deshabilitado)->format('H:i A') }}
+                                        </strong>
+                                    </li>
+                                @endif
+                                <li> <span class="icon fal fa-calendar-alt"></span>
+                                    <strong>{{ Carbon::parse($evento->eve_fecha)->translatedFormat('d F, Y') }} </strong>
+                                </li>
+                                <li> <span class="icon fal fa-map-marker-check"></span> <strong>
+                                        {{ $evento->eve_lugar }}</strong></li>
+                                <li> <span class="icon fal fa-envelope"></span> <strong> profe@iipp.edu.bo</strong>
+                                </li>
+                                {{-- <li> <span class="icon fal fa-phone"></span> <strong> +591</strong></li> --}}
+                                @if ($evento->eve_inscripcion == 1)
+                                    <li>
+                                        <div class="slider-btn">
+                                            <a href="{{ route('eventoInscripcion', $evento->eve_id) }}"
+                                                class="btn ss-btn smoth-scroll">
+                                                Inscribirme
+                                                <i class="fal fa-long-arrow-right"></i>
+                                            </a>
+                                        </div>
+                                    </li>
+                                @endif
+                                @if ($evento->eve_asistencia == 1)
+                                    <li>
+                                        <div class="slider-btn">
+                                            <a href="{{ route('eventoAsistencia', $evento->eve_id) }}"
+                                                class="btn ss-btn smoth-scroll">
+                                                Asistencia
+                                                <i class="fal fa-long-arrow-right"></i>
+                                            </a>
+                                        </div>
+                                    </li>
+                                @endif
+
+                            </ul>
+                        </div>
+                    </div>
                     <div class="text-column col-lg-9 col-md-12 col-sm-12">
 
                         <div class="s-about-content wow fadeInRight" data-animation="fadeInRight" data-delay=".2s">
@@ -233,54 +281,7 @@
                             </div> --}}
                         </div>
                     </div>
-                    <div class="info-column col-lg-3 col-md-12 col-sm-12">
-                        <div class="inner-column3">
-                            <h3> Detalles</h3>
-                            <ul class="project-info clearfix">
-                                @if ($evento->eve_ins_hora_asis_habilitado != '00:00:00')
-                                    <li>
-                                        <span class="icon fal fa-clock"></span>
-                                        <strong>
-                                            {{ Carbon::createFromFormat('H:i:s', $evento->eve_ins_hora_asis_habilitado)->format('H:i A') }}
-                                            -
-                                            {{ Carbon::createFromFormat('H:i:s', $evento->eve_ins_hora_asis_deshabilitado)->format('H:i A') }}
-                                        </strong>
-                                    </li>
-                                @endif
-                                <li> <span class="icon fal fa-calendar-alt"></span>
-                                    <strong>{{ Carbon::parse($evento->eve_fecha)->translatedFormat('d F, Y') }} </strong>
-                                </li>
-                                <li> <span class="icon fal fa-map-marker-check"></span> <strong>
-                                        {{ $evento->eve_lugar }}</strong></li>
-                                <li> <span class="icon fal fa-envelope"></span> <strong> profe@iipp.edu.bo</strong>
-                                </li>
-                                {{-- <li> <span class="icon fal fa-phone"></span> <strong> +591</strong></li> --}}
-                                @if ($evento->eve_inscripcion == 1)
-                                    <li>
-                                        <div class="slider-btn">
-                                            <a href="{{ route('eventoInscripcion', $evento->eve_id) }}"
-                                                class="btn ss-btn smoth-scroll">
-                                                Inscribirme
-                                                <i class="fal fa-long-arrow-right"></i>
-                                            </a>
-                                        </div>
-                                    </li>
-                                @endif
-                                @if ($evento->eve_asistencia == 1)
-                                    <li>
-                                        <div class="slider-btn">
-                                            <a href="{{ route('eventoAsistencia', $evento->eve_id) }}"
-                                                class="btn ss-btn smoth-scroll">
-                                                Asistencia
-                                                <i class="fal fa-long-arrow-right"></i>
-                                            </a>
-                                        </div>
-                                    </li>
-                                @endif
-
-                            </ul>
-                        </div>
-                    </div>
+                    
                 </div>
             </div>
         </div>

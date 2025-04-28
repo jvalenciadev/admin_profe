@@ -142,7 +142,7 @@
                         <div class="form-group">
                             <label for="eve_per_ci">Carnet de identidad</label>
                             <input type="text" class="form-control" name="eve_per_ci" id="eve_per_ci" autofocus
-                                placeholder="Ingrese el número de carnet de identidad" required pattern="[0-9]{4,10}"
+                                placeholder="Ingrese el número de carnet de identidad" pattern="[0-9]{4,10}"
                                 title="Debe tener entre 4 y 10 dígitos." />
                             @error('eve_per_ci')
                                 <div class="error-message">{{ $message }}</div>
@@ -151,22 +151,21 @@
                         <div class="form-group">
                             <label for="eve_codigo">Código de asistencia</label>
                             <input type="text" class="form-control" name="eve_codigo" id="eve_codigo" autofocus
-                                placeholder="Ingrese el número de carnet de identidad" required  />
+                                placeholder="Ingrese el código de asistencia" />
                             @error('eve_codigo')
                                 <div class="error-message">{{ $message }}</div>
                             @enderror
                         </div>
 
                         <input type="hidden" name="eve_id" id="eve_id" value="{{ encrypt($evento->eve_id) }}">
-
                         <div class="captcha-container">
+                            <label for="captcha" class="fw-bold d-block mb-2">Código de verificación (CAPTCHA):</label>
                             <div class="captcha">
                                 <span>{!! captcha_img('mini') !!}</span>
                                 <button type="button" class="btn btn-danger reload" id="reload">&#x21bb;</button>
                             </div>
                             <div class="form-group mb-2">
-                                <input type="text" class="form-control" name="captcha" id="captcha" required
-                                    placeholder="Ingrese el código de verificación">
+                                <input type="text" class="form-control" name="captcha" id="captcha"                                     placeholder="Ingrese el código que aparece en la imagen">
                                 @error('captcha')
                                     <div class="error-message">{{ $message }}</div>
                                 @enderror

@@ -68,9 +68,13 @@ class InscripcionController extends Controller
             ->join('programa_inscripcion_estado', 'programa_inscripcion.pie_id', '=', 'programa_inscripcion_estado.pie_id')
             ->where('sede.sede_id', decrypt($sede_id))
             ->where('programa_inscripcion.pi_estado', "=",'activo')
+            ->whereIn('programa_inscripcion.pie_id', [2,7])
             ->where('programa_version.pv_gestion', "=",'2025')
             ->select(
                 'programa_inscripcion.pi_id',
+                'programa_inscripcion.pie_id',
+                'programa_turno.pro_tur_id',
+                'programa_turno.pro_tur_nombre',
                 'programa_inscripcion.pi_licenciatura',
                 'programa_inscripcion.pi_materia',
                 'programa_inscripcion.pi_subsistema',
@@ -120,6 +124,9 @@ class InscripcionController extends Controller
             )
             ->groupBy(
                 'programa_inscripcion.pi_id',
+                'programa_inscripcion.pie_id',
+                'programa_turno.pro_tur_id',
+                'programa_turno.pro_tur_nombre',
                 'programa_inscripcion.pi_licenciatura',
                 'programa_inscripcion.pi_materia',
                 'programa_inscripcion.pi_subsistema',
@@ -367,7 +374,7 @@ class InscripcionController extends Controller
     public function create(Request $request)
     {
         if (is_null($this->user) || !$this->user->can('inscripcion.create')) {
-            abort(403, 'Sorry !! You are Unauthorized to create any role !');
+            abort(403, 'Lo siento, no puede realizar la PREINSCRIPCIÓN');
         }
         // Decodificar el parámetro $sede_id
         $decryptedSedeId = decrypt($request->sede_id);
@@ -501,7 +508,6 @@ class InscripcionController extends Controller
         $inscripcion = new ProgramaInscripcion();
         $inscripcion->per_id = $persona->per_id; // Asignar el per_id obtenido
         $inscripcion->pro_id = $request->pro_id;
-        $inscripcion->pro_id = $request->pro_id;
         $inscripcion->pro_tur_id = $request->pro_tur_id;
         $inscripcion->sede_id = $request->sede_id;
         $inscripcion->pi_licenciatura = $request->pi_licenciatura??NULL;
@@ -509,7 +515,8 @@ class InscripcionController extends Controller
         $inscripcion->pi_materia = $request->pi_materia??NULL;
         $inscripcion->pi_nivel = $request->pi_nivel??NULL;
         $inscripcion->pi_subsistema = $request->pi_subsistema??NULL;
-        $inscripcion->pie_id = 4;
+        $inscripcion->pie_id = 7;
+       
         // Añadir otros campos según tu estructura de datos
 
         // Guardar la inscripción
@@ -586,7 +593,7 @@ class InscripcionController extends Controller
         // Obtener los bauchers relacionados con la inscripción filtrada por pi_id
         $bauchers = ProgramaBaucher::where('pi_id', $pi_id)->orderBy('pro_bau_fecha')->get();
         $totalMonto = ProgramaBaucher::where('pi_id', $pi_id)->sum('pro_bau_monto');
-        $inscripcionestado = ProgramaInscripcionEstado::all();
+        $inscripcionestado = ProgramaInscripcionEstado::where('pie_estado', "activo")->get();
         $mapPersonaNr = MapPersonaNr::where('per_id',$inscripcion->per_id)->first();
         $departamentos = Departamento::all();
         $niveles = MapNivel::where('niv_estado', "=",'activo')->get();
@@ -785,10 +792,10 @@ class InscripcionController extends Controller
             $nro_deposito = $request->input('pro_bau_nro_deposito');
             $extension = $image->getClientOriginalExtension();
             $timestamp = date('Ymd_His'); // Formato de fecha y hora
-            if ($pro_bau_tipo_pago == "Descuento por Planilla") {
+            if ($pro_bau_tipo_pago == "Banca Móvil") {
                 $name = $persona->per_rda . '_' . $timestamp . '.' . $extension; // Nombre encriptado
             } else {
-                $name = $nro_deposito . '.' . $extension;
+                $name = $nro_deposito . '_' . $timestamp. '.' . $extension;
             }
 
             // Guarda la imagen en storage/app/public/images/bauchers
@@ -861,10 +868,10 @@ class InscripcionController extends Controller
             $nro_deposito = $request->input('pro_bau_nro_deposito');
             $extension = $image->getClientOriginalExtension();
             $timestamp = date('Ymd_His'); // Formato de fecha y hora
-            if ($pro_bau_tipo_pago == "Descuento por Planilla") {
+            if ($pro_bau_tipo_pago == "Banca Móvil") {
                 $name = $persona->per_rda . '_' . $timestamp . '.' . $extension; // Nombre encriptado
             } else {
-                $name = $nro_deposito . '.' . $extension;
+                $name = $nro_deposito . '_' . $timestamp. '.' . $extension;
             }
 
             $path = $request->file('pro_bau_imagen')->storeAs('public/bauchers', $name);

@@ -224,7 +224,7 @@ class EventoController extends Controller
             return back()->withErrors(['asistencia' => 'El código que introdujo no es válido para este evento.']);
         }
 
-        $inscripcion = EventoInscripcionV2::where('eve_id', $eve_id)->where('eve_per_id', $usuarioEvento->eve_per_id)->first();
+        $inscripcion = EventoInscripcionV2::whereBetween('eve_id', [38, 46])->where('eve_per_id', $usuarioEvento->eve_per_id)->first();
         if (!$inscripcion) {
             return back()->withErrors(['asistencia' => 'Usted no se ha inscrito para confirmar su asistencia.']);
         }

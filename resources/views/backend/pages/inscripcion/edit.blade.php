@@ -470,7 +470,7 @@
                                                 <strong>¡Atención!</strong> Si el participante realizó el pago por
                                                 transferencia, solo se aceptan transferencias desde Banco Unión. Además,
                                                 debe adjuntar la imagen de transferencia y en el campo "Número
-                                                de Depósito" ingresar el número de cuenta del depositante.
+                                                de Depósito" ingresar el número de cuenta del depositante o Nro de comprobante.
                                             </div>
                                             <form
                                                 action="{{ route('admin.inscripcion.baucherpost', $inscripcion->pi_id) }}"
@@ -486,11 +486,26 @@
                                                     <input type="text" name="pro_bau_nro_deposito"
                                                         class="form-control" placeholder="Ingrese el nro de baucher">
                                                 </div>
-                                                <div class="form-group">
+                                                {{-- <div class="form-group">
                                                     <label for="pro_bau_monto">Monto (Bs)</label>
                                                     <input type="text" name="pro_bau_monto" class="form-control"
                                                         value="{{ $inscripcion->pro_tip_id == 3 ? 300 : ($inscripcion->pro_tip_id == 2 ? 150 : '') }}"
                                                         readonly>
+                                                </div> --}}
+                                                <div class="form-group">
+                                                    <label for="pro_bau_monto">Monto (Bs)</label>
+                                                
+                                                    @if ($inscripcion->pro_tip_id == 2)
+                                                        {{-- Monto fijo para tipo 2 --}}
+                                                        <input type="text" name="pro_bau_monto" class="form-control" value="150" readonly>
+                                                    
+                                                    @elseif ($inscripcion->pro_tip_id == 3)
+                                                        {{-- Select con opciones para tipo 3 --}}
+                                                        <select name="pro_bau_monto" class="form-control">
+                                                            <option value="300" >300 Bs</option>
+                                                            <option value="1500" >1500 Bs</option>
+                                                        </select>
+                                                    @endif
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="pro_bau_fecha">Fecha</label>

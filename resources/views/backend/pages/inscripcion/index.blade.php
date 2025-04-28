@@ -101,20 +101,55 @@
                                         @foreach ($inscripciones->groupBy('pro_id') as $pro_id => $inscripcionesGrouped)
                                             <div class="tab-pane {{ $inscripciones->groupBy('pro_id')->count() > 1 ? '' : 'active' }}"
                                                 id="tab_{{ $pro_id }}" role="tabpanel">
-                                                <div class="d-flex justify-content-between align-items-center mb-3">
-                                                    <h5 class="mb-0">{{ $inscripcionesGrouped->first()->pro_nombre }}
-                                                    </h5>
-                                                    <div>
-                                                        <a target="_blank"
-                                                            href="{{ route('admin.inscripcion.reporteinscritopdf', ['sede_id' => $sede_id, 'pro_id' => encrypt($inscripcionesGrouped->first()->pro_id)]) }}"
-                                                            class="btn btn-outline-danger waves-effect waves-light">
-                                                            <i class="icofont icofont-file-pdf"></i> Reporte Pagos
-                                                        </a>
-                                                        {{-- <a target="_blank" href="{{ route('admin.inscripcion.reporteinscritopdf', ['sede_id' => $sede_id, 'pro_id' => encrypt($inscripcionesGrouped->first()->pro_id)]) }}" class="btn btn-outline-primary waves-effect waves-light">
-                                                            <i class="icofont icofont-file-pdf"></i> Lista
-                                                        </a> --}}
+
+                                                <div class="d-flex justify-content-between align-items-start mb-3">
+                                                    {{-- Columna 1: Información del programa y cantidad por turno --}}
+                                                    <div style="flex: 3;">
+                                                        <h5 class="mb-0">{{ $inscripcionesGrouped->first()->pro_nombre }}
+                                                        </h5>
+                                                        {{-- Cantidad por Turno --}}
+                                                        <div class="d-flex gap-2 flex-wrap" style="margin-top: 5px;">
+                                                            @foreach ($inscripcionesGrouped->groupBy('pro_tur_id') as $pro_tur_id => $turnoGrouped)
+                                                                <span class="badge bg-dark p-1 px-2"
+                                                                    style="font-size: 0.75rem;">
+                                                                    {{ $turnoGrouped->first()->pro_tur_nombre }}:
+                                                                    {{ $turnoGrouped->count() }}
+                                                                </span>
+                                                            @endforeach
+                                                        </div>
+                                                    </div>
+
+                                                    {{-- Columna 2: Información de estados y reporte --}}
+                                                    <div style="flex: 1;">
+                                                        <div class="d-flex gap-2 flex-wrap" style="justify-content: start;">
+                                                            {{-- Estados --}}
+                                                            <span class="badge bg-warning p-1 px-2"
+                                                                style="font-size: 0.75rem;">Preinscrito:
+                                                                {{ $inscripcionesGrouped->where('pie_id', 4)->count() }}</span>
+                                                            <span class="badge bg-success p-1 px-2"
+                                                                style="font-size: 0.75rem;">Inscrito:
+                                                                {{ $inscripcionesGrouped->where('pie_id', 2)->count() }}</span>
+                                                            <span class="badge bg-primary p-1 px-2"
+                                                                style="font-size: 0.75rem;">Confirmado:
+                                                                {{ $inscripcionesGrouped->where('pie_id', 7)->count() }}</span>
+                                                            <span class="badge bg-danger p-1 px-2"
+                                                                style="font-size: 0.75rem;">Baja:
+                                                                {{ $inscripcionesGrouped->where('pie_id', 3)->count() }}</span>
+                                                        </div>
+                                                        {{-- Reporte --}}
+                                                        <div class="mt-3">
+                                                            <a target="_blank"
+                                                                href="{{ route('admin.inscripcion.reporteinscritopdf', ['sede_id' => $sede_id, 'pro_id' => encrypt($inscripcionesGrouped->first()->pro_id)]) }}"
+                                                                class="btn btn-outline-danger waves-effect waves-light">
+                                                                <i class="icofont icofont-file-pdf"></i> Reporte Pagos
+                                                            </a>
+                                                            {{-- <a target="_blank" href="{{ route('admin.inscripcion.reporteinscritopdf', ['sede_id' => $sede_id, 'pro_id' => encrypt($inscripcionesGrouped->first()->pro_id)]) }}" class="btn btn-outline-primary waves-effect waves-light">
+                                                                <i class="icofont icofont-file-pdf"></i> Lista
+                                                            </a> --}}
+                                                        </div>
                                                     </div>
                                                 </div>
+
                                                 <div class="dt-responsive table-responsive">
 
                                                     <table id="dataTable{{ $loop->index }}"
@@ -139,14 +174,14 @@
                                                                         {{ $inscripcion->per_nombre2 }}
                                                                         {{ $inscripcion->per_apellido1 }}
                                                                         {{ $inscripcion->per_apellido2 }}
-                                                                        <br><strong>|RDA:</strong>
-                                                                        {{ $inscripcion->per_rda }}<br>
-                                                                        <strong>|CI:</strong>
+                                                                        {{-- <br><strong>|RDA:</strong> --}}
+                                                                        {{-- {{ $inscripcion->per_rda }}<br> --}}
+                                                                        <br><strong>CI:</strong>
                                                                         {{ $inscripcion->per_ci }}
-                                                                        {{ $inscripcion->per_complemento ? '-' . $inscripcion->per_complemento : '' }}<br>
-                                                                        <strong>En funcion:
+                                                                        {{ $inscripcion->per_complemento ? '-' . $inscripcion->per_complemento : '' }}
+                                                                        {{-- <br><strong>En funcion:
                                                                             {{ $inscripcion->per_en_funcion ? 'SI' : 'NO' }}
-                                                                        </strong>
+                                                                        </strong> --}}
                                                                         @if (!empty($inscripcion->per_celular))
                                                                             <br><strong>Celular:</strong> <a
                                                                                 href="https://wa.me/{{ '+591' . $inscripcion->per_celular }}"
@@ -186,6 +221,9 @@
                                                                         @elseif ($inscripcion->pie_nombre == 'PREINSCRITO')
                                                                             <span
                                                                                 class="label label-warning">{{ $inscripcion->pie_nombre }}</span>
+                                                                        @elseif ($inscripcion->pie_nombre == 'CONFIRMADO')
+                                                                            <span
+                                                                                class="label label-warning">{{ $inscripcion->pie_nombre }}</span>
                                                                         @else
                                                                             <span
                                                                                 class="label label-danger">{{ $inscripcion->pie_nombre }}</span>
@@ -205,105 +243,100 @@
                                                                                 <i class="icofont icofont-ui-delete"></i>
                                                                             </a>
                                                                         @endif
-                                                                        @if (Auth::guard('admin')->user()->can('inscripcion.pdfpago'))
+                                                                       
+                                                                        {{-- @if (Auth::guard('admin')->user()->can('inscripcion.pdflista'))
                                                                             @if ($inscripcion->pie_nombre == 'INSCRITO')
-                                                                                @if ($inscripcion->estado_pago == 'Completado')
-                                                                                    <a href="{{ route('admin.inscripcion.participantepagopdf', encrypt($inscripcion->pi_id)) }}"
-                                                                                        class="btn btn-outline-danger waves-effect waves-light m-r-20">
-                                                                                        <i
-                                                                                            class="icofont icofont-file-pdf"></i>
+                                                                                    <a href="{{ route('admin.inscripcion.formulariopdf', encrypt($inscripcion->pi_id)) }}"
+                                                                                        class="btn btn-warning btn-outline-warning waves-effect waves-light m-r-20">
+                                                                                        <i class="icofont icofont-files"></i>
                                                                                     </a>
-                                                                                @endif
                                                                             @endif
-                                                                        @endif
-                                                                        @if (Auth::guard('admin')->user()->can('inscripcion.pdflista'))
-                                                                            {{-- @if ($inscripcion->pie_nombre == 'INSCRITO')
-                                                                                <a href="{{ route('admin.inscripcion.formulariopdf', encrypt($inscripcion->pi_id)) }}"
-                                                                                    class="btn btn-warning btn-outline-warning waves-effect waves-light m-r-20">
-                                                                                    <i class="icofont icofont-files"></i>
-                                                                                </a>
-                                                                            @endif --}}
                                                                             @if ($inscripcion->pie_nombre == 'INSCRITO')
                                                                                 <a href="{{ route('programa.comprobanteParticipantePdf', [
                                                                                     'per_id' => encrypt($inscripcion->per_id),
                                                                                     'pro_id' => encrypt($inscripcion->pro_id),
                                                                                 ]) }}"
-                                                                                    class="btn btn-warning btn-outline-warning waves-effect waves-light m-r-20">
+                                                                                    class="btn btn-warning btn-outline-warning waves-effect waves-light m-r-20" target="_blank">
                                                                                     <i class="icofont icofont-files"></i>
                                                                                 </a>
                                                                             @endif
-                                                                        @endif
-                                                                        <button class="btn btn-outline-info"
-                                                                            data-toggle="modal"
-                                                                            data-target="#participanteModal"
+                                                                        @endif --}}
+                                                                        <div class="btn-group">
+                                                                            <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                                                                                <i class="icofont icofont-files"></i> <!-- Icono de PDF con IcoFont -->
+                                                                            </button>
+                                                                            <ul class="dropdown-menu">
+                                                                                @if (Auth::guard('admin')->user()->can('inscripcion.pdflista'))
+                                                                                    @if ($inscripcion->pie_nombre == 'INSCRITO')
+                                                                                        <li>
+                                                                                            <a class="dropdown-item" href="{{ route('programa.comprobanteParticipantePdf', [
+                                                                                                'per_id' => encrypt($inscripcion->per_id),
+                                                                                                'pro_id' => encrypt($inscripcion->pro_id),
+                                                                                            ]) }}" target="_blank">
+                                                                                                <i class="icofont icofont-files"></i> FICHA DE INSCRIPCIÓN
+                                                                                            </a>
+                                                                                        </li>
+                                                                                    @endif
+                                                                                @endif
+                                                                                <li>
+                                                                                    <a class="dropdown-item" href="{{ route('programa.compromisoParticipantePdf', [
+                                                                                        'per_id' => encrypt($inscripcion->per_id),
+                                                                                        'pro_id' => encrypt($inscripcion->pro_id),
+                                                                                    ]) }}" target="_blank">
+                                                                                        <i class="icofont icofont-files"></i> COMPROMISO
+                                                                                    </a>
+                                                                                </li>
+                                                                                <li>
+                                                                                    <a class="dropdown-item" href="{{ route('programa.rotuloParticipantePdf', [
+                                                                                        'per_id' => encrypt($inscripcion->per_id),
+                                                                                        'pro_id' => encrypt($inscripcion->pro_id),
+                                                                                    ]) }}" target="_blank">
+                                                                                        <i class="icofont icofont-files"></i> RÓTULO
+                                                                                    </a>
+                                                                                </li>
+                                                                                @if (Auth::guard('admin')->user()->can('inscripcion.pdfpago'))
+                                                                                    @if ($inscripcion->pie_nombre == 'INSCRITO')
+                                                                                        @if ($inscripcion->estado_pago == 'Completado')
+                                                                                            <li>
+                                                                                                <a class="dropdown-item" href="{{ route('admin.inscripcion.participantepagopdf', encrypt($inscripcion->pi_id)) }}"
+                                                                                                    target="_blank" >
+                                                                                                    <i class="icofont icofont-files"></i> CONCLUSIÓN
+                                                                                                    DE PAGOS
+                                                                                                </a>
+                                                                                            </li>
+                                                                                        @endif
+                                                                                    @endif
+                                                                                @endif
+                                                                            </ul>
+                                                                        </div>
+                                                                        <a
+                                                                            class="btn btn-outline-primary waves-effect waves-light btn-view"
+                                                                            data-toggle="modal" data-target="#viewModal"
                                                                             data-nombre="{{ $inscripcion->per_nombre1 }} {{ $inscripcion->per_nombre2 }} {{ $inscripcion->per_apellido1 }} {{ $inscripcion->per_apellido2 }}"
-                                                                            data-rda="{{ $inscripcion->per_rda }}"
                                                                             data-ci="{{ $inscripcion->per_ci }}{{ $inscripcion->per_complemento ? '-' . $inscripcion->per_complemento : '' }}"
-                                                                            data-fechanac="{{ $inscripcion->per_fecha_nacimiento }}"
-                                                                            data-enfuncion="{{ $inscripcion->per_en_funcion ? 'SI' : 'NO' }}"
-                                                                            data-licenciatura="{{ $inscripcion->pi_licenciatura ?? ''}}"
-                                                                            data-uniedu="{{ $inscripcion->pi_unidad_educativa ?? ''}}"
-                                                                            data-materia="{{ $inscripcion->pi_materia ?? ''}}"
-                                                                            data-subsistema="{{ $inscripcion->pi_subsistema ?? ''}}"
-                                                                            data-nivel="{{ $inscripcion->pi_nivel ?? ''}}"
+                                                                            data-fecha_nacimiento="{{ $inscripcion->per_fecha_nacimiento }}"
                                                                             data-celular="{{ $inscripcion->per_celular }}"
-                                                                            data-totalpagado="{{ $inscripcion->total_pagado }}"
-                                                                            data-restante="{{ $inscripcion->restante }}"
-                                                                            data-estadopago="{{ $inscripcion->estado_pago }}"
-                                                                            data-estadoparticipante="{{ $inscripcion->pie_nombre }}"
-                                                                            data-updatedat="{{ $inscripcion->updated_at }}">
-                                                                            <i class="icofont icofont-eye-alt"></i>
-                                                                        </button>
-
+                                                                            data-correo="{{ $inscripcion->per_correo }}"
+                                                                            data-en_funcion="{{ $inscripcion->per_en_funcion ? 'SI' : 'NO' }}"
+                                                                            data-esp="{{ $inscripcion->pi_licenciatura }}"
+                                                                            data-car="{{ $inscripcion->pi_materia }}"
+                                                                            data-subsistema="{{ $inscripcion->pi_subsistema }}"
+                                                                            data-unidad="{{ $inscripcion->pi_unidad_educativa }}"
+                                                                            data-nivel="{{ $inscripcion->pi_nivel }}"
+                                                                            data-genero="{{ $inscripcion->gen_nombre }}">
+                                                                            <i class="icofont icofont-eye"></i>
+                                                                        </a>
                                                                     </td>
                                                                 </tr>
                                                             @endforeach
                                                         </tbody>
+
                                                     </table>
                                                 </div>
                                             </div>
                                         @endforeach
                                     </div>
-                                    <div class="modal fade" id="participanteModal" tabindex="-1" role="dialog"
-                                        aria-labelledby="participanteModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog" role="document">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title" id="participanteModalLabel">Detalles del
-                                                        Participante</h5>
-                                                    <button type="button" class="close" data-dismiss="modal"
-                                                        aria-label="Close">
-                                                        <span aria-hidden="true">&times;</span>
-                                                    </button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <p><strong>Nombre:</strong> <span id="modalNombre"></span></p>
-                                                    <p><strong>RDA:</strong> <span id="modalRda"></span></p>
-                                                    <p><strong>CI:</strong> <span id="modalCi"></span></p>
-                                                    <p><strong>Fecha Nacimiento:</strong> <span id="modalFechanac"></span></p>
-                                                    <p><strong>Licenciatura en:</strong> <span id="modalLicenciatura"></span></p>
-                                                    <p><strong>Institucion:</strong> <span id="modalUniedu"></span></p>
-                                                    <p><strong>Cargo Actual:</strong> <span id="modalMateria"></span></p>
-                                                    <p><strong>Nivel:</strong> <span id="modalNivel"></span></p>
-                                                    <p><strong>Subsistema:</strong> <span id="modalSubsistema"></span></p>
-                                                    <p><strong>En función:</strong> <span id="modalEnFuncion"></span></p>
-                                                    <p><strong>Celular:</strong> <span id="modalCelular"></span></p>
-                                                    <p><strong>Total Pagado:</strong> <span id="modalTotalPagado"></span>
-                                                    </p>
-                                                    <p><strong>Restante:</strong> <span id="modalRestante"></span></p>
-                                                    <p><strong>Estado de Pago:</strong> <span id="modalEstadoPago"></span>
-                                                    </p>
-                                                    <p><strong>Estado:</strong> <span id="modalEstado"></span></p>
-                                                    <p><strong>Última actualización:</strong> <span
-                                                            id="modalUpdatedAt"></span></p>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary"
-                                                        data-dismiss="modal">Cerrar</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+
                                 </div>
                             </div>
 
@@ -315,12 +348,57 @@
             </div>
         </div>
     </div>
-
+    <!-- Modal -->
+    <div class="modal fade" id="viewModal" tabindex="-1" role="dialog" aria-labelledby="viewModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="viewModalLabel">Detalles del Participante</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Nombre:</strong> <span id="modal-nombre"></span></p>
+                    <p><strong>CI:</strong> <span id="modal-ci"></span></p>
+                    <p><strong>Fecha de Nacimiento:</strong> <span id="modal-fecha_nacimiento"></span></p>
+                    <p><strong>Celular:</strong> <span id="modal-celular"></span></p>
+                    <p><strong>Correo:</strong> <span id="modal-correo"></span></p>
+                    <p><strong>En Función:</strong> <span id="modal-en_funcion"></span></p>
+                    <p><strong>Licenciatura en:</strong> <span id="modal-esp"></span></p>
+                    <p><strong>Cargo:</strong> <span id="modal-car"></span></p>
+                    <p><strong>Institución:</strong> <span id="modal-unidad"></span></p>
+                    <p><strong>Subsistema:</strong> <span id="modal-subsistema"></span></p>
+                    <p><strong>Nivel:</strong> <span id="modal-nivel"></span></p>
+                    <p><strong>Género:</strong> <span id="modal-genero"></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
     <div id="styleSelector"></div>
 @endsection
 
 
 @section('scripts')
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $('.btn-view').click(function() {
+            $('#modal-nombre').text($(this).data('nombre'));
+            $('#modal-ci').text($(this).data('ci'));
+            $('#modal-fecha_nacimiento').text($(this).data('fecha_nacimiento'));
+            $('#modal-celular').text($(this).data('celular'));
+            $('#modal-correo').text($(this).data('correo'));
+            $('#modal-en_funcion').text($(this).data('en_funcion'));
+            $('#modal-esp').text($(this).data('esp'));
+            $('#modal-car').text($(this).data('car'));
+            $('#modal-subsistema').text($(this).data('subsistema'));
+            $('#modal-nivel').text($(this).data('nivel'));
+            $('#modal-unidad').text($(this).data('unidad'));
+            $('#modal-genero').text($(this).data('genero'));
+        });
+    </script>
+    
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var tabLinks = document.querySelectorAll('#inscripcionTabs .nav-link');
@@ -377,45 +455,6 @@
         src="{{ asset('backend/files/bower_components/datatables.net-responsive-bs4/js/responsive.bootstrap4.min.js') }}">
     </script>
     <script src="{{ asset('backend/files/assets/pages/data-table/js/data-table-custom.js') }}"></script>
-    <script>
-        $('#participanteModal').on('show.bs.modal', function(event) {
-            var button = $(event.relatedTarget); // Botón que activa el modal
-            var nombre = button.data('nombre');
-            var rda = button.data('rda');
-            var ci = button.data('ci');
-            var fechanac = button.data('fechanac');
-            var licenciatura = button.data('licenciatura');
-            var uniedu = button.data('uniedu');
-            var materia = button.data('materia');
-            var subsistema = button.data('subsistema');
-            var nivel = button.data('nivel');
-            var enfuncion = button.data('enfuncion');
-            var celular = button.data('celular');
-            var totalpagado = button.data('totalpagado');
-            var restante = button.data('restante');
-            var estadopago = button.data('estadopago');
-            var estadoparticipante = button.data('estadoparticipante');
-            var updatedat = button.data('updatedat');
-
-            // Actualizar el contenido del modal
-            $('#modalNombre').text(nombre);
-            $('#modalRda').text(rda);
-            $('#modalCi').text(ci);
-            $('#modalFechanac').text(fechanac);
-            $('#modalLicenciatura').text(licenciatura);
-            $('#modalUniedu').text(uniedu);
-            $('#modalMateria').text(materia);
-            $('#modalNivel').text(nivel);
-            $('#modalSubsistema').text(subsistema);
-            $('#modalEnFuncion').text(enfuncion);
-            $('#modalCelular').text(celular);
-            $('#modalTotalPagado').text(totalpagado);
-            $('#modalRestante').text(restante);
-            $('#modalEstadoPago').text(estadopago);
-            $('#modalEstado').text(estadoparticipante);
-            $('#modalUpdatedAt').text(updatedat);
-        });
-    </script>
     <script>
         $(document).ready(function() {
             // Inicializar las tablas

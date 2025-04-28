@@ -94,6 +94,7 @@ class PerfilController extends Controller
         $admin->fecha_nacimiento = $request->fecha_nacimiento??null;
         $admin->estado_civil = $request->estado_civil??null;
         $admin->celular = $request->celular??null;
+        $admin->correo = $request->correo??null;
         $admin->direccion = $request->direccion??null;
         $admin->facebook = $request->facebook??null;
         $admin->tiktok = $request->tiktok??null;        // Subir imagen

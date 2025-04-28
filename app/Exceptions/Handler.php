@@ -48,6 +48,8 @@ class Handler extends ExceptionHandler
      *
      * @throws \Throwable
      */
+    // Si es una excepción 404
+
     public function render($request, Throwable $exception)
     {
         return parent::render($request, $exception);

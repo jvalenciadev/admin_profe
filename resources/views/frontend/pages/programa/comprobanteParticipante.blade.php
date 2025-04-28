@@ -196,12 +196,12 @@
                         <span class="fw-bold">Nota:</span> Debe dejar sus documentos en la sede que se inscribió.
                     </p>
                 @endif
-                @if($programa->pie_id == 2)
+                @if($programa->pie_id == 2 || $programa->pie_id == 7)
                 <p class="error-message text-center">
                     USTED YA SE ENCUENTRA INSCRITO
                 </p>
                 @endif
-                @if($programa->pie_id == 4)
+                @if($programa->pie_id == 4 )
                     <p class="form-title">REQUISITOS PARA EL {{ mb_strtoupper($programa->pro_tip_nombre, 'UTF-8') }}</p>
                         @if($programa->pro_tip_id==2)
                         <div class="document-info">
@@ -243,7 +243,7 @@
                     @endif
                 @endif
                 <div class="text-center mt-4">
-                    @if($programa->pie_id == 4)
+                    @if($programa->pie_id == 4 || $programa->pie_id == 7)
                         <a href="{{ route('programa.habilitacionParticipantePdf', [
                             'per_id' => encrypt($programa->per_id),
                             'pro_id' => encrypt($programa->pro_id),

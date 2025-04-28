@@ -28,7 +28,7 @@
         }
 
         .breadcrumb-area {
-            background-color: rgba(32, 40, 46, 0.8);
+            background-color: rgba(32, 40, 46, 0.205);
             /* Fondo con un poco de transparencia */
             background-image: url('{{ asset('storage/programa_banners/' . $programa->pro_banner) }}');
             background-blend-mode: overlay;
@@ -58,7 +58,7 @@
                 </div>
             </div>
         </div>
-    </section> <!-- breadcrumb-area-end --><!-- Project Detail -->
+    </section>
     <section class="project-detail">
         <div class="container"> <!-- Lower Content -->
             <div class="lower-content">
@@ -74,7 +74,7 @@
                                             <span class="discont"> 55% OFF </span> --}}
                                         </div>
                                     </li>
-                                    <li> <span class="icon fal fa-calendar-alt"></span> <strong>Inscripcion:</strong>
+                                    <li> <span class="icon fal fa-calendar-alt"></span> <strong>Inscripción:</strong>
                                         <span class="class-size">
                                             Del
                                             {{ Carbon::parse($programa->pro_fecha_inicio_inscripcion)->translatedFormat('d') }}
@@ -88,6 +88,15 @@
                                             {{ Carbon::parse($programa->pro_fecha_fin_inscripcion)->translatedFormat('Y') }}
                                         </span>
                                     </li>
+                                    <li> <span class="icon fal fa-calendar-alt"></span> <strong>Inicio de Actividades:</strong>
+                                        <span class="class-size">
+                                            {{ Carbon::parse($programa->pro_fecha_inicio_clase)->translatedFormat('d') }}
+                                            de
+                                            {{ Carbon::parse($programa->pro_fecha_inicio_clase)->translatedFormat('F') }}
+                                            de
+                                            {{ Carbon::parse($programa->pro_fecha_inicio_clase)->translatedFormat('Y') }}
+                                        </span>
+                                    </li>
                                     <li> <span class="icon fal fa-book"></span> <strong>Carga horaria:</strong>
                                         <span>{{ $programa->pro_carga_horaria }} hrs.</span>
                                     </li>
@@ -98,6 +107,7 @@
                                             {{ $programa->pro_horario }}
                                         </span>
                                     </li>
+                                    
                                     {{-- <li> <span class="icon fal fa-user"></span> <strong>Inscritos: </strong> <span>20
                                             students</span></li> --}}
 
@@ -145,7 +155,7 @@
                         <div class="">
                             <div class="">
                                     <img
-                                        src="{{ asset('storage/programa_banners/' . $programa->pro_banner) }}"
+                                        src="{{ asset('storage/programa_afiches/' . $programa->pro_afiche) }}"
                                        />
                             </div>
                         </div>
